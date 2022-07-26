@@ -195,25 +195,25 @@ vim.o.shortmess   = vim.o.shortmess .. "c"
 If you want to use another completion plugin like [hrsh7th/nvim-cmp](https://github.com/hrsh7th/nvim-cmp) with [uga-rosa/cmp-dictionary](https://github.com/uga-rosa/cmp-dictionary), vim-lilypond-suite uses the following dictionary files :
 
 ```bash
-$LILYWORDS/grobs
-$LILYWORDS/keywords
-$LILYWORDS/musicFunctions
-$LILYWORDS/articulations
-$LILYWORDS/grobProperties
-$LILYWORDS/paperVariables
-$LILYWORDS/headerVariables
-$LILYWORDS/contextProperties
-$LILYWORDS/clefs
-$LILYWORDS/repeatTypes
-$LILYWORDS/languageNames
-$LILYWORDS/accidentalsStyles
-$LILYWORDS/scales
-$LILYWORDS/musicCommands
-$LILYWORDS/markupCommands
-$LILYWORDS/contextsCmd
-$LILYWORDS/dynamics
-$LILYWORDS/contexts
-$LILYWORDS/translators
+$LILYDICTPATH/grobs
+$LILYDICTPATH/keywords
+$LILYDICTPATH/musicFunctions
+$LILYDICTPATH/articulations
+$LILYDICTPATH/grobProperties
+$LILYDICTPATH/paperVariables
+$LILYDICTPATH/headerVariables
+$LILYDICTPATH/contextProperties
+$LILYDICTPATH/clefs
+$LILYDICTPATH/repeatTypes
+$LILYDICTPATH/languageNames
+$LILYDICTPATH/accidentalsStyles
+$LILYDICTPATH/scales
+$LILYDICTPATH/musicCommands
+$LILYDICTPATH/markupCommands
+$LILYDICTPATH/contextsCmd
+$LILYDICTPATH/dynamics
+$LILYDICTPATH/contexts
+$LILYDICTPATH/translators
 ```
 
 ### My Neovim settings for Point & Click

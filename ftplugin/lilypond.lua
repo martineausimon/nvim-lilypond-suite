@@ -4,7 +4,7 @@ local lilyHi    = vim.api.nvim_set_hl
 local lilyCmd   = vim.api.nvim_create_user_command
 local lilyWords = expand('<sfile>:p:h') .. '/../lilywords'
 vim.g.lilywords = lilyWords
-vim.cmd[[let $LILYWORDS = g:lilywords]]
+vim.cmd[[let $LILYDICTPATH = g:lilywords]]
 
 vim.b.lilyplay     = expand('<sfile>:p:h') .. '/../lua/player.lua'
 vim.b.nvls_pdf     = vim.fn.shellescape(vim.fn.expand('%:p:r') .. '.pdf')
