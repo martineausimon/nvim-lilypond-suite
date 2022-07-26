@@ -15,8 +15,6 @@ This is a plugin (Neovim only) for **LilyPond** with updated syntax and dictiona
 <img src="https://github.com/martineausimon/nvim-lilypond-suite/blob/main/screenshoot.png">
 </p>
 
----
-
 * [Installation](#Installation)
 	* nvim-lilypond-suite
 	* Dependences
