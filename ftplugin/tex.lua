@@ -40,5 +40,6 @@ texAutoCmd( 'VimLeave', {
 
 texHi(0, 'Snip', { ctermfg = "white", fg = "white", bold = true })
 
+texMap(0, 'n', '<F3>', ":ToggleSyn<cr>", {noremap = true})
 texMap(0, 'n', '<F5>', ":LaTexCmp<cr>", {noremap = true})
 texMap(0, 'n', '<F6>', ":Viewer<cr>", {noremap = true})
