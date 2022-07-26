@@ -115,7 +115,7 @@ sudo pacman -S mpv ffmpeg
 
 ### QuickFix
 
-This plugin have no defaults for `QuickFixCmdPost` function. You can configure your `init.lua` using an autocommand, e.g. :
+This plugin have no defaults for `QuickFixCmdPost` event. You can configure your `init.lua` using an autocommand, e.g. :
 
 ```lua
 vim.api.nvim_create_autocmd( 'QuickFixCmdPost', { 
