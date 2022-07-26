@@ -1,8 +1,8 @@
-# NVIM-LILYPOND-SUITE
+# nvim-lilypond-suite
 
 This is a plugin (Neovim only) for **LilyPond** with updated syntax and dictionary for auto-completion. This repository also contains an ftplugin for **LaTeX** files which allows embedded LilyPond syntax highlighting, and makeprg which support `lilypond-book` or `lyluatex` package out of the box.
 
-## Features
+## FEATURES
 
 * **Updated syntax file** using the last [Pygments syntax highlighter for LilyPond](https://github.com/pygments/pygments/blob/master/pygments/lexers/_lilypond_builtins.py)
 * **Asynchronous :make** - compile in background without freezing Neovim
@@ -31,7 +31,7 @@ This is a plugin (Neovim only) for **LilyPond** with updated syntax and dictiona
 
 ---
 
-## Installation
+## INSTALLATION
 
 ### nvim-lilypond-suite
 
@@ -72,7 +72,7 @@ sudo ln -s /usr/share/soundfonts/FluidR3_GM.sf2 /usr/share/soundfonts/default.sf
 sudo pacman -S mpv ffmpeg
 ```
 
-## Mappings
+## MAPPINGS
 
 ### Commands
 
@@ -109,7 +109,7 @@ sudo pacman -S mpv ffmpeg
 | `j` and `k` | Decrease/increase current playback speed by 10% |
 | `[` and `]` | Decrease/increase current playback speed by 10% |
 
-## Settings
+## SETTINGS
 
 ### QuickFix
 
@@ -264,7 +264,7 @@ Adjust space between systems using this line (in `\renewcommand` or `\newcommand
 ```
 
 
-## License
+## LICENSE
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
