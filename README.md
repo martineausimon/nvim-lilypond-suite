@@ -1,6 +1,6 @@
 # NVIM-LILYPOND-SUITE
 
-This is a plugin (Neovim only) for **LilyPond** written in **Lua**, with updated syntax and dictionary for auto-completion. This repository also contains an ftplugin for **LaTeX** files which allows embedded LilyPond syntax highlighting, and makeprg which support `lilypond-book` or `lyluatex` package out of the box.
+This is a plugin (Neovim only) for **LilyPond** with updated syntax and dictionary for auto-completion. This repository also contains an ftplugin for **LaTeX** files which allows embedded LilyPond syntax highlighting, and makeprg which support `lilypond-book` or `lyluatex` package out of the box.
 
 ## Features
 
