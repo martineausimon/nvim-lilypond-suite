@@ -90,8 +90,8 @@ sudo pacman -S mpv ffmpeg
 | Command       | Default mappings | Description                                            |
 | ---           | ---              | ---                                                    |
 | `:ToggleSyn`  | `<F3>`           | Enable or disable LilyPond embed syntax                |
-| `:Viewer`     | `<F6>`           | Open %.pdf                                             |
 | `:TexCmp`     | `<F5>`           | Save & compile pdf                                     |
+| `:Viewer`     | `<F6>`           | Open %.pdf                                             |
 
 ### Player mappings (LilyPond only)
 
