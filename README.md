@@ -11,6 +11,10 @@ This is a plugin (Neovim only) for **LilyPond** with updated syntax and dictiona
 * **ftplugin for TeX files** whith detect and allows embedded LilyPond syntax, adaptive `makeprg` function for `lyluatex` or `lilypond-book`, correct `errorformat`
 * **Easy Point & Click configuration**
 
+<p align="center">
+<img src="https://github.com/martineausimon/nvim-lilypond-suite/blob/main/screenshoot.png">
+</p>
+
 ---
 
 * [Installation](#Installation)
