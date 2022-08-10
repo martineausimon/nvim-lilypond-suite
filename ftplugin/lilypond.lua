@@ -1,4 +1,11 @@
+if vim.g.loaded_nvls then
+  return
+end
+
+vim.g.loaded_nvls = true
+
 local expand    = vim.fn.expand
+
 local lilyMap   = vim.api.nvim_buf_set_keymap
 local lilyHi    = vim.api.nvim_set_hl
 local lilyCmd   = vim.api.nvim_create_user_command
