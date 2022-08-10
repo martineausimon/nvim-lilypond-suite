@@ -113,6 +113,14 @@ sudo pacman -S mpv ffmpeg
 
 ## SETTINGS
 
+### Lighter syntax highlightings
+
+The full syntax highlighting can be a little slow. Add this line to your `init.lua` to use a lighter syntax file :
+
+```lua
+vim.g.nvls_light = true
+```
+
 ### QuickFix
 
 This plugin have no defaults for `QuickFixCmdPost` event. You can configure your `init.lua` using an autocommand, e.g. :
