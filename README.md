@@ -147,61 +147,6 @@ hi(0, 'PreCondit',      {ctermfg = "cyan"})
 
 Install [coc.nvim](https://github.com/neoclide/coc.nvim) and `coc-dictionary` & `coc-tabnine` : works out of the box !
 
-#### My config for coc.nvim
-
-* In my `init.lua` :
-
-```lua
-require('cocSettings')
-```
-
-* In `~/.config/nvim/lua/cocSettings.lua` :
-
-```lua
-function escape_keycode(keycode)
-	return vim.api.nvim_replace_termcodes(keycode, true, true, true)
-end
-
-local function check_back_space()
-	local col = vim.fn.col(".") - 1
-	return col <= 0 or vim.fn.getline("."):sub(col, col):match("%s")
-end
-
-function tab_completion()
-	if vim.fn.pumvisible() > 0 then
-		return escape_keycode("<C-n>")
-	end
-	if check_back_space() then
-		return escape_keycode("<TAB>")
-	end
-	return vim.fn["coc#refresh"]()
-end
-
-function shift_tab_completion()
-	if vim.fn.pumvisible() > 0 then
-		return escape_keycode("<C-p>")
-	else
-		return escape_keycode("<C-h>")
-	end
-end
-
-key = vim.api.nvim_set_keymap
-
-if vim.fn.exists("*complete_info") then
-	key(
-		"i", "<CR>", 
-		"complete_info(['selected'])['selected'] != -1 ?" ..
-		"'<C-y>' : '<C-G>u<CR>'", 
-		{silent = true, expr = true, noremap = true}
-	)
-end
-
-key("i", "<TAB>",   "v:lua.tab_completion()",       { expr = true })
-key("i", "<S-TAB>", "v:lua.shift_tab_completion()", { expr = true })
-
-vim.o.completeopt = "menu,menuone,noselect"
-vim.o.shortmess   = vim.o.shortmess .. "c"
-```
 If you want to use another completion plugin like [hrsh7th/nvim-cmp](https://github.com/hrsh7th/nvim-cmp) with [uga-rosa/cmp-dictionary](https://github.com/uga-rosa/cmp-dictionary), vim-lilypond-suite uses the following dictionary files :
 
 ```bash
