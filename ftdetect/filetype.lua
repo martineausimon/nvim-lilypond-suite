@@ -10,9 +10,10 @@ if vim.g.do_filetype_lua == 1 then
 		{ 'BufNewFile', 'BufRead' },
 		{
 			command = "set ft=lilypond",
-			group = { '*.ly', '*.ily' }
+			pattern = { '*.ly', '*.ily' },
+			group =  vim.api.nvim_create_augroup(
+				"LilypondAutocmds", { clear = true}
+			)
 		}
 	)
 end
-
-
