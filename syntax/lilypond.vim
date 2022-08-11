@@ -13,7 +13,6 @@ endif
 setlocal mps+=<:>
 
 syn case match
-match Delimiter "{\|}\|<\|>\|\[\|\]\|(\|)"
 
 if g:nvls_light == 'true'
 	runtime! syntax/lilypond-light.vim
@@ -33,6 +32,7 @@ syn match  lilySpecial       "\\[({)\|(})]"
 syn match  lilyDynamics      "\\[<!>\\]"
 syn match  lilyArticulation  "[-_^][-_^+|>.]"
 
+match Delimiter "{\|}\|<\|>\|\[\|\]\|(\|)"
 syn include @embeddedScheme syntax/scheme.vim
 unlet b:current_syntax
 syn region lilyScheme matchgroup=Delimiter start="#['`]\?(" matchgroup=Delimiter end=")" contains=@embeddedScheme
