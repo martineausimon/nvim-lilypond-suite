@@ -1,7 +1,7 @@
 syn match lilyGrobs "\<\u\l\w*\>"
 syn match lilyFunctions "[-_^]\?\\\([^ ]*[\n ]\)"
-syn match lilyVar "\u*\l*-*\w*-*\w*\s\*="me=e-1
-syn match lilyVar "\.\w*[-\l]\l\w*"ms=s+1
+syn match lilyVar "\(\l\+\-\+\)*\w\+\s\+="me=e-1
+syn match lilyVar "\(\.\l\+\u\+\l\+\)\w*"ms=s+1
 
 syn match lilyPaperVariables "\(auto-first-page-number\|binding-offset\|blank-last-page-penalty\|blank-page-penalty\|bottom-margin\|check-consistency\|evenHeaderMarkup\|first-page-number\|footnote-separator-markup\|horizontal-shift\|indent\|inner-margin\|last-bottom-spacing\|left-margin\|line-width\|markup-markup-spacing\|markup-system-spacing\|max-systems-per-page\|min-systems-per-page\|minimum-distance\|oddHeaderMarkup\|outer-margin\|page-breaking-system-system-spacing\|page-breaking\|page-count\|page-number-type\|page-spacing-weight\|paper-height\|paper-width\|print-all-headers\|print-first-page-number\|ragged-bottom\|ragged-last-bottom\|ragged-last\|ragged-right\|right-margin\|score-markup-spacing\|score-system-spacing\|short-indent\|stretchability\|system-count\|system-separator-markup\|system-system-spacing\|systems-per-page\|top-margin\|top-markup-spacing\|top-system-spacing\|two-sided\)\(\A\|\n\)"me=e,ms=s
 
