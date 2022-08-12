@@ -1,7 +1,8 @@
-syn match lilyGrobs "\<\u\l\w*\>"
-syn match lilyFunctions "[-_^]\?\\\([^ ]*[\n ]\)"
-syn match lilyVar "\(\l\+\-\+\)*\w\+\s\+="me=e-1
-syn match lilyVar "\(\.\l\+\u\+\l\+\)\w*"ms=s+1
+syn match lilyGrobs          "\<\u\a\+\>"
+syn match lilyMarkupCommands "[-_^]\?\\\([^ ]*[\n ]\)"
+syn match lilyFunctions      "[-_^]\?\\\([^ ]*[\n ]\)"
+syn match lilyVar            "\(\i\|\-\)\+\s\+="me=e-1
+syn match lilyVar            "\.\l\(\-\|\u\|\l\)\+"ms=s+1
 
 syn match lilyPaperVariables "\(auto-first-page-number\|binding-offset\|blank-last-page-penalty\|blank-page-penalty\|bottom-margin\|check-consistency\|evenHeaderMarkup\|first-page-number\|footnote-separator-markup\|horizontal-shift\|indent\|inner-margin\|last-bottom-spacing\|left-margin\|line-width\|markup-markup-spacing\|markup-system-spacing\|max-systems-per-page\|min-systems-per-page\|minimum-distance\|oddHeaderMarkup\|outer-margin\|page-breaking-system-system-spacing\|page-breaking\|page-count\|page-number-type\|page-spacing-weight\|paper-height\|paper-width\|print-all-headers\|print-first-page-number\|ragged-bottom\|ragged-last-bottom\|ragged-last\|ragged-right\|right-margin\|score-markup-spacing\|score-system-spacing\|short-indent\|stretchability\|system-count\|system-separator-markup\|system-system-spacing\|systems-per-page\|top-margin\|top-markup-spacing\|top-system-spacing\|two-sided\)\(\A\|\n\)"me=e,ms=s
 
@@ -19,15 +20,25 @@ syn match lilyDynamics "[-_^]\?\\\(cr\|cresc\|decr\|decresc\|dim\|endcr\|endcres
 
 syn match lilyContexts "\<\(AncientRemoveEmptyStaffContext\|ChoirStaff\|ChordNames\|CueVoice\|Devnull\|DrumStaff\|DrumVoice\|Dynamics\|FiguredBass\|FretBoards\|Global\|GrandStaff\|GregorianTranscriptionStaff\|GregorianTranscriptionVoice\|KievanStaff\|KievanVoice\|Lyrics\|MensuralStaff\|MensuralVoice\|NoteNames\|NullVoice\|OneStaff\|PetrucciStaff\|PetrucciVoice\|PianoStaff\|RemoveEmptyDrumStaffContext\|RemoveEmptyRhythmicStaffContext\|RemoveEmptyStaffContext\|RemoveEmptyTabStaffContext\|RhythmicStaff\|Score\|Staff\|StaffGroup\|TabStaff\|TabVoice\|VaticanaStaff\|VaticanaVoice\|Voice\)\(\A\|\n\)"me=e-1,ms=s
 
-syn match lilyTranslators "[A-Z][a-z]\w*\(_\)\w*"
+syn match lilyTranslators "\u\l\+\(_\)\w*\(engraver\|performer\|translator\)"
 
 syn match lilyMisc "\(##f\|##t\|#f\|#t\)\(\A\|\n\)"me=e,ms=s
 
+syn region lilyLyrics 
+	\ start="\\lyricmode {" 
+	\ end="}" 
+	\ contains=lilyFunctions,lilyArticulation
+
+syn region lilyMarkup 
+	\ start="\\markup {" 
+	\ end="}" 
+	\ contains=lilyString,lilyMarkupCommands,lilyValue,lilySymbol,lilyNumber,lilyComment
+
 command -nargs=+ HiLink hi def link <args>
+	HiLink lilyLyrics              Default
 	HiLink lilyFunctions					 Statement
 	HiLink lilyDynamics						 SpecialChar
 	HiLink lilyScales							 Statement
-	HiLink lilySpecial						 Special
 	HiLink lilyArticulation				 PreProc
 	HiLink lilyContexts						 Type
 	HiLink lilyGrobs							 Include
@@ -38,6 +49,7 @@ command -nargs=+ HiLink hi def link <args>
 	HiLink lilyPitchLanguageNames  Label
 	HiLink lilyMisc								 SpecialComment
 	HiLink lilyVar								 Tag
+	HiLink lilyMarkupCommands      Keyword
 	HiLink lilyPaperVariables			 SpecialComment
 delcommand HiLink
 

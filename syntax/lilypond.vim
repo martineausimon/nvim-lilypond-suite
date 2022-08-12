@@ -20,19 +20,18 @@ else
 	runtime! syntax/lilypond-full.vim
 endif
 
+match Delimiter "{\|}\|<\|>\|\[\|\]\|(\|)"
+
 syn match  lilyValue         "#[^'(0-9 ]*[\n ]"ms=s+1
 syn match  lilySymbol        "#'[^'(0-9 ]*[\n ]"ms=s+2
 syn region lilyString        start=/"/ end=/"/ skip=/\\"/
 syn region lilyComment       start="%{" skip="%$" end="%}"
 syn region lilyComment       start="%\([^{]\|$\)" end="$"
 syn match  lilyNumber        "[-_^.]\?\d\+[.]\?"
-syn match  lilySpecial       "[(~)]\|[(*)]"
-syn match  lilySpecial       "\\[()]"
-syn match  lilySpecial       "\\[({)\|(})]"
+syn match  lilySpecial       "[(~)]\|[(*)]\|[(:)]"
 syn match  lilyDynamics      "\\[<!>\\]"
 syn match  lilyArticulation  "[-_^][-_^+|>.]"
 
-match Delimiter "{\|}\|<\|>\|\[\|\]\|(\|)"
 syn include @embeddedScheme syntax/scheme.vim
 unlet b:current_syntax
 syn region lilyScheme matchgroup=Delimiter start="#['`]\?(" matchgroup=Delimiter end=")" contains=@embeddedScheme
