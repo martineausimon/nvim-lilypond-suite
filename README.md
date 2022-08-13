@@ -115,10 +115,17 @@ sudo pacman -S mpv ffmpeg
 
 ### Lighter syntax highlightings
 
-The full syntax highlighting can be a little slow. Add this line to your `init.lua` to use a lighter syntax file :
+Since the last big update [7df532e](https://github.com/martineausimon/nvim-lilypond-suite/commit/7df532ef0476299b03cc72e3160e13c7ae54488c), I changed my method for syntax highlighting and avoided word lists as much as possible, for more lightness. For now only the default language works for note pitches.
+
+>TODO : create pitches pattern for other languages
+
+Recommended settings in `init.lua` :
 
 ```lua
-vim.g.nvls_light = true
+vim.api.nvim_create_autocmd('VimEnter', { 
+	command = "syntax sync fromstart",
+	pattern = { '*.ly', '*.ily' }
+})
 ```
 
 ### QuickFix
@@ -139,8 +146,8 @@ local hi = vim.api.nvim_set_hl
 hi(0, 'Keyword',        {ctermfg = "yellow",       bold = true})
 hi(0, 'Tag',            {ctermfg = "blue"})
 hi(0, 'Label',          {ctermfg = "lightYellow"})
-hi(0, 'StorageClass',   {ctermfg = "lightGreen",   bold = true})
 hi(0, 'SpecialComment', {ctermfg = "lightCyan"})
+hi(0, 'SpecialChar',    {ctermfg = "lightMagenta", bold = true})
 hi(0, 'PreCondit',      {ctermfg = "cyan"})
 ```
 ### Recommended settings for Auto-completion
