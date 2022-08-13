@@ -130,31 +130,31 @@ syn region lilyMarkup
 
 
 command -nargs=+ HiLink hi def link <args>
-	HiLink lilyString              String
-	HiLink lilyDynamics            SpecialChar
-	HiLink lilyComment             Comment
-	HiLink lilyNumber              Constant
-	HiLink lilySpecial             SpecialChar
-	HiLink lilyValue               PreCondit
-	HiLink lilySymbol              PreCondit
-	HiLink lilyLyrics              Special
-	HiLink lilyInnerLyrics         Special
-	HiLink lilyFunctions					 Statement
-	HiLink lilyDynamics						 SpecialChar
-	HiLink lilyArticulation				 PreProc
-	HiLink lilyContexts						 Type
-	HiLink lilyGrobs							 Include
-	HiLink lilyGrobsExcpt          Include
-	HiLink lilyTranslators				 Type
-	HiLink lilyClefs							 Label
-	HiLink lilyAccidentalsStyles	 Tag
-	HiLink lilyRepeatTypes				 Label
-	HiLink lilyPitchLanguageNames  Label
-	HiLink lilyMisc								 SpecialComment
-	HiLink lilyVar								 Tag
-	HiLink lilyPaperVariables			 SpecialComment
-	HiLink lilyMarkupCommands      Keyword 
-	HiLink lilyPitches             Function
+	HiLink lilyString             String
+	HiLink lilyDynamics           SpecialChar
+	HiLink lilyComment            Comment
+	HiLink lilyNumber             Constant
+	HiLink lilySpecial            SpecialChar
+	HiLink lilyValue              PreCondit
+	HiLink lilySymbol             PreCondit
+	HiLink lilyLyrics             Special
+	HiLink lilyInnerLyrics        Special
+	HiLink lilyFunctions          Statement
+	HiLink lilyDynamics           SpecialChar
+	HiLink lilyArticulation       PreProc
+	HiLink lilyContexts           Type
+	HiLink lilyGrobs              Include
+	HiLink lilyGrobsExcpt         Include
+	HiLink lilyTranslators        Type
+	HiLink lilyClefs              Label
+	HiLink lilyAccidentalsStyles  Tag
+	HiLink lilyRepeatTypes        Label
+	HiLink lilyPitchLanguageNames Label
+	HiLink lilyMisc               SpecialComment
+	HiLink lilyVar                Tag
+	HiLink lilyPaperVariables     SpecialComment
+	HiLink lilyMarkupCommands     Keyword
+	HiLink lilyPitches            Function
 delcommand HiLink
 
 let b:current_syntax = "lilypond"
