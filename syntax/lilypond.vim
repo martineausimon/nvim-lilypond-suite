@@ -37,7 +37,10 @@ syn cluster lilyMatchGroup contains=
 	\lilyPitchLanguageNames,
 	\lilyMisc,
 	\lilyVar,
-	\lilyPaperVariables
+	\lilyAltVar1,
+	\lilyAltVar2,
+	\Error
+"	\lilyPaperVariables
 
 syn region lilyMatcher	
 	\ matchgroup=Delimiter
@@ -73,9 +76,10 @@ syn match lilyPitches        "\<\([a-g]\|s\|R\|r\)
 syn match lilyMarkupCommands "[-_^]\?\\\([^ ]*[\n ]\)"
 syn match lilyFunctions      "[-_^]\?\\\([^ ]*[\n ]\)"
 syn match lilyVar            "\(\i\|\-\)\+\s\+="me=e-1
-syn match lilyVar            "\.\l\(\-\|\u\|\l\)\+"ms=s+1
-
-syn match lilyPaperVariables "\(auto-first-page-number\|binding-offset\|blank-last-page-penalty\|blank-page-penalty\|bottom-margin\|check-consistency\|evenHeaderMarkup\|first-page-number\|footnote-separator-markup\|horizontal-shift\|indent\|inner-margin\|last-bottom-spacing\|left-margin\|line-width\|markup-markup-spacing\|markup-system-spacing\|max-systems-per-page\|min-systems-per-page\|minimum-distance\|oddHeaderMarkup\|outer-margin\|page-breaking-system-system-spacing\|page-breaking\|page-count\|page-number-type\|page-spacing-weight\|paper-height\|paper-width\|print-all-headers\|print-first-page-number\|ragged-bottom\|ragged-last-bottom\|ragged-last\|ragged-right\|right-margin\|score-markup-spacing\|score-system-spacing\|short-indent\|stretchability\|system-count\|system-separator-markup\|system-system-spacing\|systems-per-page\|top-margin\|top-markup-spacing\|top-system-spacing\|two-sided\)\(\A\|\n\)"me=e-1
+syn match lilyAltVar2        "\l\(\-\|\u\|\l\)\+\."me=e-1
+  \ display contained nextgroup=lilyVar
+syn match lilyAltVar1        "\l\(\-\|\u\|\l\)\+\."he=e-1 
+  \	display nextgroup=lilyAltVar2
 
 syn match lilyClefs "\<\(C\|F\|G\|G2\|GG\|alto\|altovarC\|baritone\|baritonevarC\|baritonevarF\|bass\|blackmensural-c1\|blackmensural-c2\|blackmensural-c3\|blackmensural-c4\|blackmensural-c5\|french\|hufnagel-do-fa\|hufnagel-do1\|hufnagel-do2\|hufnagel-do3\|hufnagel-fa1\|hufnagel-fa2\|kievan-do\|medicaea-do1\|medicaea-do2\|medicaea-do3\|medicaea-fa1\|medicaea-fa2\|mensural-c1\|mensural-c2\|mensural-c3\|mensural-c4\|mensural-c5\|mensural-f\|mensural-g\|mezzosoprano\|moderntab\|neomensural-c1\|neomensural-c2\|neomensural-c3\|neomensural-c4\|neomensural-c5\|percussion\|petrucci-c1\|petrucci-c2\|petrucci-c3\|petrucci-c4\|petrucci-c5\|petrucci-f\|petrucci-f2\|petrucci-f3\|petrucci-f4\|petrucci-f5\|petrucci-g\|petrucci-g1\|petrucci-g2\|soprano\|subbass\|tab\|tenor\|tenorG\|tenorvarC\|treble\|varC\|varbaritone\|varpercussion\|vaticana-do1\|vaticana-do2\|vaticana-do3\|vaticana-fa1\|vaticana-fa2\|violin\)\(\A\|\n\)"
 
@@ -118,12 +122,12 @@ syn region lilyLyrics
 	\ matchgroup=lilyLyrics
 	\ start="\(\\addlyrics\s\+{\|\\lyricmode\s\+{\|\\lyricsto\s\+\"\+\l\+\"\+\s\+{\)"
 	\ end="}"
-	\ contains=ALLBUT,lilyGrobs,lilyPitches
+	\ contains=ALLBUT,lilyGrobs,lilyPitches,Error
 
 syn match lilyGrobsExcpt "LyricText"
 
 syn region lilyMarkup
-	\ matchgroup=lilyFunctions 
+	\ matchgroup=lilyFunctions
 	\ start="\([\_\^\-]\\markup\s\+{\|\\markup\s\+{\)"
 	\ end="}" 
 	\ contains=ALLBUT,lilyFunctions,lilyInnerLyrics
@@ -152,9 +156,14 @@ command -nargs=+ HiLink hi def link <args>
 	HiLink lilyPitchLanguageNames Label
 	HiLink lilyMisc               SpecialComment
 	HiLink lilyVar                Tag
-	HiLink lilyPaperVariables     SpecialComment
+	HiLink lilyAltVar1            PreCondit
+	HiLink lilyAltVar2            SpecialComment
 	HiLink lilyMarkupCommands     Keyword
 	HiLink lilyPitches            Function
 delcommand HiLink
+
+syn match Error "}"
+syn match Error "\l\+\d[',]\+"
+syn match Error "\<\\tuplet\s\+{"
 
 let b:current_syntax = "lilypond"
