@@ -22,6 +22,7 @@ This is a plugin (Neovim only) for **LilyPond** with updated syntax and dictiona
 	* Commands
 	* Player mappings
 * [Settings](#Settings)
+	* Lighter syntax highlighting
 	* QuickFix
 	* Recommended highlightings
 	* Recommended settings for Auto-completion
@@ -113,7 +114,7 @@ sudo pacman -S mpv ffmpeg
 
 ## SETTINGS
 
-### Lighter syntax highlightings
+### Lighter syntax highlighting
 
 Since the last big update [7df532e](https://github.com/martineausimon/nvim-lilypond-suite/commit/7df532ef0476299b03cc72e3160e13c7ae54488c), I changed my method for syntax highlighting and avoided word lists as much as possible, for more lightness. For now only the default language works for note pitches.
 
