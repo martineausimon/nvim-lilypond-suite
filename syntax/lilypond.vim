@@ -2,9 +2,8 @@ if exists('b:current_syntax')
 	finish 
 endif
 
-if exists("b:current_syntax")
-	unlet b:current_syntax
-endif
+let s:keepcpo= &cpo
+set cpo&vim
 
 setlocal mps+=<:>
 
@@ -40,7 +39,6 @@ syn cluster lilyMatchGroup contains=
 	\lilyAltVar1,
 	\lilyAltVar2,
 	\Error
-"	\lilyPaperVariables
 
 syn region lilyMatcher	
 	\ matchgroup=Delimiter
@@ -73,8 +71,8 @@ syn match lilyPitches        "\<\([a-g]\|s\|R\|r\)
 	\\(1024\|512\|256\|128\|64\|32\|16\|8\|4\|2\|1\|\)
 	\\(\M.\+\|\|\)
 	\\(\A\|\n\)"me=e-1
-syn match lilyMarkupCommands "[-_^]\?\\\([^ ]*[\n ]\)"
-syn match lilyFunctions      "[-_^]\?\\\([^ ]*[\n ]\)"
+syn match lilyMarkupCommands "\\\a\(\i\|\-\)\+"
+syn match lilyFunctions      "\\\a\(\i\|\-\)\+"
 syn match lilyVar            "\(\i\|\-\)\+\s\+="me=e-1
 syn match lilyAltVar2        "\l\(\-\|\u\|\l\)\+\."me=e-1
   \ display contained nextgroup=lilyVar
@@ -115,8 +113,14 @@ syn region lilyScheme
 	\ end=")" 
 	\ contains=@Scheme
 
-syn region lilyInnerLyrics matchgroup=Delimiter start="{" end="}" contained contains=ALLBUT,lilyGrobs,lilyPitches
-syn region lilyInnerLyrics matchgroup=Delimiter start="<" end=">" contained contains=ALLBUT,lilyGrobs,lilyPitches
+syn region lilyInnerLyrics 
+	\ matchgroup=Delimiter 
+	\ start="{" end="}" 
+	\ contained contains=ALLBUT,lilyGrobs,lilyPitches
+syn region lilyInnerLyrics 
+	\ matchgroup=Delimiter 
+	\ start="<" end=">" 
+	\ contained contains=ALLBUT,lilyGrobs,lilyPitches
 
 syn region lilyLyrics
 	\ matchgroup=lilyLyrics
@@ -129,9 +133,8 @@ syn match lilyGrobsExcpt "LyricText"
 syn region lilyMarkup
 	\ matchgroup=lilyFunctions
 	\ start="\([\_\^\-]\\markup\s\+{\|\\markup\s\+{\)"
-	\ end="}" 
+	\ end="}"
 	\ contains=ALLBUT,lilyFunctions,lilyInnerLyrics
-
 
 command -nargs=+ HiLink hi def link <args>
 	HiLink lilyString             String
@@ -164,6 +167,9 @@ delcommand HiLink
 
 syn match Error "}"
 syn match Error "\l\+\d[',]\+"
-syn match Error "\<\\tuplet\s\+{"
+syn match Error "\<\\tuplet\(\s\|\)\+{"me=e-1
 
 let b:current_syntax = "lilypond"
+
+let &cpo = s:keepcpo
+unlet s:keepcpo
