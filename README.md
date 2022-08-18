@@ -1,10 +1,10 @@
 # nvim-lilypond-suite
 
-This is a plugin (Neovim only) for **LilyPond** with updated syntax and dictionary for auto-completion. This repository also contains an ftplugin for **LaTeX** files which allows embedded LilyPond syntax highlighting, and makeprg which support `lilypond-book` or `lyluatex` package out of the box.
+This is a plugin (Neovim only) for **LilyPond** with fast syntax highlighting and dictionary for auto-completion. This repository also contains an ftplugin for **LaTeX** files which allows embedded LilyPond syntax highlighting, and makeprg which support `lilypond-book` or `lyluatex` package out of the box.
 
 ## FEATURES
 
-* **Updated syntax file** using the last [Pygments syntax highlighter for LilyPond](https://github.com/pygments/pygments/blob/master/pygments/lexers/_lilypond_builtins.py)
+* **Better syntax file for LilyPond**
 * **Asynchronous :make** - compile in background without freezing Neovim
 * **mp3 player in floating window** (LilyPond only) - convert and play midi file while writing score (using `mpv`, `fluidsynth` & `ffmpeg`)
 * **Simple ftplugin for LilyPond** with `makeprg`, correct `errorformat`
@@ -16,20 +16,20 @@ This is a plugin (Neovim only) for **LilyPond** with updated syntax and dictiona
 </p>
 
 * [Installation](#Installation)
-	* nvim-lilypond-suite
-	* Dependences
+  * nvim-lilypond-suite
+  * Dependences
 * [Mappings](#Mappings)
-	* Commands
-	* Player mappings
+  * Commands
+  * Player mappings
 * [Settings](#Settings)
-	* Lighter syntax highlighting
-	* QuickFix
-	* Recommended highlightings
-	* Recommended settings for Auto-completion
-	* Point & click configuration
+  * Lighter syntax highlighting
+  * QuickFix
+  * Recommended highlightings
+  * Recommended settings for Auto-completion
+  * Point & click configuration
 * [LaTex](#LaTex)
-	* Clean log files on exit
-	* Tricks for lilypond-book
+  * Clean log files on exit
+  * Tricks for lilypond-book
 * [License](#License)
 
 ---
@@ -124,8 +124,8 @@ Recommended settings in `init.lua` :
 
 ```lua
 vim.api.nvim_create_autocmd('VimEnter', { 
-	command = "syntax sync fromstart",
-	pattern = { '*.ly', '*.ily' }
+  command = "syntax sync fromstart",
+  pattern = { '*.ly', '*.ily' }
 })
 ```
 
@@ -135,8 +135,8 @@ This plugin have no defaults for `QuickFixCmdPost` event. You can configure your
 
 ```lua
 vim.api.nvim_create_autocmd( 'QuickFixCmdPost', { 
-	command = "cwindow",
-	pattern = "*"
+  command = "cwindow",
+  pattern = "*"
 })
 ```
 ### Recommended highlightings
@@ -185,7 +185,7 @@ Recommended pdf viewer : [zathura](https://pwmt.org/projects/zathura/) with [zat
 
 Add this line to `~/.config/zathura/zathurarc` :
 
-	set synctex-editor-command "lilypond-invoke-editor %s"
+  set synctex-editor-command "lilypond-invoke-editor %s"
 
 Install [neovim-remote](https://github.com/mhinz/neovim-remote) and add this line to `~/.profile` :
 
