@@ -1,5 +1,5 @@
 if exists('b:current_syntax')
-	finish 
+  finish 
 endif
 
 let s:keepcpo= &cpo
@@ -10,74 +10,74 @@ setlocal mps+=<:>
 syn case match
 
 syn cluster lilyMatchGroup contains=
-	\lilyMatcher,
-	\lilyPitches,
-	\lilyFunctions,
-	\lilyString,
-	\lilyValue,
-	\lilySymbol,
-	\lilyComment,
-	\lilyNumber,
-	\lilySpecial,
-	\lilyDynamics,
-	\lilyArticulation,
-	\lilyScheme,
-	\lilyLyrics,
-	\lilyMarkup,
-	\lilyDynamics,
-	\lilyScales,
-	\lilyArticulation,
-	\lilyContexts,
-	\lilyGrobs,
-	\lilyTranslators,
-	\lilyClefs,
-	\lilyAccidentalsStyles,
-	\lilyRepeatTypes,
-	\lilyPitchLanguageNames,
-	\lilyMisc,
-	\lilyVar,
-	\lilyAltVar1,
-	\lilyAltVar2,
-	\Error
+  \lilyMatcher,
+  \lilyPitches,
+  \lilyFunctions,
+  \lilyString,
+  \lilyValue,
+  \lilySymbol,
+  \lilyComment,
+  \lilyNumber,
+  \lilySpecial,
+  \lilyDynamics,
+  \lilyArticulation,
+  \lilyScheme,
+  \lilyLyrics,
+  \lilyMarkup,
+  \lilyDynamics,
+  \lilyScales,
+  \lilyArticulation,
+  \lilyContexts,
+  \lilyGrobs,
+  \lilyTranslators,
+  \lilyClefs,
+  \lilyAccidentalsStyles,
+  \lilyRepeatTypes,
+  \lilyPitchLanguageNames,
+  \lilyMisc,
+  \lilyVar,
+  \lilyAltVar1,
+  \lilyAltVar2,
+  \Error
 
-syn region lilyMatcher	
-	\ matchgroup=Delimiter
-	\ start="{"
-	\ skip="\\\\\|\\[<>]"
-	\ end="}"
-	\ contains=@lilyMatchGroup 
-	\ fold
+syn region lilyMatcher  
+  \ matchgroup=Delimiter
+  \ start="{"
+  \ skip="\\\\\|\\[<>]"
+  \ end="}"
+  \ contains=@lilyMatchGroup 
+  \ fold
 
-syn region lilyMatcher	
-	\ matchgroup=Delimiter
-	\ start="\["
-	\ end="]"
-	\ contains=@lilyMatchGroup
-	\ fold
+syn region lilyMatcher  
+  \ matchgroup=Delimiter
+  \ start="\["
+  \ end="]"
+  \ contains=@lilyMatchGroup
+  \ fold
 
-syn region lilyMatcher	
-	\ matchgroup=Delimiter 
-	\ start="<" 
-	\ skip="\\\\\|\\[{<>}]" 
-	\ end=">"	
-	\ contains=@lilyMatchGroup 
-	\ fold
+syn region lilyMatcher  
+  \ matchgroup=Delimiter 
+  \ start="<" 
+  \ skip="\\\\\|\\[{<>}]" 
+  \ end=">" 
+  \ contains=@lilyMatchGroup 
+  \ fold
 
 syn match lilyGrobs          "\<\u\a\+\>"
 syn match lilyPitches        "\<\([a-g]\|s\|R\|r\)
-	\\(\(\is\)\+\|\(es\)\+\|\|\)
-	\\(\'\+\|\,\+\|\)
-	\\(?\|!\|\|\)
-	\\(1024\|512\|256\|128\|64\|32\|16\|8\|4\|2\|1\|\)
-	\\(\M.\+\|\|\)
-	\\(\A\|\n\)"me=e-1
+  \\(\(\is\)\+\|\(es\)\+\|\|\)
+  \\(\'\+\|\,\+\|\)
+  \\(?\|!\|\|\)
+  \\(1024\|512\|256\|128\|64\|32\|16\|8\|4\|2\|1\|\)
+  \\(\M.\+\|\|\)
+  \\(\A\|\n\)"me=e-1
 syn match lilyMarkupCommands "\\\a\(\i\|\-\)\+"
 syn match lilyFunctions      "\\\a\(\i\|\-\)\+"
-syn match lilyVar            "\(\i\|\-\)\+\s\+="me=e-1
+syn match lilyVar            "\(\i\|\-\)\+\(\s\|\)\+="me=e-1
 syn match lilyAltVar2        "\l\(\-\|\u\|\l\)\+\."me=e-1
   \ display contained nextgroup=lilyVar
 syn match lilyAltVar1        "\l\(\-\|\u\|\l\)\+\."he=e-1 
-  \	display nextgroup=lilyAltVar2
+  \ display nextgroup=lilyAltVar2
 
 syn match lilyClefs "\<\(C\|F\|G\|G2\|GG\|alto\|altovarC\|baritone\|baritonevarC\|baritonevarF\|bass\|blackmensural-c1\|blackmensural-c2\|blackmensural-c3\|blackmensural-c4\|blackmensural-c5\|french\|hufnagel-do-fa\|hufnagel-do1\|hufnagel-do2\|hufnagel-do3\|hufnagel-fa1\|hufnagel-fa2\|kievan-do\|medicaea-do1\|medicaea-do2\|medicaea-do3\|medicaea-fa1\|medicaea-fa2\|mensural-c1\|mensural-c2\|mensural-c3\|mensural-c4\|mensural-c5\|mensural-f\|mensural-g\|mezzosoprano\|moderntab\|neomensural-c1\|neomensural-c2\|neomensural-c3\|neomensural-c4\|neomensural-c5\|percussion\|petrucci-c1\|petrucci-c2\|petrucci-c3\|petrucci-c4\|petrucci-c5\|petrucci-f\|petrucci-f2\|petrucci-f3\|petrucci-f4\|petrucci-f5\|petrucci-g\|petrucci-g1\|petrucci-g2\|soprano\|subbass\|tab\|tenor\|tenorG\|tenorvarC\|treble\|varC\|varbaritone\|varpercussion\|vaticana-do1\|vaticana-do2\|vaticana-do3\|vaticana-fa1\|vaticana-fa2\|violin\)\(\A\|\n\)"
 
@@ -100,74 +100,74 @@ syn match  lilySymbol       "#'[^'(0-9 ]*[\n ]"ms=s+2
 syn region lilyString       start=/"/            end=/"/   skip=/\\"/
 syn region lilyComment      start="%{"           skip="%$" end="%}"
 syn region lilyComment      start="%\([^{]\|$\)" end="$"
-syn match  lilySpecial      "[(~)]\|[(*)]\|[(:)]"
+syn match  lilySpecial      "[(~)]\|[(*)]\|[(:)]\|[(=)]"
 syn match  lilyDynamics     "\\[<!>\\]"
 syn match  lilyArticulation "[-_^][-_^+|>.]"
 syn match  lilyNumber       "[-_^.]\?\(\-\.\|\|\)\d\+[.]\?"
 
+syn match Error "}"
+syn match Error "\l\+\d[',]\+"
+syn match Error "\<\\tuplet\(\s\|\)\+{"me=e-1
+
 syn include @Scheme syntax/scheme.vim
 unlet b:current_syntax
 syn region lilyScheme
-	\ matchgroup=Delimiter 
-	\ start="#['`]\?(" 
-	\ end=")" 
-	\ contains=@Scheme
+  \ matchgroup=Delimiter 
+  \ start="#['`]\?(" 
+  \ end=")" 
+  \ contains=@Scheme
 
 syn region lilyInnerLyrics 
-	\ matchgroup=Delimiter 
-	\ start="{" end="}" 
-	\ contained contains=ALLBUT,lilyGrobs,lilyPitches
+  \ matchgroup=Delimiter 
+  \ start="{" end="}" 
+  \ contained contains=ALLBUT,lilyGrobs,lilyPitches
 syn region lilyInnerLyrics 
-	\ matchgroup=Delimiter 
-	\ start="<" end=">" 
-	\ contained contains=ALLBUT,lilyGrobs,lilyPitches
+  \ matchgroup=Delimiter 
+  \ start="<" end=">" 
+  \ contained contains=ALLBUT,lilyGrobs,lilyPitches
 
 syn region lilyLyrics
-	\ matchgroup=lilyLyrics
-	\ start="\(\\addlyrics\s\+{\|\\lyricmode\s\+{\|\\lyricsto\s\+\"\+\l\+\"\+\s\+{\)"
-	\ end="}"
-	\ contains=ALLBUT,lilyGrobs,lilyPitches,Error
+  \ matchgroup=lilyLyrics
+  \ start="\(\\addlyrics\s\+{\|\\lyricmode\s\+{\|\\lyricsto\s\+\"\+\l\+\"\+\s\+{\)"
+  \ end="}"
+  \ contains=ALLBUT,lilyGrobs,lilyPitches,Error
 
 syn match lilyGrobsExcpt "LyricText"
 
 syn region lilyMarkup
-	\ matchgroup=lilyFunctions
-	\ start="\([\_\^\-]\\markup\s\+{\|\\markup\s\+{\)"
-	\ end="}"
-	\ contains=ALLBUT,lilyFunctions,lilyInnerLyrics
+  \ matchgroup=lilyFunctions
+  \ start="\([\_\^\-]\\markup\s\+{\|\\markup\s\+{\)"
+  \ end="}"
+  \ contains=ALLBUT,lilyFunctions,lilyInnerLyrics
 
 command -nargs=+ HiLink hi def link <args>
-	HiLink lilyString             String
-	HiLink lilyDynamics           SpecialChar
-	HiLink lilyComment            Comment
-	HiLink lilyNumber             Constant
-	HiLink lilySpecial            SpecialChar
-	HiLink lilyValue              PreCondit
-	HiLink lilySymbol             PreCondit
-	HiLink lilyLyrics             Special
-	HiLink lilyInnerLyrics        Special
-	HiLink lilyFunctions          Statement
-	HiLink lilyDynamics           SpecialChar
-	HiLink lilyArticulation       PreProc
-	HiLink lilyContexts           Type
-	HiLink lilyGrobs              Include
-	HiLink lilyGrobsExcpt         Include
-	HiLink lilyTranslators        Type
-	HiLink lilyClefs              Label
-	HiLink lilyAccidentalsStyles  Tag
-	HiLink lilyRepeatTypes        Label
-	HiLink lilyPitchLanguageNames Label
-	HiLink lilyMisc               SpecialComment
-	HiLink lilyVar                Tag
-	HiLink lilyAltVar1            PreCondit
-	HiLink lilyAltVar2            SpecialComment
-	HiLink lilyMarkupCommands     Keyword
-	HiLink lilyPitches            Function
+  HiLink lilyString             String
+  HiLink lilyDynamics           SpecialChar
+  HiLink lilyComment            Comment
+  HiLink lilyNumber             Constant
+  HiLink lilySpecial            SpecialChar
+  HiLink lilyValue              PreCondit
+  HiLink lilySymbol             PreCondit
+  HiLink lilyLyrics             Special
+  HiLink lilyInnerLyrics        Special
+  HiLink lilyFunctions          Statement
+  HiLink lilyDynamics           SpecialChar
+  HiLink lilyArticulation       PreProc
+  HiLink lilyContexts           Type
+  HiLink lilyGrobs              Include
+  HiLink lilyGrobsExcpt         Include
+  HiLink lilyTranslators        Type
+  HiLink lilyClefs              Label
+  HiLink lilyAccidentalsStyles  Tag
+  HiLink lilyRepeatTypes        Label
+  HiLink lilyPitchLanguageNames Label
+  HiLink lilyMisc               SpecialComment
+  HiLink lilyVar                Tag
+  HiLink lilyAltVar1            PreCondit
+  HiLink lilyAltVar2            SpecialComment
+  HiLink lilyMarkupCommands     Keyword
+  HiLink lilyPitches            Function
 delcommand HiLink
-
-syn match Error "}"
-syn match Error "\l\+\d[',]\+"
-syn match Error "\<\\tuplet\(\s\|\)\+{"me=e-1
 
 let b:current_syntax = "lilypond"
 
