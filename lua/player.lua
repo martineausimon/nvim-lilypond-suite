@@ -44,7 +44,7 @@ key(lilyPlayer.bufnr, 'n', 'q',
 key(lilyPlayer.bufnr, 't', 'q',
   "<cmd>bw!<cr>", {noremap = true})
 key(lilyPlayer.bufnr, 't', '<A-Space>',
-  "<cmd>stopinsert<cr><C-w>w" {noremap = true})
+  "<cmd>stopinsert<cr><C-w>w", {noremap = true})
 key(lilyPlayer.bufnr, 'n', '<A-Space>',
   "<C-w>w", {noremap = true})
 key(lilyPlayer.bufnr, 't', '<Esc>',
