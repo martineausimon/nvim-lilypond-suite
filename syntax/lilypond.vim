@@ -63,22 +63,6 @@ syn region lilyMatcher
   \ contains=@lilyMatchGroup 
   \ fold
 
-syn match lilyGrobs          "\<\u\a\+\>"
-syn match lilyPitches        "\<\([a-g]\|s\|R\|r\)
-  \\(\(\is\)\+\|\(es\)\+\|\|\)
-  \\(\'\+\|\,\+\|\)
-  \\(?\|!\|\|\)
-  \\(1024\|512\|256\|128\|64\|32\|16\|8\|4\|2\|1\|\)
-  \\(\M.\+\|\|\)
-  \\(\A\|\n\)"me=e-1
-syn match lilyMarkupCommands "\\\a\(\i\|\-\)\+"
-syn match lilyFunctions      "\\\a\(\i\|\-\)\+"
-syn match lilyVar            "\(\i\|\-\)\+\(\s\|\)\+="me=e-1
-syn match lilyAltVar2        "\l\(\-\|\u\|\l\)\+\."me=e-1
-  \ display contained nextgroup=lilyVar
-syn match lilyAltVar1        "\l\(\-\|\u\|\l\)\+\."he=e-1 
-  \ display nextgroup=lilyAltVar2
-
 syn match lilyClefs "\<\(C\|F\|G\|G2\|GG\|alto\|altovarC\|baritone\|baritonevarC\|baritonevarF\|bass\|blackmensural-c1\|blackmensural-c2\|blackmensural-c3\|blackmensural-c4\|blackmensural-c5\|french\|hufnagel-do-fa\|hufnagel-do1\|hufnagel-do2\|hufnagel-do3\|hufnagel-fa1\|hufnagel-fa2\|kievan-do\|medicaea-do1\|medicaea-do2\|medicaea-do3\|medicaea-fa1\|medicaea-fa2\|mensural-c1\|mensural-c2\|mensural-c3\|mensural-c4\|mensural-c5\|mensural-f\|mensural-g\|mezzosoprano\|moderntab\|neomensural-c1\|neomensural-c2\|neomensural-c3\|neomensural-c4\|neomensural-c5\|percussion\|petrucci-c1\|petrucci-c2\|petrucci-c3\|petrucci-c4\|petrucci-c5\|petrucci-f\|petrucci-f2\|petrucci-f3\|petrucci-f4\|petrucci-f5\|petrucci-g\|petrucci-g1\|petrucci-g2\|soprano\|subbass\|tab\|tenor\|tenorG\|tenorvarC\|treble\|varC\|varbaritone\|varpercussion\|vaticana-do1\|vaticana-do2\|vaticana-do3\|vaticana-fa1\|vaticana-fa2\|violin\)\(\A\|\n\)"
 
 syn match lilyRepeatTypes "\<\(percent\|segno\|tremolo\|unfold\|volta\)\(\A\|\n\)"
@@ -90,6 +74,22 @@ syn match lilyAccidentalsStyles "\<\(choral-cautionary\|choral\|default\|dodecap
 syn match lilyDynamics "[-_^]\?\\\(cr\|cresc\|decr\|decresc\|dim\|endcr\|endcresc\|enddecr\|enddecresc\|enddim\|f\|ff\|fff\|ffff\|fffff\|fp\|fz\|mf\|mp\|n\|p\|pp\|ppp\|pppp\|ppppp\|rfz\|sf\|sff\|sfp\|sfz\|sp\|spp\)\(\A\|\n\)"me=e-1
 
 syn match lilyContexts "\(\\\|\<\)\(AncientRemoveEmptyStaffContext\|ChoirStaff\|ChordNames\|CueVoice\|Devnull\|DrumStaff\|DrumVoice\|Dynamics\|FiguredBass\|FretBoards\|Global\|GrandStaff\|GregorianTranscriptionStaff\|GregorianTranscriptionVoice\|KievanStaff\|KievanVoice\|Lyrics\|MensuralStaff\|MensuralVoice\|NoteNames\|NullVoice\|OneStaff\|PetrucciStaff\|PetrucciVoice\|PianoStaff\|RemoveEmptyDrumStaffContext\|RemoveEmptyRhythmicStaffContext\|RemoveEmptyStaffContext\|RemoveEmptyTabStaffContext\|RhythmicStaff\|Score\|Staff\|StaffGroup\|TabStaff\|TabVoice\|VaticanaStaff\|VaticanaVoice\|Voice\)\(\A\|\n\)"me=e-1
+syn match lilyGrobs          "\<\u\a\+\>"
+syn match lilyPitches        "\<\([a-g]\|s\|R\|r\)
+  \\(\(\is\)\+\|\(es\)\+\|\|\)
+  \\(\'\+\|\,\+\|\)
+  \\(?\|!\|\|\)
+  \\(1024\|512\|256\|128\|64\|32\|16\|8\|4\|2\|1\|\)
+  \\(\M.\+\|\|\)
+  \\(\A\|\n\)"me=e-1
+
+syn match lilyMarkupCommands "\\\a\(\i\|\-\)\+"
+syn match lilyFunctions      "\\\a\(\i\|\-\)\+"
+syn match lilyVar            "\(\i\|\-\)\+\(\s\|\)\+="me=e-1
+syn match lilyAltVar2        "\l\(\-\|\u\|\l\)\+\."me=e-1
+  \ display contained nextgroup=lilyVar
+syn match lilyAltVar1        "\l\(\-\|\u\|\l\)\+\."he=e-1 
+  \ display nextgroup=lilyAltVar2
 
 syn match lilyTranslators "\u\l\+\(_\)\w*\(engraver\|performer\|translator\)"
 
