@@ -73,8 +73,12 @@ syn match lilyAccidentalsStyles "\<\(choral-cautionary\|choral\|default\|dodecap
 
 syn match lilyDynamics "[-_^]\?\\\(cr\|cresc\|decr\|decresc\|dim\|endcr\|endcresc\|enddecr\|enddecresc\|enddim\|f\|ff\|fff\|ffff\|fffff\|fp\|fz\|mf\|mp\|n\|p\|pp\|ppp\|pppp\|ppppp\|rfz\|sf\|sff\|sfp\|sfz\|sp\|spp\)\(\A\|\n\)"me=e-1
 
-syn match lilyContexts "\(\\\|\<\)\(AncientRemoveEmptyStaffContext\|ChoirStaff\|ChordNames\|CueVoice\|Devnull\|DrumStaff\|DrumVoice\|Dynamics\|FiguredBass\|FretBoards\|Global\|GrandStaff\|GregorianTranscriptionStaff\|GregorianTranscriptionVoice\|KievanStaff\|KievanVoice\|Lyrics\|MensuralStaff\|MensuralVoice\|NoteNames\|NullVoice\|OneStaff\|PetrucciStaff\|PetrucciVoice\|PianoStaff\|RemoveEmptyDrumStaffContext\|RemoveEmptyRhythmicStaffContext\|RemoveEmptyStaffContext\|RemoveEmptyTabStaffContext\|RhythmicStaff\|Score\|Staff\|StaffGroup\|TabStaff\|TabVoice\|VaticanaStaff\|VaticanaVoice\|Voice\)\(\A\|\n\)"me=e-1
 syn match lilyGrobs          "\<\u\a\+\>"
+syn match lilyMarkupCommands "\\\a\(\i\|\-\)\+"
+syn match lilyFunctions      "\\\a\(\i\|\-\)\+"
+
+syn match lilyContexts "\(\\\|\<\)\(AncientRemoveEmptyStaffContext\|ChoirStaff\|ChordNames\|CueVoice\|Devnull\|DrumStaff\|DrumVoice\|Dynamics\|FiguredBass\|FretBoards\|Global\|GrandStaff\|GregorianTranscriptionStaff\|GregorianTranscriptionVoice\|KievanStaff\|KievanVoice\|Lyrics\|MensuralStaff\|MensuralVoice\|NoteNames\|NullVoice\|OneStaff\|PetrucciStaff\|PetrucciVoice\|PianoStaff\|RemoveEmptyDrumStaffContext\|RemoveEmptyRhythmicStaffContext\|RemoveEmptyStaffContext\|RemoveEmptyTabStaffContext\|RhythmicStaff\|Score\|Staff\|StaffGroup\|TabStaff\|TabVoice\|VaticanaStaff\|VaticanaVoice\|Voice\)\(\A\|\n\)"me=e-1
+
 syn match lilyPitches        "\<\([a-g]\|s\|R\|r\)
   \\(\(\is\)\+\|\(es\)\+\|\|\)
   \\(\'\+\|\,\+\|\)
@@ -83,8 +87,6 @@ syn match lilyPitches        "\<\([a-g]\|s\|R\|r\)
   \\(\M.\+\|\|\)
   \\(\A\|\n\)"me=e-1
 
-syn match lilyMarkupCommands "\\\a\(\i\|\-\)\+"
-syn match lilyFunctions      "\\\a\(\i\|\-\)\+"
 syn match lilyVar            "\(\i\|\-\)\+\(\s\|\)\+="me=e-1
 syn match lilyAltVar2        "\l\(\-\|\u\|\l\)\+\."me=e-1
   \ display contained nextgroup=lilyVar
@@ -158,7 +160,7 @@ command -nargs=+ HiLink hi def link <args>
   HiLink lilyGrobsExcpt         Include
   HiLink lilyTranslators        Type
   HiLink lilyClefs              Label
-  HiLink lilyAccidentalsStyles  Tag
+  HiLink lilyAccidentalsStyles  Label
   HiLink lilyRepeatTypes        Label
   HiLink lilyPitchLanguageNames Label
   HiLink lilyMisc               SpecialComment
