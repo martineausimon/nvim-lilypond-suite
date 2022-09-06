@@ -12,10 +12,9 @@ local lilyWords = expand('<sfile>:p:h') .. '/../lilywords'
 vim.g.lilywords = lilyWords
 vim.cmd[[let $LILYDICTPATH = g:lilywords]]
 
-vim.b.lilyFolder    = vim.fn.shellescape(vim.fn.expand('%:p:h'))
 vim.b.lilyplay     = expand('<sfile>:p:h') .. '/../lua/player.lua'
 vim.b.nvls_pdf     = vim.fn.shellescape(expand('%:p:r') .. '.pdf')
-vim.b.nvls_makeprg = 'lilypond -o' .. vim.b.lilyFolder .. ' %:p:S'
+vim.b.nvls_makeprg = 'lilypond -o%:p:r:S %:p:S'
 vim.b.nvls_efm     = '%+G%f:%l:%c:, %f:%l:%c: %m,%-G%.%#'
 
 vim.bo.autoindent = true
