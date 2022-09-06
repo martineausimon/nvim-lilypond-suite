@@ -201,7 +201,7 @@ Reboot or reload with `. ~/.profile`
 
 This plugin works with `lilypond-book` by default if the `.tex` file contains `\begin{lilypond}`. To use `lyluatex`, just add `\usepackage{lyluatex}` to your preamble. 
 
->NOTE : `lyluatex` package does not allow files containing spaces, and does not allow compiling in a folder other than the working folder
+>NOTE : `lyluatex` package does not allow files containing spaces, and does not allow compiling in a directory other than the working directory
 
 Syntax highlighting can be slow with embedded LilyPond, you can use `<F3>` to activate or deactivate it.
 
