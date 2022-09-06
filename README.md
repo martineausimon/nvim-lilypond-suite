@@ -15,28 +15,28 @@ This is a plugin (Neovim only) for **LilyPond** with fast syntax highlighting an
 <img src="https://github.com/martineausimon/nvim-lilypond-suite/blob/main/screenshoot.png">
 </p>
 
-* [Installation](#Installation)
-  * nvim-lilypond-suite
-  * Dependences
-* [Mappings](#Mappings)
-  * Commands
-  * Player mappings
-* [Settings](#Settings)
-  * Lighter syntax highlighting
-  * QuickFix
-  * Recommended highlightings
-  * Recommended settings for Auto-completion
-  * Point & click configuration
-* [LaTex](#LaTex)
-  * Clean log files on exit
-  * Tricks for lilypond-book
+* [Installation](#installation)
+  * [nvim-lilypond-suite](#nvim-lilypond-suite-plugin)
+  * [Dependences](#dependences)
+* [Mappings](#mappings)
+  * [Commands](#commands)
+  * [Player mappings](#player-mappings-lilypond-only)
+* [Settings](#settings)
+  * [Lighter syntax highlighting](#lighter-syntax-highlighting)
+  * [QuickFix](#quickfix)
+  * [Recommended highlightings](#recommended-highlightings)
+  * [Recommended settings for Auto-completion](#recommended-settings-for-auto-completion)
+  * [Point & click configuration](#my-neovim-settings-for-point-click)
+* [LaTex](#latex)
+  * [Clean log files on exit](#clean-log-files-on-exit)
+  * [Tricks for lilypond-book](#tricks-for-lilypond-book)
 * [License](#License)
 
 ---
 
 ## INSTALLATION
 
-### nvim-lilypond-suite
+### nvim-lilypond-suite plugin
 
 * Using [packer.nvim](https://github.com/wbthomason/packer.nvim)
 
@@ -200,6 +200,8 @@ Reboot or reload with `. ~/.profile`
 ## LaTex
 
 This plugin works with `lilypond-book` by default if the `.tex` file contains `\begin{lilypond}`. To use `lyluatex`, just add `\usepackage{lyluatex}` to your preamble. 
+
+>NOTE : `lyluatex` package does not allow files containing spaces, and does not allow compiling in a folder other than the working folder
 
 Syntax highlighting can be slow with embedded LilyPond, you can use `<F3>` to activate or deactivate it.
 
