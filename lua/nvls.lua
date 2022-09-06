@@ -1,3 +1,4 @@
+local shellescape = vim.fn.shellescape
 local M = {}
 
 function M.make()
@@ -17,8 +18,8 @@ function M.make()
         efm = vim.b.nvls_efm,
       })
       vim.api.nvim_exec_autocmds("QuickFixCmdPost", {})
-      if vim.b.nvls_makeprg == "lilypond-book " .. 
-      "--output=tmpOutDir --pdf %:p:S" then
+      if vim.b.nvls_makeprg == "lilypond-book --output=" .. 
+        shellescape(vim.b.tmpOutDir) .. " %:p:S" then
         require('tex').lytexCmp()
       else
         print(' ')
