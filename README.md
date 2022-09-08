@@ -1,4 +1,4 @@
-#nvim-lilypond-suite
+# nvim-lilypond-suite
 
 This is a plugin (Neovim only) for **LilyPond** with fast syntax highlighting and dictionary for auto-completion. This repository also contains an ftplugin for **LaTeX** files which allows embedded LilyPond syntax highlighting, and makeprg which support `lilypond-book` or `lyluatex` package out of the box.
 
