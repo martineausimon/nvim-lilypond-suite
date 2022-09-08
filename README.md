@@ -38,7 +38,7 @@ This is a plugin (Neovim only) for **LilyPond** with fast syntax highlighting an
 
 ### nvim-lilypond-suite plugin
 
-> This plugin requires Nvim >= 0.7
+> **⚠ This plugin requires Nvim >= 0.7**
 
 * Using [packer.nvim](https://github.com/wbthomason/packer.nvim)
 
