@@ -21,7 +21,6 @@ vim.bo.autoindent = true
 vim.bo.tabstop    = 2
 vim.bo.shiftwidth = 2
 vim.o.showmatch   = true
-vim.opt_local.shortmess:append('c')
 vim.opt_local.iskeyword:append([[-]])
 vim.opt_local.iskeyword:append([[\]])
 vim.opt_local.complete:append('k')
