@@ -1,16 +1,14 @@
-local lilyMidiFile = vim.fn.shellescape(vim.fn.expand('%:p:r') .. '.midi')
-local lilyAudioFile = vim.fn.shellescape(vim.fn.expand('%:p:r') .. '.mp3')
-vim.g.lilyAudioFile = lilyAudioFile
-
 local M = {}
 
 function M.lilyPlayer()
   if vim.fn.empty(vim.fn.glob("%:r.midi")) == 0 then
-    vim.fn.execute('!rm -rf ' .. lilyAudioFile .. ' && ' ..
-      'fluidsynth -T raw -F - ' .. lilyMidiFile .. 
-      ' -s | ffmpeg -f s32le -i - ' .. lilyAudioFile
-    )
-    dofile(vim.b.lilyplay)
+    print('Converting ' .. vim.fn.expand('%:r') .. '.midi to mp3...') 
+    vim.b.nvls_cmd = "fluidsynth"
+    vim.b.nvls_makeprg = 'rm -rf ' .. vim.g.lilyAudioFile .. ' && ' ..
+      vim.b.nvls_cmd .. ' -T raw -F - ' .. vim.g.lilyMidiFile .. 
+      ' -s | ffmpeg -f s32le -i - ' .. vim.g.lilyAudioFile
+    vim.b.nvls_efm = " " 
+    require('nvls').make()
   else
     if vim.fn.empty(vim.fn.glob("%:r.mp3")) > 0 then
       print("[LilyPlayer] No mp3 file in working directory")

@@ -43,11 +43,13 @@ function M.SelectMakePrgType()
 end
 
 function M.lytexCmp()
-  vim.b.nvls_makeprg = "cd " .. shellescape(vim.b.tmpOutDir) .. " && lualatex " ..
-    "--output-directory=" .. shellescape(expand('%:p:h')) ..
+  vim.b.nvls_cmd = "lualatex"
+  vim.b.nvls_makeprg = "cd " .. shellescape(vim.b.tmpOutDir) .. 
+  " && " .. vim.b.nvls_cmd ..
+    " --output-directory=" .. shellescape(expand('%:p:h')) ..
     " --shell-escape " ..
-    "--interaction=nonstopmode " .. shellescape(vim.b.tmpOutDir .. expand('%:t:r') .. '.tex') -- && " ..
-    --"cd %:p:h && mv %:p:h/tmpOutDir/%:t:r.pdf %:p:h"
+    "--interaction=nonstopmode " .. 
+    shellescape(vim.b.tmpOutDir .. expand('%:t:r') .. '.tex')
   vim.b.nvls_efm = "%+G! LaTeX %trror: %m," ..
     "%+GLaTeX %.%#Warning: %.%#line %l%.%#," ..
     "%+GLaTeX %.%#Warning: %m," ..
@@ -56,10 +58,11 @@ function M.lytexCmp()
 end
 
 function M.lualatexCmp()
-  vim.b.nvls_makeprg = "lualatex " ..
-    "--output-directory=" .. shellescape(expand('%:p:h')) .. 
-    " --shell-escape " ..
-    "--interaction=nonstopmode %:p:S"
+  vim.b.nvls_cmd = "lualatex"
+  vim.b.nvls_makeprg = vim.b.nvls_cmd ..
+    " --output-directory=" .. shellescape(expand('%:p:h')) .. 
+    " --shell-escape" ..
+    " --interaction=nonstopmode %:p:S"
   vim.b.nvls_efm = "%+G! LaTeX %trror: %m," ..
     "%+GLaTeX %.%#Warning: %.%#line %l%.%#," ..
     "%+GLaTeX %.%#Warning: %m," ..
@@ -68,7 +71,9 @@ function M.lualatexCmp()
 end
 
 function M.lilypondBookCmp()
-  vim.b.nvls_makeprg = "lilypond-book --output=" .. shellescape(vim.b.tmpOutDir) .. " %:p:S"
+  vim.b.nvls_cmd = "lilypond-book"
+  vim.b.nvls_makeprg = vim.b.nvls_cmd .. 
+    " --output=" .. shellescape(vim.b.tmpOutDir) .. " %:p:S"
   vim.b.nvls_efm = '%+G%f:%l:%c:, %f:%l:%c: %m,%-G%.%#'
   require('nvls').make()
 end

@@ -12,10 +12,13 @@ local lilyWords = expand('<sfile>:p:h') .. '/../lilywords'
 vim.g.lilywords = lilyWords
 vim.cmd[[let $LILYDICTPATH = g:lilywords]]
 
+vim.g.lilyMidiFile = vim.fn.shellescape(vim.fn.expand('%:p:r') .. '.midi')
+vim.g.lilyAudioFile = vim.fn.shellescape(vim.fn.expand('%:p:r') .. '.mp3')
 vim.b.lilyplay     = expand('<sfile>:p:h') .. '/../lua/player.lua'
-vim.b.nvls_pdf     = vim.fn.shellescape(expand('%:p:r') .. '.pdf')
-vim.b.nvls_makeprg = 'lilypond -o%:p:r:S %:p:S'
+vim.b.nvls_cmd     = "lilypond"
+vim.b.nvls_makeprg = vim.b.nvls_cmd .. ' -o%:p:r:S %:p:S'
 vim.b.nvls_efm     = '%+G%f:%l:%c:, %f:%l:%c: %m,%-G%.%#'
+vim.b.nvls_pdf     = vim.fn.shellescape(expand('%:p:r') .. '.pdf')
 
 vim.bo.autoindent = true
 vim.bo.tabstop    = 2
@@ -29,6 +32,9 @@ lilyCmd('LilyPlayer', function() require('lilypond').lilyPlayer() end, {})
 lilyCmd('Viewer',     function() require('nvls').viewer()         end, {})
 lilyCmd('LilyCmp',    function() 
     vim.fn.execute('write')
+    vim.b.nvls_cmd = "lilypond"
+    vim.b.nvls_makeprg = vim.b.nvls_cmd .. ' -o%:p:r:S %:p:S'
+    vim.b.nvls_efm     = '%+G%f:%l:%c:, %f:%l:%c: %m,%-G%.%#'
     require('nvls').make()
   end,
 {})

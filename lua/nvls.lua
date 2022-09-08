@@ -18,10 +18,13 @@ function M.make()
         efm = vim.b.nvls_efm,
       })
       vim.api.nvim_exec_autocmds("QuickFixCmdPost", {})
-      if vim.b.nvls_makeprg == "lilypond-book --output=" .. 
-        shellescape(vim.b.tmpOutDir) .. " %:p:S" then
+      if vim.b.nvls_cmd == "lilypond-book" then
         require('tex').lytexCmp()
-      else
+      elseif vim.b.nvls_cmd == "fluidsynth" then
+        vim.fn.execute('stopinsert')
+        print(' ')
+        dofile(vim.b.lilyplay)
+      else    
         print(' ')
       end
     end
