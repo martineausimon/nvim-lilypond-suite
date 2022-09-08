@@ -187,7 +187,9 @@ Recommended pdf viewer : [zathura](https://pwmt.org/projects/zathura/) with [zat
 
 Add this line to `~/.config/zathura/zathurarc` :
 
-  set synctex-editor-command "lilypond-invoke-editor %s"
+```bash
+set synctex-editor-command "lilypond-invoke-editor %s"
+```
 
 Install [neovim-remote](https://github.com/mhinz/neovim-remote) and add this line to `~/.profile` :
 
