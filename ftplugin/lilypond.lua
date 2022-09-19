@@ -1,24 +1,27 @@
-if vim.g.loaded_nvls then
-  return
-end
-
-vim.g.loaded_nvls = true
-
-local expand    = vim.fn.expand
-local lilyMap   = vim.api.nvim_buf_set_keymap
-local lilyHi    = vim.api.nvim_set_hl
-local lilyCmd   = vim.api.nvim_create_user_command
-local lilyWords = expand('<sfile>:p:h') .. '/../lilywords'
-vim.g.lilywords = lilyWords
+local expand      = vim.fn.expand
+local lilyMap     = vim.api.nvim_buf_set_keymap
+local lilyHi      = vim.api.nvim_set_hl
+local lilyCmd     = vim.api.nvim_create_user_command
+local lilyAutoCmd = vim.api.nvim_create_autocmd
+local lilyWords   = expand('<sfile>:p:h') .. '/../lilywords'
+local g           = vim.g
+local b           = vim.b
+g.lilywords   = lilyWords
 vim.cmd[[let $LILYDICTPATH = g:lilywords]]
 
-vim.g.lilyMidiFile = vim.fn.shellescape(vim.fn.expand('%:p:r') .. '.midi')
-vim.g.lilyAudioFile = vim.fn.shellescape(vim.fn.expand('%:p:r') .. '.mp3')
-vim.b.lilyplay     = expand('<sfile>:p:h') .. '/../lua/player.lua'
-vim.b.nvls_cmd     = "lilypond"
-vim.b.nvls_makeprg = vim.b.nvls_cmd .. ' -o%:p:r:S %:p:S'
-vim.b.nvls_efm     = '%+G%f:%l:%c:, %f:%l:%c: %m,%-G%.%#'
-vim.b.nvls_pdf     = vim.fn.shellescape(expand('%:p:r') .. '.pdf')
+require('lilypond').DefineMainFile()
+
+g.lilyMidiFile = expand(
+  "'" .. g.nvls_main_name:gsub("'", "") .. ".midi'")
+g.lilyAudioFile = expand(
+  "'" .. g.nvls_main_name:gsub("'", "") .. ".mp3'")
+b.lilyplay     = expand('<sfile>:p:h') .. '/../lua/player.lua'
+b.nvls_cmd     = "lilypond"
+b.nvls_makeprg = vim.b.nvls_cmd .. " -o" .. 
+  g.nvls_main_name .. ' ' .. g.nvls_main
+b.nvls_efm     = '%+G%f:%l:%c:, %f:%l:%c: %m,%-G%.%#'
+b.nvls_pdf     = expand(
+  "'" .. g.nvls_main_name:gsub("'", "") .. ".pdf'")
 
 vim.bo.autoindent = true
 vim.bo.tabstop    = 2
@@ -28,13 +31,24 @@ vim.opt_local.iskeyword:append([[-]])
 vim.opt_local.iskeyword:append([[\]])
 vim.opt_local.complete:append('k')
 
-lilyCmd('LilyPlayer', function() require('lilypond').lilyPlayer() end, {})
-lilyCmd('Viewer',     function() require('nvls').viewer()         end, {})
+lilyCmd('LilyPlayer', function() 
+  require('lilypond').DefineMainFile()
+  require('lilypond').lilyPlayer() 
+  end, 
+{})
+
+lilyCmd('Viewer', function() 
+  require('lilypond').DefineMainFile()
+  require('nvls').viewer()
+  end,
+{})
 lilyCmd('LilyCmp',    function() 
+    require('lilypond').DefineMainFile()
     vim.fn.execute('write')
-    vim.b.nvls_cmd = "lilypond"
-    vim.b.nvls_makeprg = vim.b.nvls_cmd .. ' -o%:p:r:S %:p:S'
-    vim.b.nvls_efm     = '%+G%f:%l:%c:, %f:%l:%c: %m,%-G%.%#'
+    b.nvls_cmd = "lilypond"
+    b.nvls_makeprg = vim.b.nvls_cmd .. " -o" .. 
+      g.nvls_main_name .. ' ' .. g.nvls_main
+    b.nvls_efm     = '%+G%f:%l:%c:, %f:%l:%c: %m,%-G%.%#'
     require('nvls').make()
   end,
 {})
