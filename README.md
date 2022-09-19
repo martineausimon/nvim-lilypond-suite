@@ -8,6 +8,7 @@ This is a plugin (Neovim only) for **LilyPond** with fast syntax highlighting an
 * **Asynchronous :make** - compile in background without freezing Neovim
 * **mp3 player in floating window** (LilyPond only) - convert and play midi file while writing score (using `mpv`, `fluidsynth` & `ffmpeg`)
 * **Simple ftplugin for LilyPond** with `makeprg`, correct `errorformat`
+* **Compile only main file when working on multiple files project**
 * **ftplugin for TeX files** whith detect and allows embedded LilyPond syntax, adaptive `makeprg` function for `lyluatex` or `lilypond-book`, correct `errorformat`
 * **Easy Point & Click configuration**
 
@@ -24,6 +25,7 @@ This is a plugin (Neovim only) for **LilyPond** with fast syntax highlighting an
 * [Settings](#settings)
   * [Lighter syntax highlighting](#lighter-syntax-highlighting)
   * [QuickFix](#quickfix)
+  * [Multiple files projects](#multiple-files-projects)
   * [Recommended highlightings](#recommended-highlightings)
   * [Recommended settings for Auto-completion](#recommended-settings-for-auto-completion)
   * [Point & click configuration](#my-neovim-settings-for-point-click)
@@ -141,6 +143,15 @@ vim.api.nvim_create_autocmd( 'QuickFixCmdPost', {
   pattern = "*"
 })
 ```
+
+### Multiple files projects
+
+When working on a multiple files project, with `\include`d sources in a main file, only the file called `main.ly` is selected for compilation, open pdf and play midi. You can define a custom main file by creating a `.lilyrc` file in the project directory containing:
+
+```lua
+vim.g.nvls_main = "/complete/path/to/custom/main/file.ly"
+```
+
 ### Recommended highlightings
 
 ```lua
