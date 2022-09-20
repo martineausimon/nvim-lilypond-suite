@@ -28,25 +28,28 @@ end
 
 function M.DefineMainFile()
   local expand = vim.fn.expand
+
   if vim.fn.empty(vim.fn.glob('%:p:h' .. '/.lilyrc')) == 0 then
     dofile(expand('%:p:h') .. '/.lilyrc')
     if not g.nvls_main then 
       print('error in .lilyrc')
     end
     g.nvls_main = "'" .. g.nvls_main .. "'"
-    g.nvls_main_name = g.nvls_main:gsub('%.(.*)', "'")
-    g.nvls_short = g.nvls_main:match('/([^/]+)$'):gsub('%.(.*)', '')
   else
     if vim.fn.empty(vim.fn.glob(expand('%:p:h') .. '/main.ly')) == 0 then
       g.nvls_main = "'" .. expand('%:p:h') .. "/main.ly'"
-      g.nvls_main_name = g.nvls_main:gsub('%.(.*)', "'")
-      g.nvls_short = g.nvls_main:match('/([^/]+)$'):gsub('%.(.*)', '')
     else
       g.nvls_main = expand('%:p:S')
-      g.nvls_main_name = g.nvls_main:gsub('%.(.*)', "'")
-      g.nvls_short = g.nvls_main:match('/([^/]+)$'):gsub('%.(.*)', '')
     end
   end
+
+  local name,out = g.nvls_main:gsub("%.(ly')", "'")
+  if out == 0 then
+    name,out = g.nvls_main:gsub("%.(ily')", "'")
+  end
+  g.nvls_main_name = name
+  g.nvls_short = g.nvls_main_name:match('/([^/]+)$'):gsub("'", "")
+
 end
 
 return M
