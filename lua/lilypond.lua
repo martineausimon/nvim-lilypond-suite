@@ -27,21 +27,21 @@ function M.lilyPlayer()
 end
 
 function M.DefineMainFile()
-  -- default : main file is current file
+-- default : main file is current file
   g.nvls_main = expand('%:p:S')
 
-  -- if folder containing opened contains .lilyrc, read it
-  -- (and overwrite vim.g.nvls_main)
+-- if folder containing opened file contains .lilyrc, read it
+-- (and overwrite vim.g.nvls_main)
   if fn.empty(fn.glob('%:p:h' .. '/.lilyrc')) == 0 then
     dofile(expand('%:p:h') .. '/.lilyrc')
     g.nvls_main = "'" .. g.nvls_main .. "'"
 
-  -- if folder containing file contains main.ly, main file is main.ly
+-- if folder containing opened file contains main.ly, main file is main.ly
   elseif fn.empty(fn.glob(expand('%:p:h') .. '/main.ly')) == 0 then
       g.nvls_main = "'" .. expand('%:p:h') .. "/main.ly'"
   end
 
-  -- create sub variables from vim.g.nvls_main variable
+-- create sub variables from vim.g.nvls_main variable
   local name,out = g.nvls_main:gsub("%.(ly')", "'")
   if out == 0 then
     name,out = g.nvls_main:gsub("%.(ily')", "'")
