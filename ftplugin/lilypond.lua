@@ -33,25 +33,30 @@ vim.opt_local.complete:append('k')
 
 lilyCmd('LilyPlayer', function() 
   require('lilypond').DefineMainFile()
+  g.lilyMidiFile = expand(
+    "'" .. g.nvls_main_name:gsub("'", "") .. ".midi'")
+  g.lilyAudioFile = expand(
+    "'" .. g.nvls_main_name:gsub("'", "") .. ".mp3'")
   require('lilypond').lilyPlayer() 
-  end, 
-{})
+end, {})
 
 lilyCmd('Viewer', function() 
   require('lilypond').DefineMainFile()
+  print('Opening ' .. g.nvls_short .. '.pdf...')
+  b.nvls_pdf = expand(
+  "'" .. g.nvls_main_name:gsub("'", "") .. ".pdf'")
   require('nvls').viewer()
-  end,
-{})
+end, {})
 lilyCmd('LilyCmp',    function() 
-    require('lilypond').DefineMainFile()
-    vim.fn.execute('write')
-    b.nvls_cmd = "lilypond"
-    b.nvls_makeprg = vim.b.nvls_cmd .. " -o" .. 
-      g.nvls_main_name .. ' ' .. g.nvls_main
-    b.nvls_efm     = '%+G%f:%l:%c:, %f:%l:%c: %m,%-G%.%#'
-    require('nvls').make()
-  end,
-{})
+  require('lilypond').DefineMainFile()
+  vim.fn.execute('write')
+  print('Compiling ' .. g.nvls_short .. '.ly...')
+  b.nvls_cmd = "lilypond"
+  b.nvls_makeprg = vim.b.nvls_cmd .. " -o" .. 
+    g.nvls_main_name .. ' ' .. g.nvls_main
+  b.nvls_efm     = '%+G%f:%l:%c:, %f:%l:%c: %m,%-G%.%#'
+  require('nvls').make()
+end, {})
 
 lilyMap(0, 'n', '<F3>',      ":LilyPlayer<cr>",    {noremap = true})
 lilyMap(0, 'n', '<F4>',
