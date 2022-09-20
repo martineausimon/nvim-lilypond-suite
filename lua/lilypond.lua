@@ -1,13 +1,13 @@
-local g = vim.g
-local b = vim.b
+local g, b, fn = vim.g, vim.b, vim.fn
+local expand = fn.expand
 
 local M = {}
 
 function M.lilyPlayer()
-  if vim.fn.empty(
-    vim.fn.glob(vim.fn.expand('%:p:h') 
+  if fn.empty(
+    fn.glob(expand('%:p:h') 
     .. '/' .. g.nvls_short .. '.midi')) == 0 then
-    print('Converting ' .. vim.g.nvls_short .. '.midi to mp3...') 
+    print('Converting ' .. g.nvls_short .. '.midi to mp3...') 
     b.nvls_cmd = "fluidsynth"
     b.nvls_makeprg = 'rm -rf ' .. g.lilyAudioFile .. ' && ' ..
       b.nvls_cmd .. ' -T raw -F - ' .. g.lilyMidiFile .. 
@@ -15,34 +15,33 @@ function M.lilyPlayer()
     b.nvls_efm = " " 
     require('nvls').make()
   else
-    if vim.fn.empty(
-      vim.fn.glob(vim.fn.expand('%:p:h') 
+    if fn.empty(
+      fn.glob(expand('%:p:h') 
         .. '/' .. g.nvls_short .. '.mp3')) > 0 then
       print("[LilyPlayer] No mp3 file in working directory")
       do return end
     else
-      dofile(vim.b.lilyplay)
+      dofile(b.lilyplay)
     end
   end
 end
 
 function M.DefineMainFile()
-  local expand = vim.fn.expand
+  -- default : main file is current file
+  g.nvls_main = expand('%:p:S')
 
-  if vim.fn.empty(vim.fn.glob('%:p:h' .. '/.lilyrc')) == 0 then
+  -- if folder containing opened contains .lilyrc, read it
+  -- (and overwrite vim.g.nvls_main)
+  if fn.empty(fn.glob('%:p:h' .. '/.lilyrc')) == 0 then
     dofile(expand('%:p:h') .. '/.lilyrc')
-    if not g.nvls_main then 
-      print('error in .lilyrc')
-    end
     g.nvls_main = "'" .. g.nvls_main .. "'"
-  else
-    if vim.fn.empty(vim.fn.glob(expand('%:p:h') .. '/main.ly')) == 0 then
+
+  -- if folder containing file contains main.ly, main file is main.ly
+  elseif fn.empty(fn.glob(expand('%:p:h') .. '/main.ly')) == 0 then
       g.nvls_main = "'" .. expand('%:p:h') .. "/main.ly'"
-    else
-      g.nvls_main = expand('%:p:S')
-    end
   end
 
+  -- create sub variables from vim.g.nvls_main variable
   local name,out = g.nvls_main:gsub("%.(ly')", "'")
   if out == 0 then
     name,out = g.nvls_main:gsub("%.(ily')", "'")
