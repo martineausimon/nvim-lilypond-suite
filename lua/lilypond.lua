@@ -26,7 +26,7 @@ function M.lilyPlayer()
   end
 end
 
-function M.DefineMainFile()
+function M.DefineLilyVars()
 -- default : main file is current file
   g.nvls_main = expand('%:p:S')
 
@@ -41,6 +41,11 @@ function M.DefineMainFile()
       g.nvls_main = "'" .. expand('%:p:h') .. "/main.ly'"
   end
 
+-- if vim.g.nvls_main_file exists, define nvls_main from here :
+  if g.nvls_main_file then
+  g.nvls_main = "'" .. g.nvls_main_file .. "'"
+  end
+
 -- create sub variables from vim.g.nvls_main variable
   local name,out = g.nvls_main:gsub("%.(ly')", "'")
   if out == 0 then
@@ -48,6 +53,18 @@ function M.DefineMainFile()
   end
   g.nvls_main_name = name
   g.nvls_short = g.nvls_main_name:match('/([^/]+)$'):gsub("'", "")
+  g.lilyMidiFile = expand(
+    "'" .. g.nvls_main_name:gsub("'", "") .. ".midi'")
+  g.lilyAudioFile = expand(
+    "'" .. g.nvls_main_name:gsub("'", "") .. ".mp3'")
+  b.nvls_pdf = expand(
+  "'" .. g.nvls_main_name:gsub("'", "") .. ".pdf'")
+
+  -- other vars for async :make
+  b.nvls_cmd = "lilypond"
+  b.nvls_makeprg = vim.b.nvls_cmd .. " -o" .. 
+    g.nvls_main_name .. ' ' .. g.nvls_main
+  b.nvls_efm     = '%+G%f:%l:%c:, %f:%l:%c: %m,%-G%.%#'
 
 end
 
