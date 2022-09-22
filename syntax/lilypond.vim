@@ -80,11 +80,11 @@ syn match lilyContexts "\(\\\|\<\)\(AncientRemoveEmptyStaffContext\|ChoirStaff\|
 syn match lilyDynamics "[-_^]\?\\\(cr\|cresc\|decr\|decresc\|dim\|endcr\|endcresc\|enddecr\|enddecresc\|enddim\|f\|ff\|fff\|ffff\|fffff\|fp\|fz\|mf\|mp\|n\|p\|pp\|ppp\|pppp\|ppppp\|rfz\|sf\|sff\|sfp\|sfz\|sp\|spp\)\(\A\|\n\)"me=e-1
 
 syn match lilyPitches        "\<\([a-g]\|s\|R\|r\)
-  \\(\(\is\)\+\|\(es\)\+\|\|\)
+  \\(\(is\)\{,2}\|\(es\)\{,2}\|eh\|ih\|eseh\|isih\|\)
   \\(\'\+\|\,\+\|\)
-  \\(?\|!\|\|\)
+  \\(?\|!\|\)
   \\(1024\|512\|256\|128\|64\|32\|16\|8\|4\|2\|1\|\)
-  \\(\M.\+\|\|\)
+  \\(\M.\+\|\)
   \\(\A\|\n\)"me=e-1
 
 syn match lilyVar            "\(\i\|\-\)\+\(\s\|\)\+="me=e-1
