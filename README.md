@@ -127,7 +127,7 @@ Since the last big update [7df532e](https://github.com/martineausimon/nvim-lilyp
 Recommended settings in `init.lua` :
 
 ```lua
-vim.api.nvim_create_autocmd('VimEnter', { 
+vim.api.nvim_create_autocmd('BufEnter', { 
   command = "syntax sync fromstart",
   pattern = { '*.ly', '*.ily' }
 })
@@ -146,11 +146,27 @@ vim.api.nvim_create_autocmd( 'QuickFixCmdPost', {
 
 ### Multiple files projects
 
-When working on a multiple files project, with `\include`d sources in a main file, only the file called `main.ly` is selected for compilation, open pdf and play midi. You can define a custom main file by creating a `.lilyrc` file in the project directory containing:
+When working on a multiple files project, with `\include`d sources in a main file, only the file called `main.ly` is selected for compilation, open pdf and play midi. Two others options are availables to define a custom main file (see discussion with [niveK77pur](https://github.com/martineausimon/nvim-lilypond-suite/issues?q=is%3Aissue+is%3Aopen+author%3AniveK77pur) on [issue #3](https://github.com/martineausimon/nvim-lilypond-suite/issues/3) :
+
+##### using a local vimrc file
+
+If you already use a plugin like [exrc.nvim](https://github.com/MunifTanjim/exrc.nvim) to work with local nvim config files, I recommend using this variable to define a custom main lilypond file :
+
+```lua
+vim.g.nvls_main_file = /complete/path/to/custom/main/file.ly`
+```
+
+This variable is never overwrited by the plugin, be careful to not open severals projects already using this variable in the same nvim session, and always open files from working directory.
+
+##### using .lilyrc config file
+
+You can define a custom main file by creating a `.lilyrc` file in the project directory containing this variable (in lua only) :
 
 ```lua
 vim.g.nvls_main = "/complete/path/to/custom/main/file.ly"
 ```
+
+This one is called on each command (compile, open, play midi file), and should work if you open differents projects with differents main files in the same nvim session, even if you call files from another directory.
 
 ### Recommended highlightings
 
@@ -202,15 +218,15 @@ Add this line to `~/.config/zathura/zathurarc` :
 set synctex-editor-command "lilypond-invoke-editor %s"
 ```
 
-Install [neovim-remote](https://github.com/mhinz/neovim-remote) and add this line to `~/.profile` :
+Install [neovim-remote](https://github.com/mhinz/neovim-remote) and add this line to `~/.profile` (or `~/.bashrc`) :
 
 ```bash
-export LYEDITOR="nvr +:'call cursor(%(line)s,%(char)s)' %(file)s"
+export LYEDITOR="nvr -s +:'dr %(file)s' && nvr -s +:'call cursor(%(line)s,%(char)s+1)' %(file)s"
 ```
 
 Follow the instructions on the [LilyPond website](https://lilypond.org/doc/v2.23/Documentation/usage/configuring-the-system-for-point-and-click#) to configure the system and create `lilypond-invoke-editor.desktop`
 
-Reboot or reload with `. ~/.profile`
+Reboot or reload session
 
 ## LaTex
 
