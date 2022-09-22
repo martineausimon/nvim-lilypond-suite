@@ -221,8 +221,13 @@ set synctex-editor-command "lilypond-invoke-editor %s"
 Install [neovim-remote](https://github.com/mhinz/neovim-remote) and add this line to `~/.profile` (or `~/.bashrc`) :
 
 ```bash
-export LYEDITOR="nvr -s +:'dr %(file)s' && nvr -s +:'call cursor(%(line)s,%(char)s+1)' %(file)s"
+export LYEDITOR="nvr -s +:'dr %(file)s | call cursor(%(line)s,%(char)s+1)'"
 ```
+
+>Alternate `LYEDITOR` command, for [Okular](https://github.com/KDE/okular) :
+>```bash
+>export nvr +:'dr %f | call cursor(%l,%c+1)'
+>```
 
 Follow the instructions on the [LilyPond website](https://lilypond.org/doc/v2.23/Documentation/usage/configuring-the-system-for-point-and-click#) to configure the system and create `lilypond-invoke-editor.desktop`
 
