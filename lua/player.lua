@@ -1,10 +1,11 @@
 local lilyPopup = require("nui.popup")
-local event = require("nui.utils.autocmd").event
+--local event = require("nui.utils.autocmd").event
 
 local lilyPlayer = lilyPopup({
   enter = true,
   focusable = true,
   border = {
+    text = { top = "[" .. vim.g.nvls_short .. ".mp3]" },
     style = "single",
   },
     position = {
@@ -12,8 +13,8 @@ local lilyPlayer = lilyPopup({
     col = '99%',
   },
   size = {
-    width = 36,
-    height = 4,
+    width = 37,
+    height = 1,
   },
   buf_options = {
     modifiable = false,
@@ -27,9 +28,8 @@ local lilyPlayer = lilyPopup({
 lilyPlayer:mount()
 
 vim.api.nvim_buf_call(lilyPlayer.bufnr, function() 
-  vim.fn.execute("term mpv --loop --config-dir=/tmp/ " .. 
-    vim.g.lilyAudioFile
-  )
+  vim.fn.execute("term mpv --msg-level=cplayer=no,ffmpeg=no " ..
+    "--loop --config-dir=/tmp/ " .. vim.g.lilyAudioFile)
 end)
 
 local nrm = { noremap = true }
