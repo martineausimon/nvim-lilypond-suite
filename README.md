@@ -24,6 +24,7 @@ This is a plugin (Neovim only) for **LilyPond** with fast syntax highlighting an
   * [Player mappings](#player-mappings-lilypond-only)
 * [Settings](#settings)
   * [Lighter syntax highlighting](#lighter-syntax-highlighting)
+  * [Highlight pitches for others languages](#highlight-pitches-for-others-languages)
   * [QuickFix](#quickfix)
   * [Multiple files projects](#multiple-files-projects)
   * [Recommended highlightings](#recommended-highlightings)
@@ -120,9 +121,7 @@ sudo pacman -S mpv ffmpeg
 
 ### Lighter syntax highlighting
 
-Since the last big update [7df532e](https://github.com/martineausimon/nvim-lilypond-suite/commit/7df532ef0476299b03cc72e3160e13c7ae54488c), I changed my method for syntax highlighting and avoided word lists as much as possible, for more lightness. For now only the default language works for note pitches.
-
->TODO : create pitches pattern for other languages
+Since the last big update [7df532e](https://github.com/martineausimon/nvim-lilypond-suite/commit/7df532ef0476299b03cc72e3160e13c7ae54488c), I changed my method for syntax highlighting and avoided word lists as much as possible, for more lightness.
 
 Recommended settings in `init.lua` :
 
@@ -132,6 +131,16 @@ vim.api.nvim_create_autocmd('BufEnter', {
   pattern = { '*.ly', '*.ily' }
 })
 ```
+### Highlight pitches for others languages
+
+If you use others languages for pitch names, you can configure nvim-lilypond-suite to highlight the right words adding this variable to your `init.lua` :
+
+```lua
+vim.g.nvls_language = "english"
+```
+
+>For now, only *english*, *français* and *default* highlights are availables.  
+>TODO : create pitches pattern for other languages
 
 ### QuickFix
 
