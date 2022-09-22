@@ -13,7 +13,7 @@ This is a plugin (Neovim only) for **LilyPond** with fast syntax highlighting an
 * **Easy Point & Click configuration**
 
 <p align="center">
-<img src="https://github.com/martineausimon/nvim-lilypond-suite/blob/main/screenshoot.png">
+<img src="https://user-images.githubusercontent.com/89019438/191845626-4ba6224c-46c3-484f-a355-5cf10a66889f.png">
 </p>
 
 * [Installation](#installation)
