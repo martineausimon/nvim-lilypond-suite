@@ -74,8 +74,4 @@ function M.lilypondBookCmp()
   require('nvls').make()
 end
 
-function M.texViewer()
-  vim.fn.jobstart('xdg-open ' .. texPdfFile)
-end
-
 return M
