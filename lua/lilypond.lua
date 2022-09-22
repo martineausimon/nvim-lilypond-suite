@@ -14,39 +14,31 @@ function M.lilyPlayer()
       ' -s | ffmpeg -f s32le -i - ' .. g.lilyAudioFile
     b.nvls_efm = " " 
     require('nvls').make()
+  elseif fn.empty(
+    fn.glob(expand('%:p:h') 
+      .. '/' .. g.nvls_short .. '.mp3')) > 0 then
+    print("[LilyPlayer] No mp3 file in working directory")
+    do return end
   else
-    if fn.empty(
-      fn.glob(expand('%:p:h') 
-        .. '/' .. g.nvls_short .. '.mp3')) > 0 then
-      print("[LilyPlayer] No mp3 file in working directory")
-      do return end
-    else
-      dofile(b.lilyplay)
-    end
+    dofile(b.lilyplay)
   end
 end
 
 function M.DefineLilyVars()
--- default : main file is current file
   g.nvls_main = expand('%:p:S')
 
--- if folder containing opened file contains .lilyrc, read it
--- (and overwrite vim.g.nvls_main)
   if fn.empty(fn.glob('%:p:h' .. '/.lilyrc')) == 0 then
     dofile(expand('%:p:h') .. '/.lilyrc')
     g.nvls_main = "'" .. g.nvls_main .. "'"
 
--- if folder containing opened file contains main.ly, main file is main.ly
   elseif fn.empty(fn.glob(expand('%:p:h') .. '/main.ly')) == 0 then
       g.nvls_main = "'" .. expand('%:p:h') .. "/main.ly'"
   end
 
--- if vim.g.nvls_main_file exists, define nvls_main from here :
   if g.nvls_main_file then
   g.nvls_main = "'" .. g.nvls_main_file .. "'"
   end
 
--- create sub variables from vim.g.nvls_main variable
   local name,out = g.nvls_main:gsub("%.(ly')", "'")
   if out == 0 then
     name,out = g.nvls_main:gsub("%.(ily')", "'")
@@ -60,12 +52,10 @@ function M.DefineLilyVars()
   b.nvls_pdf = expand(
   "'" .. g.nvls_main_name:gsub("'", "") .. ".pdf'")
 
-  -- other vars for async :make
   b.nvls_cmd = "lilypond"
   b.nvls_makeprg = vim.b.nvls_cmd .. " -o" .. 
     g.nvls_main_name .. ' ' .. g.nvls_main
   b.nvls_efm     = '%+G%f:%l:%c:, %f:%l:%c: %m,%-G%.%#'
-
 end
 
 return M
