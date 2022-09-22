@@ -9,36 +9,32 @@ function M.DetectLilypondSyntax()
     vim.g.lytexSyn = 0
     vim.cmd[[set syntax=tex]]
     return
-  else
-    if vim.fn.search("begin{lilypond}", "n") ~= 0 then
-      vim.b.current_syntax = nil
-      vim.cmd('syntax include @TEX syntax/tex.vim')
-      vim.b.current_syntax = nil
-      vim.cmd('syntax include @lilypond syntax/lilypond.vim')
-      vim.cmd [[ 
-      syntax region litex 
-        \ matchgroup=Snip 
-        \ start="\\begin{lilypond}" 
-        \ end="\\end{lilypond}" 
-        \ containedin=@TEX 
-        \ contains=@lilypond
-      ]]
-      vim.cmd('filetype plugin on')
-      vim.b.current_syntax = "litex"
-      vim.g.lytexSyn = 1
-    end
+  elseif vim.fn.search("begin{lilypond}", "n") ~= 0 then
+    vim.b.current_syntax = nil
+    vim.cmd('syntax include @TEX syntax/tex.vim')
+    vim.b.current_syntax = nil
+    vim.cmd('syntax include @lilypond syntax/lilypond.vim')
+    vim.cmd [[ 
+    syntax region litex 
+      \ matchgroup=Snip 
+      \ start="\\begin{lilypond}" 
+      \ end="\\end{lilypond}" 
+      \ containedin=@TEX 
+      \ contains=@lilypond
+    ]]
+    vim.cmd('filetype plugin on')
+    vim.b.current_syntax = "litex"
+    vim.g.lytexSyn = 1
   end
 end
 
 function M.SelectMakePrgType()
   if vim.fn.search("usepackage{lyluatex}", "n") ~= 0 then
     require('tex').lualatexCmp()
-  else 
-    if vim.fn.search("begin{lilypond}", "n") ~= 0 then
-      require('tex').lilypondBookCmp()
-    else
-      require('tex').lualatexCmp()
-    end
+  elseif vim.fn.search("begin{lilypond}", "n") ~= 0 then
+    require('tex').lilypondBookCmp()
+  else
+    require('tex').lualatexCmp()
   end
 end
 
