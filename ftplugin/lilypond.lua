@@ -44,7 +44,7 @@ lilyMap(0, 'n', '<F3>',      ":LilyPlayer<cr>",    {noremap = true})
 lilyMap(0, 'n', '<F4>',
   [[0O\version<space>]] .. 
   [[<Esc>:read<Space>!lilypond<Space>-v]] ..
-  [[<Bar>grep<Space>LilyPond<Bar>cut<Space>-c<Space>14-19<cr>]] ..
+  [[<Bar>grep<Space>LilyPond<Bar>cut<Space>-c<Space>14-20<cr>]] ..
   [[kJi"<esc>6la"<esc>]],
   {noremap = true, silent = true}
 )
