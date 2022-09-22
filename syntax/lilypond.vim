@@ -2,6 +2,10 @@ if exists('b:current_syntax')
   finish 
 endif
 
+if !exists('g:nvls_language')
+  let g:nvls_language = "default"
+endif
+
 let s:keepcpo= &cpo
 set cpo&vim
 
@@ -79,13 +83,19 @@ syn match lilyContexts "\(\\\|\<\)\(AncientRemoveEmptyStaffContext\|ChoirStaff\|
 
 syn match lilyDynamics "[-_^]\?\\\(cr\|cresc\|decr\|decresc\|dim\|endcr\|endcresc\|enddecr\|enddecresc\|enddim\|f\|ff\|fff\|ffff\|fffff\|fp\|fz\|mf\|mp\|n\|p\|pp\|ppp\|pppp\|ppppp\|rfz\|sf\|sff\|sfp\|sfz\|sp\|spp\)\(\A\|\n\)"me=e-1
 
-syn match lilyPitches        "\<\([a-g]\|s\|R\|r\)
-  \\(\(is\)\{,2}\|\(es\)\{,2}\|eh\|ih\|eseh\|isih\|\)
-  \\(\'\+\|\,\+\|\)
-  \\(?\|!\|\)
-  \\(1024\|512\|256\|128\|64\|32\|16\|8\|4\|2\|1\|\)
-  \\(\M.\+\|\)
-  \\(\A\|\n\)"me=e-1
+if g:nvls_language == "français"
+  syn match lilyPitches "\<\(la\|si\|do\|re\|ré\|mi\|fa\|sol\|la\|s\|R\|r\)\(dd\|bb\|x\|sd\|sb\|dsd\|bsb\|d\|b\|\)"me=e-1
+  \ display nextgroup=lilyNotesAttr,lilySpecial
+elseif g:nvls_language == "english"
+  syn match lilyPitches "\<\([a-g]\|s\|R\|r\)\(ss\|ff\|x\|qs\|qf\|tqs\|tqf\|s\|f\|\-flatflat\|\-sharpsharp\|\-flat\|\-sharp\|\)"
+  \ display nextgroup=lilyNotesAttr,lilySpecial
+else
+syn match lilyPitches "\<\([a-g]\|s\|R\|r\)\(isis\|eses\|eh\|ih\|eseh\|isih\|is\|es\|\)\(\A\|\n\)"me=e-1
+  \ display nextgroup=lilyNotesAttr,lilySpecial
+endif
+
+syn match lilyNotesAttr "\(\'\+\|\,\+\|\)\(?\|!\|\)\(1024\|512\|256\|128\|64\|32\|16\|8\|4\|2\|1\|\)\(\M.\+\|\)\(\A\|\n\)"me=e-1 
+  \ display contained
 
 syn match lilyVar            "\(\i\|\-\)\+\(\s\|\)\+="me=e-1
 syn match lilyAltVar2        "\l\(\-\|\u\|\l\)\+\."me=e-1
@@ -132,7 +142,7 @@ syn region lilyLyrics
   \ matchgroup=lilyLyrics
   \ start="\(\\addlyrics\s\+{\|\\lyricmode\s\+{\|\\lyricsto\s\+\"\+\l\+\"\+\s\+{\)"
   \ end="}"
-  \ contains=ALLBUT,lilyGrobs,lilyPitches,Error
+  \ contains=ALLBUT,lilyGrobs,lilyPitches,Error,lilyNotesAttr,lilyAltVar1,lilyAltVar2
 
 syn match lilyGrobsExcpt "LyricText"
 
@@ -140,7 +150,7 @@ syn region lilyMarkup
   \ matchgroup=lilyFunctions
   \ start="\([\_\^\-]\\markup\s\+{\|\\markup\s\+{\)"
   \ end="}"
-  \ contains=ALLBUT,lilyFunctions,lilyInnerLyrics
+  \ contains=ALLBUT,lilyFunctions,lilyInnerLyrics,lilyNotesAttr
 
 command -nargs=+ HiLink hi def link <args>
   HiLink lilyString             String
@@ -169,6 +179,7 @@ command -nargs=+ HiLink hi def link <args>
   HiLink lilyAltVar2            SpecialComment
   HiLink lilyMarkupCommands     Keyword
   HiLink lilyPitches            Function
+  HiLink lilyNotesAttr          Function
 delcommand HiLink
 
 let b:current_syntax = "lilypond"
