@@ -153,7 +153,7 @@ When working on a multiple files project, with `\include`d sources in a main fil
 If you already use a plugin like [exrc.nvim](https://github.com/MunifTanjim/exrc.nvim) to work with local nvim config files, I recommend using this variable to define a custom main lilypond file :
 
 ```lua
-vim.g.nvls_main_file = /complete/path/to/custom/main/file.ly`
+vim.g.nvls_main_file = "/complete/path/to/custom/main/file.ly"
 ```
 
 This variable is never overwrited by the plugin, be careful to not open severals projects already using this variable in the same nvim session, and always open files from working directory.
@@ -224,9 +224,9 @@ Install [neovim-remote](https://github.com/mhinz/neovim-remote) and add this lin
 export LYEDITOR="nvr -s +:'dr %(file)s | call cursor(%(line)s,%(char)s+1)'"
 ```
 
->Alternate `LYEDITOR` command, for [Okular](https://github.com/KDE/okular) :
+>Alternate `custom text editor` command, for [Okular](https://github.com/KDE/okular) :
 >```bash
->export nvr +:'dr %f | call cursor(%l,%c+1)'
+>nvr +:'dr %f | call cursor(%l,%c+1)'
 >```
 
 Follow the instructions on the [LilyPond website](https://lilypond.org/doc/v2.23/Documentation/usage/configuring-the-system-for-point-and-click#) to configure the system and create `lilypond-invoke-editor.desktop`
