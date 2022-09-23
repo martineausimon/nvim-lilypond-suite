@@ -230,7 +230,7 @@ set synctex-editor-command "lilypond-invoke-editor %s"
 Install [neovim-remote](https://github.com/mhinz/neovim-remote) and add this line to `~/.profile` (or `~/.bashrc`) :
 
 ```bash
-export LYEDITOR="nvr -s +:'dr %(file)s | call cursor(%(line)s,%(char)s+1)'"
+export LYEDITOR="nvr -s +:'dr %(file)s | call cursor(%(line)s,%(char)s+2)'"
 ```
 
 >Alternate `custom text editor` command, for [Okular](https://github.com/KDE/okular) :
