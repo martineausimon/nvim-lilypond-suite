@@ -132,11 +132,13 @@ syn region lilyScheme
 syn region lilyInnerLyrics 
   \ matchgroup=Delimiter 
   \ start="{" end="}" 
-  \ contained contains=ALLBUT,lilyGrobs,lilyPitches
+  \ contained contains=ALLBUT,lilyGrobs,lilyPitches,Error,lilyNotesAttr,lilyAltVar1,lilyAltVar2
+
 syn region lilyInnerLyrics 
   \ matchgroup=Delimiter 
   \ start="<" end=">" 
-  \ contained contains=ALLBUT,lilyGrobs,lilyPitches
+  \ contained contains=ALLBUT,lilyGrobs,lilyPitches,Error,lilyNotesAttr,lilyAltVar1,lilyAltVar2
+
 
 syn region lilyLyrics
   \ matchgroup=lilyLyrics
