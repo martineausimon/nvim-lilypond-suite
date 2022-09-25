@@ -1,8 +1,29 @@
 local shellescape = vim.fn.shellescape
 local expand = vim.fn.expand
-local texPdfFile = shellescape(expand('%:p:r') .. '.pdf')
+
+local makeLualatex = "lualatex" ..
+    " --output-directory=" .. shellescape(expand('%:p:h')) .. 
+    " --shell-escape" ..
+    " --interaction=nonstopmode %:p:S"
+
+local lualatexEfm = "%+G! LaTeX %trror: %m," ..
+    "%+GLaTeX %.%#Warning: %.%#line %l%.%#," ..
+    "%+GLaTeX %.%#Warning: %m," ..
+    "%+G! %m,%+El.%l %m,%-G%.%#"
+
+local makeLytex = "cd " .. shellescape(vim.b.tmpOutDir) .. 
+  " && " .. "lualatex" ..
+    " --output-directory=" .. shellescape(expand('%:p:h')) ..
+    " --shell-escape " ..
+    "--interaction=nonstopmode " .. 
+    shellescape(vim.b.tmpOutDir .. expand('%:t:r') .. '.tex')
+
+local makeLilypondBook = "lilypond-book" .. 
+    " --output=" .. shellescape(vim.b.tmpOutDir) .. " %:p:S"
+
+local lilypondBookEfm = '%+G%f:%l:%c:, %f:%l:%c: %m,%-G%.%#'
+
 local M = {}
-vim.b.tmpOutDir = expand('%:p:h') .. '/tmpOutDir/'
 
 function M.DetectLilypondSyntax()
   if vim.g.lytexSyn == 1 then
@@ -30,48 +51,20 @@ end
 
 function M.SelectMakePrgType()
   if vim.fn.search("usepackage{lyluatex}", "n") ~= 0 then
-    require('tex').lualatexCmp()
+    vim.b.nvls_cmd = "lualatex"
+    require('nvls').make(makeLualatex,lualatexEfm)
   elseif vim.fn.search("begin{lilypond}", "n") ~= 0 then
-    require('tex').lilypondBookCmp()
+    vim.b.nvls_cmd = "lilypond-book"
+    require('nvls').make(makeLilypondBook,lilypondBookEfm)
   else
-    require('tex').lualatexCmp()
+    vim.b.nvls_cmd = "lualatex"
+    require('nvls').make(makeLualatex,lualatexEfm)
   end
 end
 
 function M.lytexCmp()
   vim.b.nvls_cmd = "lualatex"
-  vim.b.nvls_makeprg = "cd " .. shellescape(vim.b.tmpOutDir) .. 
-  " && " .. vim.b.nvls_cmd ..
-    " --output-directory=" .. shellescape(expand('%:p:h')) ..
-    " --shell-escape " ..
-    "--interaction=nonstopmode " .. 
-    shellescape(vim.b.tmpOutDir .. expand('%:t:r') .. '.tex')
-  vim.b.nvls_efm = "%+G! LaTeX %trror: %m," ..
-    "%+GLaTeX %.%#Warning: %.%#line %l%.%#," ..
-    "%+GLaTeX %.%#Warning: %m," ..
-    "%+G! %m,%+El.%l %m,%-G%.%#"
-  require('nvls').make()
-end
-
-function M.lualatexCmp()
-  vim.b.nvls_cmd = "lualatex"
-  vim.b.nvls_makeprg = vim.b.nvls_cmd ..
-    " --output-directory=" .. shellescape(expand('%:p:h')) .. 
-    " --shell-escape" ..
-    " --interaction=nonstopmode %:p:S"
-  vim.b.nvls_efm = "%+G! LaTeX %trror: %m," ..
-    "%+GLaTeX %.%#Warning: %.%#line %l%.%#," ..
-    "%+GLaTeX %.%#Warning: %m," ..
-    "%+G! %m,%+El.%l %m,%-G%.%#"
-  require('nvls').make()
-end
-
-function M.lilypondBookCmp()
-  vim.b.nvls_cmd = "lilypond-book"
-  vim.b.nvls_makeprg = vim.b.nvls_cmd .. 
-    " --output=" .. shellescape(vim.b.tmpOutDir) .. " %:p:S"
-  vim.b.nvls_efm = '%+G%f:%l:%c:, %f:%l:%c: %m,%-G%.%#'
-  require('nvls').make()
+  require('nvls').make(makeLytex,lualatexEfm)
 end
 
 return M

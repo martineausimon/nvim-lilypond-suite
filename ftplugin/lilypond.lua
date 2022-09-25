@@ -30,14 +30,17 @@ end, {})
 lilyCmd('Viewer', function() 
   require('lilypond').DefineLilyVars()
   print('Opening ' .. g.nvls_short .. '.pdf...')
-  require('nvls').viewer()
+  require('nvls').viewer(g.nvls_short .. '.pdf')
 end, {})
 
 lilyCmd('LilyCmp',    function() 
   require('lilypond').DefineLilyVars()
   vim.fn.execute('write')
   print('Compiling ' .. g.nvls_short .. '.ly...')
-  require('nvls').make()
+  makeprg = vim.b.nvls_cmd .. " -o" .. 
+    g.nvls_main_name .. ' ' .. g.nvls_main
+  errorfm = '%+G%f:%l:%c:, %f:%l:%c: %m,%-G%.%#'
+  require('nvls').make(makeprg,errorfm)
 end, {})
 
 lilyMap(0, 'n', '<F3>',      ":LilyPlayer<cr>",    {noremap = true})

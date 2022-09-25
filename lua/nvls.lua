@@ -1,9 +1,9 @@
 local shellescape = vim.fn.shellescape
 local M = {}
 
-function M.make()
+function M.make(makeprg,errorfm)
   local lines = {""}
-  local cmd = vim.fn.expandcmd(vim.b.nvls_makeprg)
+  local cmd = vim.fn.expandcmd(makeprg)
   local function on_event(job_id, data, event)
     if event == "stdout" or event == "stderr" then
       if data then
@@ -15,7 +15,7 @@ function M.make()
       vim.fn.setqflist({}, " ", {
         title = cmd,
         lines = lines,
-        efm = vim.b.nvls_efm,
+        efm = errorfm,
       })
       vim.api.nvim_exec_autocmds("QuickFixCmdPost", {})
       if vim.b.nvls_cmd == "lilypond-book" then
@@ -42,8 +42,8 @@ function M.make()
     )
 end
 
-function M.viewer()
-  vim.fn.jobstart('xdg-open ' .. vim.b.nvls_pdf)
+function M.viewer(file)
+  vim.fn.jobstart('xdg-open ' .. file)
 end
 
 return M

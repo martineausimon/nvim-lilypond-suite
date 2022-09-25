@@ -4,10 +4,10 @@ local texCmd      = vim.api.nvim_create_user_command
 local texAutoCmd  = vim.api.nvim_create_autocmd
 local shellescape = vim.fn.shellescape
 local expand      = vim.fn.expand
-vim.b.nvls_pdf    = shellescape(expand('%:p:r') .. '.pdf')
+texPdf = shellescape(expand('%:p:r') .. '.pdf')
 vim.b.tmpOutDir = expand('%:p:h') .. '/tmpOutDir/'
 
-texCmd('Viewer', function() require('nvls').viewer() end, {})
+texCmd('Viewer', function() require('nvls').viewer(texPdf) end, {})
 
 texCmd('LaTexCmp',  function() 
     vim.fn.execute('write')
