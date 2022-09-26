@@ -34,7 +34,7 @@ M.setup = function(opts)
 	opts = opts or {}
 	M.opts = vim.tbl_deep_extend('keep', opts, default)
 
-	vim.g.nvls_skip_defaults = M.opts.skip_defaults
+	vim.g.nvls_loaded_setup = true
 
 	if vim.fn.expand('%:e') == "tex" then
 	  local cmp = M.opts.latex.mappings.compile

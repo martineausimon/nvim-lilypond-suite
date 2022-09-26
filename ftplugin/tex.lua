@@ -36,6 +36,6 @@ texAutoCmd("BufEnter", {
 
 texHi(0, 'Snip', { ctermfg = "white", fg = "white", bold = true })
 
-if not vim.g.nvls_skip_defaults then
+if not vim.g.nvls_loaded_setup then
   require('nvls').setup()
 end
