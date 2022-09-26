@@ -67,4 +67,6 @@ vim.opt.dictionary:append({
   lilyWords .. '/translators'
 })
 
-require('nvls').setup()
+if vim.g.nvls_defaults then
+  require('nvls').setup()
+end

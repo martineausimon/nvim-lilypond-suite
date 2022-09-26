@@ -34,6 +34,8 @@ M.setup = function(opts)
 	opts = opts or {}
 	M.opts = vim.tbl_deep_extend('keep', opts, default)
 
+	vim.g.nvls_defaults = M.opts.use_defaults
+
 	if vim.fn.expand('%:e') == "tex" then
 	  local cmp = M.opts.latex.mappings.compile
 	  local view = M.opts.latex.mappings.open_pdf
@@ -52,7 +54,7 @@ M.setup = function(opts)
         pattern = '*.tex'
       })
     end
-  else
+  elseif vim.fn.expand('%:e') == "ly" then
 	  local cmp = M.opts.lilypond.mappings.compile
 	  local view = M.opts.lilypond.mappings.open_pdf
     local switch = M.opts.lilypond.mappings.switch_buffers
@@ -63,7 +65,7 @@ M.setup = function(opts)
     key(0, 'n', view,   ":Viewer<cr>",        {noremap = true})
     key(0, 'n', switch, "<C-w>w",             {noremap = true})
     key(0, 'i', switch, "<esc><C-w>w",        {noremap = true})
-    key(0, 'n', play,      ":LilyPlayer<cr>",    {noremap = true})
+    key(0, 'n', play,   ":LilyPlayer<cr>",    {noremap = true})
     key(0, 'n', version,
       [[0O\version<space>]] .. 
       [[<Esc>:read<Space>!lilypond<Space>-v]] ..
