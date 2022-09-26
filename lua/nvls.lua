@@ -10,7 +10,7 @@ local default = {
       insert_version = "<F4>"
     },
     options = {
-      pitch_languages = "default"
+      pitches_language = "default"
     },
   },
   latex = {
@@ -73,7 +73,7 @@ M.setup = function(opts)
       [[kJi"<esc>6la"<esc>]],
       {noremap = true, silent = true}
     )
-    local lang = M.opts.lilypond.options.pitch_languages
+    local lang = M.opts.lilypond.options.pitches_language
     vim.g.nvls_language = lang
   end
 end
