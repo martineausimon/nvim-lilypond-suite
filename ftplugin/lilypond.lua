@@ -43,21 +43,6 @@ lilyCmd('LilyCmp',    function()
   require('nvls').make(makeprg,errorfm)
 end, {})
 
-lilyMap(0, 'n', '<F3>',      ":LilyPlayer<cr>",    {noremap = true})
-lilyMap(0, 'n', '<F4>',
-  [[0O\version<space>]] .. 
-  [[<Esc>:read<Space>!lilypond<Space>-v]] ..
-  [[<Bar>grep<Space>LilyPond<Bar>cut<Space>-c<Space>14-20<cr>]] ..
-  [[kJi"<esc>6la"<esc>]],
-  {noremap = true, silent = true}
-)
-
-lilyMap(0, 'n', '<F5>',      ":LilyCmp<cr>",       {noremap = true})
-lilyMap(0, 'i', '<F5>',      "<esc>:LilyCmp<cr>a", {noremap = true})
-lilyMap(0, 'n', '<F6>',      ":Viewer<cr>",        {noremap = true})
-lilyMap(0, 'n', '<A-Space>', "<C-w>w",             {noremap = true})
-lilyMap(0, 'i', '<A-Space>', "<esc><C-w>w",        {noremap = true})
-
 lilyHi(0, 'QuickFixLine', {bold = true})
 
 vim.opt.dictionary:append({
@@ -81,3 +66,5 @@ vim.opt.dictionary:append({
   lilyWords .. '/contexts',
   lilyWords .. '/translators'
 })
+
+require('nvls').setup()

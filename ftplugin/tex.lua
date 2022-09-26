@@ -19,6 +19,12 @@ texCmd('ToggleSyn', function()
   require('tex').DetectLilypondSyntax() 
 end, {})
 
+texCmd('Cleaner', function() 
+    vim.fn.execute('!rm -rf ' ..
+      '%:r:S.log %:r:S.aux %r:S.out tmp-ly/ ' ..
+      shellescape(vim.b.tmpOutDir))
+end, {})
+
 texAutoCmd("BufEnter", {
   callback = function() require('tex').DetectLilypondSyntax() end,
   group = vim.api.nvim_create_augroup(
@@ -28,25 +34,6 @@ texAutoCmd("BufEnter", {
   pattern = "*.tex"
 })
 
-texAutoCmd( 'VimLeave', {
-  callback = function() 
-    if vim.g.nvls_clean_tex_files == 1 then
-      vim.fn.execute('!rm -rf ' ..
-        '%:r:S.log %:r:S.aux %r:S.out tmp-ly/ ' ..
-        shellescape(vim.b.tmpOutDir))
-    else
-      return
-    end
-  end,
-  group = vim.api.nvim_create_augroup(
-    "RemoveOutFiles", 
-    { clear = true }
-  ),
-  pattern = '*.tex'
-})
-
 texHi(0, 'Snip', { ctermfg = "white", fg = "white", bold = true })
 
-texMap(0, 'n', '<F3>', ":ToggleSyn<cr>", {noremap = true})
-texMap(0, 'n', '<F5>', ":LaTexCmp<cr>",  {noremap = true})
-texMap(0, 'n', '<F6>', ":Viewer<cr>",    {noremap = true})
+require('nvls').setup()

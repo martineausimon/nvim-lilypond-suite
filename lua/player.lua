@@ -1,5 +1,4 @@
 local lilyPopup = require("nui.popup")
---local event = require("nui.utils.autocmd").event
 
 local lilyPlayer = lilyPopup({
   enter = true,
