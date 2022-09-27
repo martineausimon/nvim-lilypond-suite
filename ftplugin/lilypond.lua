@@ -67,18 +67,16 @@ vim.opt.dictionary:append({
   lilyWords .. '/translators'
 })
 
-if not vim.g.nvls_loaded_setup then
+if not g.nvls_options then
   require('nvls').setup()
 end
 
 local cmp     = g.nvls_options.lilypond.mappings.compile
 local view    = g.nvls_options.lilypond.mappings.open_pdf
 local switch  = g.nvls_options.lilypond.mappings.switch_buffers
-vim.g.nvls_switch = switch
 local version = g.nvls_options.lilypond.mappings.insert_version
 local play    = g.nvls_options.lilypond.mappings.player
 lilyMap(0, 'n', cmp,    ":LilyCmp<cr>",       {noremap = true})
-lilyMap(0, 'i', cmp,    "<esc>:LilyCmp<cr>a", {noremap = true})
 lilyMap(0, 'n', view,   ":Viewer<cr>",        {noremap = true})
 lilyMap(0, 'n', switch, "<C-w>w",             {noremap = true})
 lilyMap(0, 'i', switch, "<esc><C-w>w",        {noremap = true})

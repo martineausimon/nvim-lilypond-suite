@@ -37,7 +37,7 @@ texAutoCmd("BufEnter", {
 
 texHi(0, 'Snip', { ctermfg = "white", fg = "white", bold = true })
 
-if not g.nvls_loaded_setup then
+if not g.nvls_options then
   require('nvls').setup()
 end
 
