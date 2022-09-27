@@ -167,7 +167,7 @@ vim.api.nvim_create_autocmd('BufEnter', {
 
 ### Highlight pitches for others languages
 
-If you use others languages for pitch names, you can configure nvim-lilypond-suite to highlight the right words in [`require('nvls').setup()`](#configuration)
+If you use others languages for pitch names, you can configure nvim-lilypond-suite to highlight the right words with `pitches_language` option in [`require('nvls').setup()`](#configuration)
 
 >For now, only *english*, *français* and *default* highlights are availables.  
 >TODO : create pitches pattern for other languages
