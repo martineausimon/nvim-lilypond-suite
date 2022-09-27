@@ -175,7 +175,7 @@ require('nvls').setup({
 
 #### Lighter syntax highlighting
 
-Since the last big update [7df532e](https://github.com/martineausimon/nvim-lilypond-suite/commit/7df532ef0476299b03cc72e3160e13c7ae54488c), I changed my method for syntax highlighting and avoided word lists as much as possible, for more lightness.
+Since [7df532e](https://github.com/martineausimon/nvim-lilypond-suite/commit/7df532ef0476299b03cc72e3160e13c7ae54488c) commit, I changed my method for syntax highlighting and avoided word lists as much as possible, for more lightness.
 
 Recommended settings in `init.lua` :
 
