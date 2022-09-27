@@ -23,6 +23,28 @@ local default = {
       clean_logs = false
     },
   },
+  player = {
+    mappings = {
+      quit = "q",
+      play_pause = "p",
+      loop = "<A-l>",
+      backward = "h",
+      small_backward = "<S-h>",
+      forward = "l",
+      small_forward = "<S-l>",
+      decrease_speed = "j",
+      increase_speed = "k",
+      halve_speed = "<S-j>",
+      double_speed = "<S-k>"
+    },
+    options = {
+      row = "2%",
+      col = "99%",
+      width = "37",
+      height = "1",
+      border_style = "single"
+    },
+  },
 }
 
 local key = vim.api.nvim_buf_set_keymap
