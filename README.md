@@ -159,19 +159,18 @@ require('nvls').setup({
 
 #### Player mappings (LilyPond only)
 
-| Key             | Description                                     |
-| ---             | ---                                             |
-| `<A-Space>`     | Switch between player and LilyPond buffers      |
-| `q` and `<Esc>` | Exit player                                     |
-| `p`             | Play / Pause                                    |
-| `<A-l>`         | Loop start/stop/clean                           |
-| `h`             | Seek backward 5 sec                             |
-| `<S-h>`         | Seek backward 1 sec                             |
-| `l`             | Seek forward 5 sec                              |
-| `<S-l>`         | Seek forward 1 sec                              |
-| `{` and `}`     | Halve/double current playback speed             |
-| `j` and `k`     | Decrease/increase current playback speed by 10% |
-| `[` and `]`     | Decrease/increase current playback speed by 10% |
+| Key                 | Description                                     |
+| ---                 | ---                                             |
+| `<A-Space>`         | Switch between player and LilyPond buffers      |
+| `q` and `<Esc>`     | Exit player                                     |
+| `p`                 | Play / Pause                                    |
+| `<A-l>`             | Loop start/stop/clean                           |
+| `h`                 | Seek backward 5 sec                             |
+| `<S-h>`             | Seek backward 1 sec                             |
+| `l`                 | Seek forward 5 sec                              |
+| `<S-l>`             | Seek forward 1 sec                              |
+| `<S-j>` and `<S-k>` | Halve/double current playback speed             |
+| `j` and `k`         | Decrease/increase current playback speed by 10% |
 
 
 #### Lighter syntax highlighting
