@@ -175,7 +175,8 @@ require('nvls').setup({
 
 #### Lighter syntax highlighting
 
-Since [7df532e](https://github.com/martineausimon/nvim-lilypond-suite/commit/7df532ef0476299b03cc72e3160e13c7ae54488c) commit, I changed my method for syntax highlighting and avoided word lists as much as possible, for more lightness.
+Since [7df532e](https://github.com/martineausimon/nvim-lilypond-suite/commit/7df532ef0476299b03cc72e3160e13c7ae54488c) commit, I changed my method for syntax highlighting and avoided word lists as much as possible, for more lightness. You can also define `pitches_language = "nohl"` in [`require('nvls').setup()`](#configuration) to avoid pitches highlighting.
+
 
 Recommended settings in `init.lua` :
 
@@ -190,7 +191,7 @@ vim.api.nvim_create_autocmd('BufEnter', {
 
 If you use others languages for pitch names, you can configure nvim-lilypond-suite to highlight the right words with `pitches_language` option in [`require('nvls').setup()`](#configuration)
 
->For now, only *english*, *français* and *default* highlights are availables.  
+>For now, only *english*, *français*, *nohl* (no highlight) and *default* highlights are availables.  
 >TODO : create pitches pattern for other languages
 
 ### QuickFix
