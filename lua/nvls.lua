@@ -30,52 +30,9 @@ local key = vim.api.nvim_buf_set_keymap
 local M = {}
 
 M.setup = function(opts)
-
 	opts = opts or {}
-	M.opts = vim.tbl_deep_extend('keep', opts, default)
-
+	vim.g.nvls_options = vim.tbl_deep_extend('keep', opts, default)
 	vim.g.nvls_loaded_setup = true
-
-	if vim.fn.expand('%:e') == "tex" then
-	  local cmp = M.opts.latex.mappings.compile
-	  local view = M.opts.latex.mappings.open_pdf
-    local lysyn = M.opts.latex.mappings.lilypond_syntax
-    local clean = M.opts.latex.options.clean_logs
-    key(0, 'n', lysyn, ":ToggleSyn<cr>", {noremap = true})
-    key(0, 'n', cmp,   ":LaTexCmp<cr>",  {noremap = true})
-    key(0, 'n', view,  ":Viewer<cr>",    {noremap = true})
-    if clean or vim.g.nvls_clean_tex_files == 1 then
-      vim.api.nvim_create_autocmd( 'VimLeave', {
-        command = 'Cleaner',
-        group = vim.api.nvim_create_augroup(
-          "RemoveOutFiles", 
-          { clear = true }
-        ),
-        pattern = '*.tex'
-      })
-    end
-  elseif vim.fn.expand('%:e') == "ly" then
-	  local cmp = M.opts.lilypond.mappings.compile
-	  local view = M.opts.lilypond.mappings.open_pdf
-    local switch = M.opts.lilypond.mappings.switch_buffers
-    local version = M.opts.lilypond.mappings.insert_version
-    local play = M.opts.lilypond.mappings.player
-    key(0, 'n', cmp,    ":LilyCmp<cr>",       {noremap = true})
-    key(0, 'i', cmp,    "<esc>:LilyCmp<cr>a", {noremap = true})
-    key(0, 'n', view,   ":Viewer<cr>",        {noremap = true})
-    key(0, 'n', switch, "<C-w>w",             {noremap = true})
-    key(0, 'i', switch, "<esc><C-w>w",        {noremap = true})
-    key(0, 'n', play,   ":LilyPlayer<cr>",    {noremap = true})
-    key(0, 'n', version,
-      [[0O\version<space>]] .. 
-      [[<Esc>:read<Space>!lilypond<Space>-v]] ..
-      [[<Bar>grep<Space>LilyPond<Bar>cut<Space>-c<Space>14-20<cr>]] ..
-      [[kJi"<esc>6la"<esc>]],
-      {noremap = true, silent = true}
-    )
-    local lang = M.opts.lilypond.options.pitches_language
-    vim.g.nvls_language = lang
-  end
 end
 
 function M.make(makeprg,errorfm)
@@ -101,7 +58,7 @@ function M.make(makeprg,errorfm)
         vim.fn.execute('stopinsert')
         print(' ')
         dofile(vim.b.lilyplay)
-      else    
+      else
         print(' ')
       end
     end

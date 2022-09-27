@@ -10,7 +10,7 @@ This is a plugin (Neovim only) for **LilyPond** with fast syntax highlighting an
 * **Simple ftplugin for LilyPond** with `makeprg`, correct `errorformat`
 * **Compile only main file when working on multiple files project** (LilyPond only)
 * **ftplugin for TeX files** whith detect and allows embedded LilyPond syntax, adaptive `makeprg` function for `lyluatex` or `lilypond-book`, correct `errorformat`
-* **Easy Point & Click configuration**
+* **Easy auto-completion and Point & Click configuration**
 
 <p align="center">
 <img src="https://user-images.githubusercontent.com/89019438/191845626-4ba6224c-46c3-484f-a355-5cf10a66889f.png">
@@ -19,10 +19,11 @@ This is a plugin (Neovim only) for **LilyPond** with fast syntax highlighting an
 * [Installation](#installation)
   * [nvim-lilypond-suite](#nvim-lilypond-suite-plugin)
   * [Dependences](#dependences)
-* [Mappings](#mappings)
-  * [Commands](#commands)
-  * [Player mappings](#player-mappings-lilypond-only)
 * [Settings](#settings)
+  * [Configuration](#configuration)
+  * [Mappings](#mappings)
+    * [Commands](#commands)
+    * [Player mappings](#player-mappings-lilypond-only)
   * [Lighter syntax highlighting](#lighter-syntax-highlighting)
   * [Highlight pitches for others languages](#highlight-pitches-for-others-languages)
   * [QuickFix](#quickfix)
@@ -80,9 +81,42 @@ sudo ln -s /usr/share/soundfonts/FluidR3_GM.sf2 /usr/share/soundfonts/default.sf
 sudo pacman -S mpv ffmpeg
 ```
 
-## MAPPINGS
+## SETTINGS
 
-### Commands
+### Configuration
+
+Nvim-lilypond-suite is configurable, here is the default configuration that you can copy-paste and modify in your init.lua :
+
+```lua
+require('nvls').setup({
+  lilypond = {
+    mappings = {
+      player = "<F3>",
+      compile = "<F5>",
+      open_pdf = "<F6>",
+      switch_buffers = "<A-Space>",
+      insert_version = "<F4>"
+    },
+    options = {
+      pitches_language = "default"
+    },
+  },
+  latex = {
+    mappings = {
+      compile = "<F5>",
+      open_pdf = "<F6>",
+      lilypond_syntax = "<F3>"
+    },
+    options = {
+      clean_logs = false
+    },
+  },
+})
+```
+
+### Mappings
+
+#### Commands
 
 * LilyPond files :
 
@@ -101,7 +135,7 @@ sudo pacman -S mpv ffmpeg
 | `:TexCmp`     | `<F5>`           | Save & compile pdf                                     |
 | `:Viewer`     | `<F6>`           | Open %.pdf                                             |
 
-### Player mappings (LilyPond only)
+#### Player mappings (LilyPond only)
 
 | Key             | Description                                     |
 | ---             | ---                                             |
@@ -117,9 +151,8 @@ sudo pacman -S mpv ffmpeg
 | `j` and `k`     | Decrease/increase current playback speed by 10% |
 | `[` and `]`     | Decrease/increase current playback speed by 10% |
 
-## SETTINGS
 
-### Lighter syntax highlighting
+#### Lighter syntax highlighting
 
 Since the last big update [7df532e](https://github.com/martineausimon/nvim-lilypond-suite/commit/7df532ef0476299b03cc72e3160e13c7ae54488c), I changed my method for syntax highlighting and avoided word lists as much as possible, for more lightness.
 
@@ -131,13 +164,10 @@ vim.api.nvim_create_autocmd('BufEnter', {
   pattern = { '*.ly', '*.ily' }
 })
 ```
+
 ### Highlight pitches for others languages
 
-If you use others languages for pitch names, you can configure nvim-lilypond-suite to highlight the right words adding this variable to your `init.lua` :
-
-```lua
-vim.g.nvls_language = "english"
-```
+If you use others languages for pitch names, you can configure nvim-lilypond-suite to highlight the right words in [`require('nvls').setup()`](#configuration)
 
 >For now, only *english*, *français* and *default* highlights are availables.  
 >TODO : create pitches pattern for other languages
@@ -157,7 +187,7 @@ vim.api.nvim_create_autocmd( 'QuickFixCmdPost', {
 
 When working on a multiple files project, with `\include`d sources in a main file, only the file called `main.ly` is selected for compilation, open pdf and play midi. Two others options are availables to define a custom main file (see discussion with [niveK77pur](https://github.com/martineausimon/nvim-lilypond-suite/issues?q=is%3Aissue+is%3Aopen+author%3AniveK77pur) on [issue #3](https://github.com/martineausimon/nvim-lilypond-suite/issues/3) :
 
-##### using a local vimrc file
+#### using a local vimrc file
 
 If you already use a plugin like [exrc.nvim](https://github.com/MunifTanjim/exrc.nvim) to work with local nvim config files, I recommend using this variable to define a custom main lilypond file :
 
@@ -167,7 +197,7 @@ vim.g.nvls_main_file = "/complete/path/to/custom/main/file.ly"
 
 This variable is never overwrited by the plugin, be careful to not open severals projects already using this variable in the same nvim session, and always open files from working directory.
 
-##### using .lilyrc config file
+#### using .lilyrc config file
 
 You can define a custom main file by creating a `.lilyrc` file in the project directory containing this variable (in lua only) :
 
@@ -252,11 +282,7 @@ Syntax highlighting can be slow with embedded LilyPond, you can use `<F3>` to ac
 
 ### Clean log files on exit
 
-Add this line to your `init.lua` to remove log files on exit :
-
-```lua
-vim.g.nvls_clean_tex_files = 1
-```
+Define `true` to `clean_logs` option in [`require('nvls').setup()`](#configuration)
 
 ### Tricks for lilypond-book
 
