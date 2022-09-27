@@ -32,48 +32,48 @@ vim.api.nvim_buf_call(lilyPlayer.bufnr, function()
 end)
 
 local nrm = { noremap = true }
+local opt = vim.g.nvls_options.player
 
---lilyPlayer:map('n', '<Esc>', function() lilyPlayer:unmount() end, nrm)
 lilyPlayer:map('n', 
-  vim.g.nvls_options.player.mappings.quit,
+  opt.mappings.quit,
   function() lilyPlayer:unmount() end, nrm)
 lilyPlayer:map('t', 
-  vim.g.nvls_options.player.mappings.quit,
+  opt.mappings.quit,
   function() lilyPlayer:unmount() end, nrm)
 lilyPlayer:map('t', 
   vim.g.nvls_options.lilypond.mappings.switch_buffers,
-  "<cmd>stopinsert<cr><C-w>w",     nrm)
+  "<cmd>stopinsert<cr><C-w>w", nrm)
 lilyPlayer:map('n', 
   vim.g.nvls_options.lilypond.mappings.switch_buffers,
-  "<cmd>stopinsert<cr><C-w>w",     nrm)
+  "<cmd>stopinsert<cr><C-w>w", nrm)
 lilyPlayer:map('n', 
-  vim.g.nvls_options.player.mappings.backward,
-  "i<Left><cmd>stopinsert<cr>",    nrm)
+  opt.mappings.backward,
+  "i<Left><cmd>stopinsert<cr>", nrm)
 lilyPlayer:map('n', 
-  vim.g.nvls_options.player.mappings.forward,
-  "i<Right><cmd>stopinsert<cr>",   nrm)
+  opt.mappings.forward,
+  "i<Right><cmd>stopinsert<cr>", nrm)
 lilyPlayer:map('n',
-  vim.g.nvls_options.player.mappings.small_forward,
+  opt.mappings.small_forward,
   "i<S-Right><cmd>stopinsert<cr>", nrm)
 lilyPlayer:map('n', 
-  vim.g.nvls_options.player.mappings.small_backward,
-  "i<S-Left><cmd>stopinsert<cr>",  nrm)
+  opt.mappings.small_backward,
+  "i<S-Left><cmd>stopinsert<cr>", nrm)
 lilyPlayer:map('n', 
-  vim.g.nvls_options.player.mappings.play_pause,
-  "ip<cmd>stopinsert<cr>",         nrm)
+  opt.mappings.play_pause,
+  "ip<cmd>stopinsert<cr>", nrm)
 lilyPlayer:map('n', 
-  vim.g.nvls_options.player.mappings.halve_speed,
-  "i{<cmd>stopinsert<cr>",         nrm)
+  opt.mappings.halve_speed,
+  "i{<cmd>stopinsert<cr>", nrm)
 lilyPlayer:map('n', 
-  vim.g.nvls_options.player.mappings.double_speed,
-  "i}<cmd>stopinsert<cr>",         nrm)
+  opt.mappings.double_speed,
+  "i}<cmd>stopinsert<cr>", nrm)
 lilyPlayer:map('n', 
-  vim.g.nvls_options.player.mappings.decrease_speed,
-  "i[<cmd>stopinsert<cr>",         nrm)
+  opt.mappings.decrease_speed,
+  "i[<cmd>stopinsert<cr>", nrm)
 lilyPlayer:map('n', 
-  vim.g.nvls_options.player.mappings.increase_speed,
-  "i]<cmd>stopinsert<cr>",         nrm)
+  opt.mappings.increase_speed,
+  "i]<cmd>stopinsert<cr>", nrm)
 lilyPlayer:map('n', 
-  vim.g.nvls_options.player.mappings.loop,
-  "il<cmd>stopinsert<cr>",         nrm)
-lilyPlayer:map('n', ':',         "",                              nrm)
+  opt.mappings.loop,
+  "il<cmd>stopinsert<cr>", nrm)
+lilyPlayer:map('n', ':', "", nrm)
