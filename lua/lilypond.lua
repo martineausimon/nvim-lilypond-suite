@@ -9,11 +9,11 @@ function M.lilyPlayer()
     .. '/' .. g.nvls_short .. '.midi')) == 0 then
     print('Converting ' .. g.nvls_short .. '.midi to mp3...') 
     b.nvls_cmd = "fluidsynth"
-    b.nvls_makeprg = 'rm -rf ' .. g.lilyAudioFile .. ' && ' ..
+    local fluidsynth = 'rm -rf ' .. g.lilyAudioFile .. ' && ' ..
       b.nvls_cmd .. ' -T raw -F - ' .. g.lilyMidiFile .. 
       ' -s | ffmpeg -f s32le -i - ' .. g.lilyAudioFile
-    b.nvls_efm = " " 
-    require('nvls').make()
+    local fluidsynthEfm = " " 
+    require('nvls').make(fluidsynth,fluidsynthEfm)
   elseif fn.empty(
     fn.glob(expand('%:p:h') 
       .. '/' .. g.nvls_short .. '.mp3')) > 0 then

@@ -4,13 +4,14 @@ local texCmd      = vim.api.nvim_create_user_command
 local texAutoCmd  = vim.api.nvim_create_autocmd
 local shellescape = vim.fn.shellescape
 local expand      = vim.fn.expand
+local g, b, fn    = vim.g, vim.b, vim.fn
 texPdf = shellescape(expand('%:p:r') .. '.pdf')
-vim.b.tmpOutDir = expand('%:p:h') .. '/tmpOutDir/'
+b.tmpOutDir = expand('%:p:h') .. '/tmpOutDir/'
 
 texCmd('Viewer', function() require('nvls').viewer(texPdf) end, {})
 
 texCmd('LaTexCmp',  function() 
-    vim.fn.execute('write')
+    fn.execute('write')
     require('tex').SelectMakePrgType() 
   end,    
 {})
@@ -20,9 +21,9 @@ texCmd('ToggleSyn', function()
 end, {})
 
 texCmd('Cleaner', function() 
-    vim.fn.execute('!rm -rf ' ..
+    fn.execute('!rm -rf ' ..
       '%:r:S.log %:r:S.aux %r:S.out tmp-ly/ ' ..
-      shellescape(vim.b.tmpOutDir))
+      shellescape(b.tmpOutDir))
 end, {})
 
 texAutoCmd("BufEnter", {
@@ -36,6 +37,25 @@ texAutoCmd("BufEnter", {
 
 texHi(0, 'Snip', { ctermfg = "white", fg = "white", bold = true })
 
-if not vim.g.nvls_loaded_setup then
+if not g.nvls_loaded_setup then
   require('nvls').setup()
 end
+
+local cmp = g.nvls_options.latex.mappings.compile
+local view = g.nvls_options.latex.mappings.open_pdf
+local lysyn = g.nvls_options.latex.mappings.lilypond_syntax
+local clean = g.nvls_options.latex.options.clean_logs
+texMap(0, 'n', lysyn, ":ToggleSyn<cr>", {noremap = true})
+texMap(0, 'n', cmp,   ":LaTexCmp<cr>",  {noremap = true})
+texMap(0, 'n', view,  ":Viewer<cr>",    {noremap = true})
+if clean or vim.g.nvls_clean_tex_files == 1 then
+  vim.api.nvim_create_autocmd( 'VimLeave', {
+    command = 'Cleaner',
+    group = vim.api.nvim_create_augroup(
+      "RemoveOutFiles", 
+      { clear = true }
+    ),
+    pattern = '*.tex'
+  })
+end
+

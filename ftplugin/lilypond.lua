@@ -70,3 +70,25 @@ vim.opt.dictionary:append({
 if not vim.g.nvls_loaded_setup then
   require('nvls').setup()
 end
+
+local cmp     = g.nvls_options.lilypond.mappings.compile
+local view    = g.nvls_options.lilypond.mappings.open_pdf
+local switch  = g.nvls_options.lilypond.mappings.switch_buffers
+vim.g.nvls_switch = switch
+local version = g.nvls_options.lilypond.mappings.insert_version
+local play    = g.nvls_options.lilypond.mappings.player
+lilyMap(0, 'n', cmp,    ":LilyCmp<cr>",       {noremap = true})
+lilyMap(0, 'i', cmp,    "<esc>:LilyCmp<cr>a", {noremap = true})
+lilyMap(0, 'n', view,   ":Viewer<cr>",        {noremap = true})
+lilyMap(0, 'n', switch, "<C-w>w",             {noremap = true})
+lilyMap(0, 'i', switch, "<esc><C-w>w",        {noremap = true})
+lilyMap(0, 'n', play,   ":LilyPlayer<cr>",    {noremap = true})
+lilyMap(0, 'n', version,
+  [[0O\version<space>]] .. 
+  [[<Esc>:read<Space>!lilypond<Space>-v]] ..
+  [[<Bar>grep<Space>LilyPond<Bar>cut<Space>-c<Space>14-20<cr>]] ..
+  [[kJi"<esc>6la"<esc>]],
+  {noremap = true, silent = true}
+)
+local lang = g.nvls_options.lilypond.options.pitches_language
+g.nvls_language = lang
