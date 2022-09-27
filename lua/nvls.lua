@@ -47,8 +47,6 @@ local default = {
   },
 }
 
-local key = vim.api.nvim_buf_set_keymap
-
 local M = {}
 
 M.setup = function(opts)
