@@ -88,5 +88,3 @@ lilyMap(0, 'n', version,
   [[kJi"<esc>6la"<esc>]],
   {noremap = true, silent = true}
 )
-local lang = g.nvls_options.lilypond.options.pitches_language
-g.nvls_language = lang
