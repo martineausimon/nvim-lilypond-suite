@@ -83,13 +83,13 @@ syn match lilyContexts "\(\\\|\<\)\(AncientRemoveEmptyStaffContext\|ChoirStaff\|
 
 syn match lilyDynamics "[-_^]\?\\\(cr\|cresc\|decr\|decresc\|dim\|endcr\|endcresc\|enddecr\|enddecresc\|enddim\|f\|ff\|fff\|ffff\|fffff\|fp\|fz\|mf\|mp\|n\|p\|pp\|ppp\|pppp\|ppppp\|rfz\|sf\|sff\|sfp\|sfz\|sp\|spp\)\(\A\|\n\)"me=e-1
 
-if g:nvls_language == "français"
+if g:nvls_options.lilypond.options.pitches_language == "français"
   syn match lilyPitches "\<\(la\|si\|do\|re\|ré\|mi\|fa\|sol\|la\|s\|R\|r\)\(dd\|bb\|x\|sd\|sb\|dsd\|bsb\|d\|b\|\)"
   \ display nextgroup=lilyNotesAttr,lilySpecial
-elseif g:nvls_language == "english"
+elseif g:nvls_options.lilypond.options.pitches_language == "english"
   syn match lilyPitches "\<\([a-g]\|s\|R\|r\)\(ss\|ff\|x\|qs\|qf\|tqs\|tqf\|s\|f\|\-flatflat\|\-sharpsharp\|\-flat\|\-sharp\|\)"
   \ display nextgroup=lilyNotesAttr,lilySpecial
-elseif g:nvls_language == "nohl"
+elseif g:nvls_options.lilypond.options.pitches_language == "nohl"
 else
 syn match lilyPitches "\<\([a-g]\|s\|R\|r\)\(isis\|eses\|eh\|ih\|eseh\|isih\|is\|es\|\)\(\A\|\n\)"me=e-1
   \ display nextgroup=lilyNotesAttr,lilySpecial
@@ -116,7 +116,13 @@ syn region lilyComment      start="%\([^{]\|$\)" end="$"
 syn match  lilySpecial      "[(~)]\|[(*)]\|[(:)]\|[(=)]"
 syn match  lilyDynamics     "\\[<!>\\]"
 syn match  lilyArticulation "[-_^][-_^+|>.]"
-syn match  lilyNumber       "[-_^.]\?\(\-\.\|\|\)\d\+[.]\?"
+
+if g:nvls_options.lilypond.options.pitches_language == "nohl"
+  syn match  lilyNumber       "[-_^.]\?\(\-\.\|\)\d\+[.]\{,3}"
+else 
+  syn match  lilyNumber       "[-_^.]\?\(\-\.\|\)\d\+[.]\?"
+end
+
 
 syn match Error "}"
 syn match Error "\l\+\d[',]\+"
