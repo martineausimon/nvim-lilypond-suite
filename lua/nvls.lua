@@ -42,7 +42,8 @@ local default = {
       col = "99%",
       width = "37",
       height = "1",
-      border_style = "single"
+      border_style = "single",
+      winhighlight = "Normal:Normal,FloatBorder:Normal"
     },
   },
 }
