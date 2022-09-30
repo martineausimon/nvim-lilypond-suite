@@ -49,13 +49,7 @@ function M.DefineLilyVars()
     "'" .. g.nvls_main_name:gsub("'", "") .. ".midi'")
   g.lilyAudioFile = expand(
     "'" .. g.nvls_main_name:gsub("'", "") .. ".mp3'")
-  b.nvls_pdf = expand(
-  "'" .. g.nvls_main_name:gsub("'", "") .. ".pdf'")
-
   b.nvls_cmd = "lilypond"
-  b.nvls_makeprg = vim.b.nvls_cmd .. " -o" .. 
-    g.nvls_main_name .. ' ' .. g.nvls_main
-  b.nvls_efm     = '%+G%f:%l:%c:, %f:%l:%c: %m,%-G%.%#'
 end
 
 return M

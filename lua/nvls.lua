@@ -10,7 +10,8 @@ local default = {
       insert_version = "<F4>"
     },
     options = {
-      pitches_language = "default"
+      pitches_language = "default",
+      output = "pdf"
     },
   },
   latex = {

@@ -6,6 +6,7 @@ local lilyAutoCmd = vim.api.nvim_create_autocmd
 local lilyWords   = expand('<sfile>:p:h') .. '/../lilywords'
 local g           = vim.g
 local b           = vim.b
+local output      = g.nvls_options.lilypond.options.output
 
 g.lilywords   = lilyWords
 vim.cmd[[let $LILYDICTPATH = g:lilywords]]
@@ -29,15 +30,16 @@ end, {})
 
 lilyCmd('Viewer', function() 
   require('lilypond').DefineLilyVars()
-  print('Opening ' .. g.nvls_short .. '.pdf...')
-  require('nvls').viewer(g.nvls_short .. '.pdf')
+  print('Opening ' .. g.nvls_short .. '.' .. output .. '...')
+  require('nvls').viewer(g.nvls_main_name .. '.' .. output)
 end, {})
 
 lilyCmd('LilyCmp',    function() 
   require('lilypond').DefineLilyVars()
   vim.fn.execute('write')
   print('Compiling ' .. g.nvls_short .. '.ly...')
-  makeprg = vim.b.nvls_cmd .. " -o" .. 
+  makeprg = vim.b.nvls_cmd .. 
+  " -f " .. output .. " -o" .. 
     g.nvls_main_name .. ' ' .. g.nvls_main
   errorfm = '%+G%f:%l:%c:, %f:%l:%c: %m,%-G%.%#'
   require('nvls').make(makeprg,errorfm)
