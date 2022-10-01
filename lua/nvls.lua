@@ -12,7 +12,8 @@ local default = {
     options = {
       pitches_language = "default",
       output = "pdf",
-      main_file = "main.ly"
+      main_file = "main.ly",
+      main_folder = "%:p:h"
     },
   },
   latex = {
