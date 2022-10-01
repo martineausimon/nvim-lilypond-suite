@@ -213,7 +213,7 @@ vim.api.nvim_create_autocmd( 'QuickFixCmdPost', {
 
 When working on a multiple files project, with `\include`d sources in a main file, only the file called `main.ly` in current folder is selected for compilation, open pdf and play midi. You can change this default by editing `main_file` and `main_folder` options in [`require('nvls').setup()`](#configuration)
 
-Two ways are possible to define a custom main file per project folder (see discussion with [niveK77pur](https://github.com/martineausimon/nvim-lilypond-suite/issues?q=is%3Aissue+is%3Aopen+author%3AniveK77pur) on [issue #3](https://github.com/martineausimon/nvim-lilypond-suite/issues/3) :
+Two ways are possible to define a custom main file per project folder (see discussion with [niveK77pur](https://github.com/martineausimon/nvim-lilypond-suite/issues?q=is%3Aissue+is%3Aopen+author%3AniveK77pur) on [issue #3](https://github.com/martineausimon/nvim-lilypond-suite/issues/3)) :
 
 #### using a local vimrc file
 
