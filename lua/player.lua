@@ -41,6 +41,7 @@ local lyopt = g.nvls_options.lilypond.mappings
 
 function M.map(key,cmd)
   lilyPlayer:map('n', key, cmd, nrm)
+  lilyPlayer:map('i', key, cmd, nrm)
 end
 
 M.map(opt.quit,             function() lilyPlayer:unmount() end)
