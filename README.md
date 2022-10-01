@@ -99,7 +99,9 @@ require('nvls').setup({
     },
     options = {
       pitches_language = "default",
-      output = "pdf"
+      output = "pdf",
+      main_file = "main.ly",
+      main_folder = "%:p:h"
     },
   },
   latex = {
@@ -209,27 +211,21 @@ vim.api.nvim_create_autocmd( 'QuickFixCmdPost', {
 
 ### Multiple files projects
 
-When working on a multiple files project, with `\include`d sources in a main file, only the file called `main.ly` is selected for compilation, open pdf and play midi. Two others options are availables to define a custom main file (see discussion with [niveK77pur](https://github.com/martineausimon/nvim-lilypond-suite/issues?q=is%3Aissue+is%3Aopen+author%3AniveK77pur) on [issue #3](https://github.com/martineausimon/nvim-lilypond-suite/issues/3) :
+When working on a multiple files project, with `\include`d sources in a main file, only the file called `main.ly` in current folder is selected for compilation, open pdf and play midi. You can change this default by editing `main_file` and `main_folder` options in [`require('nvls').setup()`](#configuration)
+
+Two ways are possible to define a custom main file per project folder (see discussion with [niveK77pur](https://github.com/martineausimon/nvim-lilypond-suite/issues?q=is%3Aissue+is%3Aopen+author%3AniveK77pur) on [issue #3](https://github.com/martineausimon/nvim-lilypond-suite/issues/3) :
 
 #### using a local vimrc file
 
-If you already use a plugin like [exrc.nvim](https://github.com/MunifTanjim/exrc.nvim) to work with local nvim config files, I recommend using this variable to define a custom main lilypond file :
+If you already use a plugin like [exrc.nvim](https://github.com/MunifTanjim/exrc.nvim) to work with local nvim config files, you can add the [`require('nvls').setup()`](#configuration)
 
-```lua
-vim.g.nvls_main_file = "/complete/path/to/custom/main/file.ly"
-```
-
-This variable is never overwrited by the plugin, be careful to not open severals projects already using this variable in the same nvim session, and always open files from working directory.
+Be careful to not open severals projects in the same nvim session, and always open files from working directory.
 
 #### using .lilyrc config file
 
-You can define a custom main file by creating a `.lilyrc` file in the project directory containing this variable (in lua only) :
+You can define a custom main file by creating a `.lilyrc` file (lua only) in the project directory containing [`require('nvls').setup()`](#configuration) function.
 
-```lua
-vim.g.nvls_main = "/complete/path/to/custom/main/file.ly"
-```
-
-This one is called on each command (compile, open, play midi file), and should work if you open differents projects with differents main files in the same nvim session, even if you call files from another directory.
+This file is called on each command (compile, open, play midi file), and should work if you open differents projects with differents main files in the same nvim session, even if you call files from another directory.
 
 ### Recommended highlightings
 
