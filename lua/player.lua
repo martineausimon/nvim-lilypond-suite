@@ -1,4 +1,5 @@
 local lilyPopup = require("nui.popup")
+local event = require("nui.utils.autocmd").event
 local g = vim.g
 local plopts = g.nvls_options.player.options
 
@@ -31,6 +32,10 @@ lilyPlayer:mount()
 vim.api.nvim_buf_call(lilyPlayer.bufnr, function() 
   vim.fn.execute("term mpv --msg-level=cplayer=no,ffmpeg=no " ..
     "--loop --config-dir=/tmp/ " .. vim.g.lilyAudioFile)
+end)
+
+lilyPlayer:on(event.BufEnter, function()
+  vim.cmd[[stopinsert]]
 end)
 
 local M = {}
