@@ -1,11 +1,13 @@
 local g, b, fn = vim.g, vim.b, vim.fn
 local expand = fn.expand
+local main_file = g.nvls_options.lilypond.options.main_file
+local main_folder = g.nvls_options.lilypond.options.main_folder
 
 local M = {}
 
 function M.lilyPlayer()
   if fn.empty(
-    fn.glob(expand('%:p:h') 
+    fn.glob(expand(main_folder) 
     .. '/' .. g.nvls_short .. '.midi')) == 0 then
     print('Converting ' .. g.nvls_short .. '.midi to mp3...') 
     b.nvls_cmd = "fluidsynth"
@@ -15,7 +17,7 @@ function M.lilyPlayer()
     local fluidsynthEfm = " " 
     require('nvls').make(fluidsynth,fluidsynthEfm)
   elseif fn.empty(
-    fn.glob(expand('%:p:h') 
+    fn.glob(expand(main_folder) 
       .. '/' .. g.nvls_short .. '.mp3')) > 0 then
     print("[LilyPlayer] No mp3 file in working directory")
     do return end
@@ -27,8 +29,6 @@ end
 function M.DefineLilyVars()
   g.nvls_main = expand('%:p:S')
 
-  local main_file = g.nvls_options.lilypond.options.main_file
-  local main_folder = g.nvls_options.lilypond.options.main_folder
 
 --  if fn.empty(fn.glob('%:p:h' .. '/.lilyrc')) == 0 then
 --    dofile(expand('%:p:h') .. '/.lilyrc')
