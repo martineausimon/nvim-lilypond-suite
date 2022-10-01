@@ -11,7 +11,8 @@ local default = {
     },
     options = {
       pitches_language = "default",
-      output = "pdf"
+      output = "pdf",
+      main_file = "main.ly"
     },
   },
   latex = {
