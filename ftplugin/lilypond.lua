@@ -2,7 +2,6 @@ local expand      = vim.fn.expand
 local lilyMap     = vim.api.nvim_buf_set_keymap
 local lilyHi      = vim.api.nvim_set_hl
 local lilyCmd     = vim.api.nvim_create_user_command
-local lilyAutoCmd = vim.api.nvim_create_autocmd
 local lilyWords   = expand('<sfile>:p:h') .. '/../lilywords'
 local g           = vim.g
 local b           = vim.b
