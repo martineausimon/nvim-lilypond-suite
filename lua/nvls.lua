@@ -55,7 +55,7 @@ local M = {}
 
 M.setup = function(opts)
 	opts = opts or {}
-	vim.g.nvls_options = vim.tbl_deep_extend('keep', opts, default)
+  vim.g.nvls_options = vim.tbl_deep_extend('keep', opts, vim.g.nvls_options or default)
 end
 
 function M.make(makeprg,errorfm)
