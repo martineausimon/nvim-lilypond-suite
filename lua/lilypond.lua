@@ -29,15 +29,6 @@ end
 function M.DefineLilyVars()
   g.nvls_main = expand('%:p:S')
 
-
---  if fn.empty(fn.glob('%:p:h' .. '/.lilyrc')) == 0 then
---    dofile(expand('%:p:h') .. '/.lilyrc')
---    g.nvls_main = "'" .. g.nvls_main .. "'"
---
---  elseif fn.empty(fn.glob(expand('%:p:h') .. '/main.ly')) == 0 then
---      g.nvls_main = "'" .. expand('%:p:h') .. "/main.ly'"
---  end
-
   if fn.empty(fn.glob(main_folder .. '/.lilyrc')) == 0 then
     dofile(expand(main_folder) .. '/.lilyrc')
     g.nvls_main = "'" .. expand(main_folder) .. "/" .. 
@@ -47,10 +38,6 @@ function M.DefineLilyVars()
     main_file)) == 0 then
       g.nvls_main = "'" .. expand(main_folder) .. "/" .. 
       main_file .. "'"
-  end
-
-  if g.nvls_main_file then
-  g.nvls_main = "'" .. g.nvls_main_file .. "'"
   end
 
   local name,out = g.nvls_main:gsub("%.(ly')", "'")
