@@ -1,11 +1,10 @@
 local g, b, fn = vim.g, vim.b, vim.fn
 local expand = fn.expand
-local main_file = g.nvls_options.lilypond.options.main_file
-local main_folder = g.nvls_options.lilypond.options.main_folder
 
 local M = {}
 
 function M.lilyPlayer()
+  local main_folder = g.nvls_options.lilypond.options.main_folder
   if fn.empty(
     fn.glob(expand(main_folder) 
     .. '/' .. g.nvls_short .. '.midi')) == 0 then
@@ -28,6 +27,8 @@ end
 
 function M.DefineLilyVars()
   g.nvls_main = expand('%:p:S')
+  local main_file = g.nvls_options.lilypond.options.main_file
+  local main_folder = g.nvls_options.lilypond.options.main_folder
 
   if fn.empty(fn.glob(main_folder .. '/.lilyrc')) == 0 then
     dofile(expand(main_folder) .. '/.lilyrc')
