@@ -5,7 +5,10 @@ local lilyCmd     = vim.api.nvim_create_user_command
 local lilyWords   = expand('<sfile>:p:h') .. '/../lilywords'
 local g           = vim.g
 local b           = vim.b
-local output      = g.nvls_options.lilypond.options.output
+
+if not g.nvls_options then
+  require('nvls').setup()
+end
 
 g.lilywords   = lilyWords
 vim.cmd[[let $LILYDICTPATH = g:lilywords]]
@@ -29,12 +32,14 @@ end, {})
 
 lilyCmd('Viewer', function() 
   require('lilypond').DefineLilyVars()
+  local output      = g.nvls_options.lilypond.options.output
   print('Opening ' .. g.nvls_short .. '.' .. output .. '...')
   require('nvls').viewer(g.nvls_main_name .. '.' .. output)
 end, {})
 
 lilyCmd('LilyCmp',    function() 
   require('lilypond').DefineLilyVars()
+  local output      = g.nvls_options.lilypond.options.output
   vim.fn.execute('write')
   print('Compiling ' .. g.nvls_short .. '.ly...')
   makeprg = vim.b.nvls_cmd .. 
@@ -67,10 +72,6 @@ vim.opt.dictionary:append({
   lilyWords .. '/contexts',
   lilyWords .. '/translators'
 })
-
-if not g.nvls_options then
-  require('nvls').setup()
-end
 
 local cmp     = g.nvls_options.lilypond.mappings.compile
 local view    = g.nvls_options.lilypond.mappings.open_pdf
