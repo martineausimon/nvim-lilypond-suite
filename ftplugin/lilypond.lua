@@ -87,6 +87,6 @@ lilyMap(0, 'n', version,
   [[0O\version<space>]] .. 
   [[<Esc>:read<Space>!lilypond<Space>-v]] ..
   [[<Bar>grep<Space>LilyPond<Bar>cut<Space>-c<Space>14-20<cr>]] ..
-  [[kJi"<esc>6la"<esc>]],
+  [[kJi"<esc>A"<esc>]],
   {noremap = true, silent = true}
 )
