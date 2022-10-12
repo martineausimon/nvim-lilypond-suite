@@ -84,19 +84,21 @@ syn match lilyContexts "\(\\\|\<\)\(AncientRemoveEmptyStaffContext\|ChoirStaff\|
 syn match lilyDynamics "[-_^]\?\\\(cr\|cresc\|decr\|decresc\|dim\|endcr\|endcresc\|enddecr\|enddecresc\|enddim\|f\|ff\|fff\|ffff\|fffff\|fp\|fz\|mf\|mp\|n\|p\|pp\|ppp\|pppp\|ppppp\|rfz\|sf\|sff\|sfp\|sfz\|sp\|spp\)\(\A\|\n\)"me=e-1
 
 if g:nvls_options.lilypond.options.pitches_language == "français"
-  syn match lilyPitches "\<\(la\|si\|do\|re\|ré\|mi\|fa\|sol\|la\|s\|R\|r\)\(dd\|bb\|x\|sd\|sb\|dsd\|bsb\|d\|b\|\)"
-  \ display nextgroup=lilyNotesAttr,lilySpecial
+  syn match lilyPitches "\<\(la\|si\|do\|re\|ré\|mi\|fa\|sol\|la\|s\|R\|r\)\(dd\|bb\|x\|sd\|sb\|dsd\|bsb\|d\|b\|\)\(\A\|\n\)"me=e-1
+  \ display nextgroup=lilyNotesAttr,lilySpecial,lilyArticulation
 elseif g:nvls_options.lilypond.options.pitches_language == "english"
-  syn match lilyPitches "\<\([a-g]\|s\|R\|r\)\(ss\|ff\|x\|qs\|qf\|tqs\|tqf\|s\|f\|\-flatflat\|\-sharpsharp\|\-flat\|\-sharp\|\)"
-  \ display nextgroup=lilyNotesAttr,lilySpecial
+  syn match lilyPitches "\<\([a-g]\|s\|R\|r\)\(ss\|ff\|x\|qs\|qf\|tqs\|tqf\|s\|f\|\-flatflat\|\-sharpsharp\|\-flat\|\-sharp\|\)\(\A\|\n\)"me=e-1
+  \ display nextgroup=lilyNotesAttr,lilySpecial,lilyArticulation
 elseif g:nvls_options.lilypond.options.pitches_language == "nohl"
 else
 syn match lilyPitches "\<\([a-g]\|s\|R\|r\)\(isis\|eses\|eh\|ih\|eseh\|isih\|is\|es\|\)\(\A\|\n\)"me=e-1
-  \ display nextgroup=lilyNotesAttr,lilySpecial
+  \ display nextgroup=lilyNotesAttr,lilySpecial,lilyArticulation
 endif
 
-syn match lilyNotesAttr "\(\'\+\|\,\+\|\)\(?\|!\|\)\(1024\|512\|256\|128\|64\|32\|16\|8\|4\|2\|1\|\)\(\M.\+\|\)\(\A\|\n\)"me=e-1 
+
+syn match lilyNotesAttr "\(\'\+\|\,\+\|\)\(?\|!\|\)\(1024\|512\|256\|128\|64\|32\|16\|8\|4\|2\|1\|\)\(\M.\+\|\)\(\A\|\n\)"me=e-1
   \ display contained
+
 
 syn match lilyVar            "\(\i\|\-\)\+\(\s\|\)\+="me=e-1
 syn match lilyAltVar2        "\l\(\-\|\u\|\l\)\+\."me=e-1
