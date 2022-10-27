@@ -7,6 +7,7 @@ This is a plugin (Neovim only) for **LilyPond** with fast syntax highlighting an
 * **Better syntax file for LilyPond**
 * **Asynchronous :make** - compile in background without freezing Neovim
 * **mp3 player in floating window** (LilyPond only) - convert and play midi file while writing score (using `mpv`, `fluidsynth` & `ffmpeg`)
+* **Hyphenation** : automatically place hyphens ' -- ' inside texts to make those texts usable as lyrics (LilyPond only)
 * **Simple ftplugin for LilyPond** with `makeprg`, correct `errorformat`
 * **Compile only main file when working on multiple files project** (LilyPond only)
 * **ftplugin for TeX files** whith detect and allows embedded LilyPond syntax, adaptive `makeprg` function for `lyluatex` or `lilypond-book`, correct `errorformat`
@@ -62,6 +63,8 @@ Plug 'MunifTanjim/nui.nvim'
 
 ### Dependences
 
+#### mp3/midi player
+
 If you want to use the mp3/midi player, you'll need to install the following packages :
 
 * Install and configure `fluidsynth` (e.g. on [Arch](https://wiki.archlinux.org/title/FluidSynth) with `soundfont-fluid`)
@@ -81,6 +84,14 @@ sudo ln -s /usr/share/soundfonts/FluidR3_GM.sf2 /usr/share/soundfonts/default.sf
 sudo pacman -S mpv ffmpeg
 ```
 
+#### Hyphenation function
+
+The Hyphenation function works with the [pyphen](https://pyphen.org/) python module.
+
+Pyphen is available on [PyPI](https://pypi.org/project/pyphen/). To install, just type `pip install pyphen` as superuser. Pyphen is also packaged for ArchLinux, CentOS, Gentoo, Fedora and Mageia.
+
+You'll need to install `python`, and a Python 3 provider in neovim (run `:checkhealth` to confirm if you have the correct runtimes for the provider)
+
 ## SETTINGS
 
 ### Configuration
@@ -95,13 +106,15 @@ require('nvls').setup({
       compile = "<F5>",
       open_pdf = "<F6>",
       switch_buffers = "<A-Space>",
-      insert_version = "<F4>"
+      insert_version = "<F4>",
+      hyphenation = "<F12>"
     },
     options = {
       pitches_language = "default",
       output = "pdf",
       main_file = "main.ly",
-      main_folder = "%:p:h"
+      main_folder = "%:p:h",
+      hyphenation_language = "en_EN",
     },
   },
   latex = {
@@ -146,12 +159,13 @@ require('nvls').setup({
 
 * LilyPond files :
 
-| Command       | Default mappings | Description                                            |
-| ---           | ---              | ---                                                    |
-| `:LilyPlayer` | `<F3>`           | Convert midi file to mp3 and play in a floating window |
-|               | `<F4>`           | Insert current version                                 |
-| `:LilyCmp`    | `<F5>`           | Save & compile pdf                                     |
-| `:Viewer`     | `<F6>`           | Open %.pdf                                             |
+| Command        | Default mappings | Description                                            |
+| ---            | ---              | ---                                                    |
+| `:LilyPlayer`  | `<F3>`           | Convert midi file to mp3 and play in a floating window |
+|                | `<F4>`           | Insert current version                                 |
+| `:LilyCmp`     | `<F5>`           | Save & compile pdf                                     |
+| `:Viewer`      | `<F6>`           | Open %.pdf                                             |
+| `:Hyphenation` | `<F12>`          | place hyphens ' -- ' inside visual selected words      |
 
 * LaTex files :
 
