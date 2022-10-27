@@ -9,12 +9,11 @@ function M.lilyPlayer()
     fn.glob(expand(main_folder) 
     .. '/' .. g.nvls_short .. '.midi')) == 0 then
     print('Converting ' .. g.nvls_short .. '.midi to mp3...') 
-    b.nvls_cmd = "fluidsynth"
-    local fluidsynth = 'rm -rf ' .. g.lilyAudioFile .. ' && ' ..
-      b.nvls_cmd .. ' -T raw -F - ' .. g.lilyMidiFile .. 
+    local convert = 'rm -rf ' .. g.lilyAudioFile .. ' && ' ..
+      'fluidsynth -T raw -F - ' .. g.lilyMidiFile .. 
       ' -s | ffmpeg -f s32le -i - ' .. g.lilyAudioFile
     local fluidsynthEfm = " " 
-    require('nvls').make(fluidsynth,fluidsynthEfm)
+    require('nvls').make(convert,fluidsynthEfm,"fluidsynth")
   elseif fn.empty(
     fn.glob(expand(main_folder) 
       .. '/' .. g.nvls_short .. '.mp3')) > 0 then
@@ -51,7 +50,6 @@ function M.DefineLilyVars()
     "'" .. g.nvls_main_name:gsub("'", "") .. ".midi'")
   g.lilyAudioFile = expand(
     "'" .. g.nvls_main_name:gsub("'", "") .. ".mp3'")
-  b.nvls_cmd = "lilypond"
 end
 
 return M
