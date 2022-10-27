@@ -7,10 +7,12 @@ local default = {
       compile = "<F5>",
       open_pdf = "<F6>",
       switch_buffers = "<A-Space>",
-      insert_version = "<F4>"
+      insert_version = "<F4>",
+      hyphenation = "<F12>"
     },
     options = {
       pitches_language = "default",
+      hyphenation_language = "en_EN",
       output = "pdf",
       main_file = "main.ly",
       main_folder = "%:p:h"
@@ -58,7 +60,8 @@ M.setup = function(opts)
   vim.g.nvls_options = vim.tbl_deep_extend('keep', opts, vim.g.nvls_options or default)
 end
 
-function M.make(makeprg,errorfm)
+function M.make(makeprg,errorfm,ctrl)
+  ctrl = ctrl or nil
   local lines = {""}
   local cmd = vim.fn.expandcmd(makeprg)
   local function on_event(job_id, data, event)
@@ -75,9 +78,9 @@ function M.make(makeprg,errorfm)
         efm = errorfm,
       })
       vim.api.nvim_exec_autocmds("QuickFixCmdPost", {})
-      if vim.b.nvls_cmd == "lilypond-book" then
+      if ctrl == "lilypond-book" then
         require('tex').lytexCmp()
-      elseif vim.b.nvls_cmd == "fluidsynth" then
+      elseif ctrl == "fluidsynth" then
         vim.fn.execute('stopinsert')
         print(' ')
         dofile(vim.b.lilyplay)

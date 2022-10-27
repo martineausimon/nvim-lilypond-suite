@@ -51,20 +51,16 @@ end
 
 function M.SelectMakePrgType()
   if vim.fn.search("usepackage{lyluatex}", "n") ~= 0 then
-    vim.b.nvls_cmd = "lualatex"
-    require('nvls').make(makeLualatex,lualatexEfm)
+    require('nvls').make(makeLualatex,lualatexEfm,"lualatex")
   elseif vim.fn.search("begin{lilypond}", "n") ~= 0 then
-    vim.b.nvls_cmd = "lilypond-book"
-    require('nvls').make(makeLilypondBook,lilypondBookEfm)
+    require('nvls').make(makeLilypondBook,lilypondBookEfm,"lilypond-book")
   else
-    vim.b.nvls_cmd = "lualatex"
-    require('nvls').make(makeLualatex,lualatexEfm)
+    require('nvls').make(makeLualatex,lualatexEfm,"lualatex")
   end
 end
 
 function M.lytexCmp()
-  vim.b.nvls_cmd = "lualatex"
-  require('nvls').make(makeLytex,lualatexEfm)
+  require('nvls').make(makeLytex,lualatexEfm,"lualatex")
 end
 
 return M
