@@ -7,7 +7,7 @@ This is a plugin (Neovim only) for **LilyPond** with fast syntax highlighting an
 * **Better syntax file for LilyPond**
 * **Asynchronous :make** - compile in background without freezing Neovim
 * **mp3 player in floating window** (LilyPond only) - convert and play midi file while writing score (using `mpv`, `fluidsynth` & `ffmpeg`)
-* **Hyphenation** : automatically place hyphens ' -- ' inside texts to make those texts usable as lyrics (LilyPond only)
+* **Hyphenation** : automatically place hyphens ' **--** ' inside texts to make those texts usable as lyrics (LilyPond only)
 * **Simple ftplugin for LilyPond** with `makeprg`, correct `errorformat`
 * **Compile only main file when working on multiple files project** (LilyPond only)
 * **ftplugin for TeX files** whith detect and allows embedded LilyPond syntax, adaptive `makeprg` function for `lyluatex` or `lilypond-book`, correct `errorformat`
