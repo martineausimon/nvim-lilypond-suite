@@ -1,3 +1,4 @@
+local b, g, fn, cmd = vim.b, vim.g, vim.fn, vim.cmd
 local shellescape = vim.fn.shellescape
 local expand = vim.fn.expand
 
@@ -11,31 +12,31 @@ local lualatexEfm = "%+G! LaTeX %trror: %m," ..
     "%+GLaTeX %.%#Warning: %m," ..
     "%+G! %m,%+El.%l %m,%-G%.%#"
 
-local makeLytex = "cd " .. shellescape(vim.b.tmpOutDir) .. 
+local makeLytex = "cd " .. shellescape(b.tmpOutDir) .. 
   " && " .. "lualatex" ..
     " --output-directory=" .. shellescape(expand('%:p:h')) ..
     " --shell-escape " ..
     "--interaction=nonstopmode " .. 
-    shellescape(vim.b.tmpOutDir .. expand('%:t:r') .. '.tex')
+    shellescape(b.tmpOutDir .. expand('%:t:r') .. '.tex')
 
 local makeLilypondBook = "lilypond-book" .. 
-    " --output=" .. shellescape(vim.b.tmpOutDir) .. " %:p:S"
+    " --output=" .. shellescape(b.tmpOutDir) .. " %:p:S"
 
 local lilypondBookEfm = '%+G%f:%l:%c:, %f:%l:%c: %m,%-G%.%#'
 
 local M = {}
 
 function M.DetectLilypondSyntax()
-  if vim.g.lytexSyn == 1 then
-    vim.g.lytexSyn = 0
-    vim.cmd[[set syntax=tex]]
+  if g.lytexSyn == 1 then
+    g.lytexSyn = 0
+    cmd[[set syntax=tex]]
     return
-  elseif vim.fn.search("begin{lilypond}", "n") ~= 0 then
-    vim.b.current_syntax = nil
-    vim.cmd('syntax include @TEX syntax/tex.vim')
-    vim.b.current_syntax = nil
-    vim.cmd('syntax include @lilypond syntax/lilypond.vim')
-    vim.cmd [[ 
+  elseif fn.search("begin{lilypond}", "n") ~= 0 then
+    b.current_syntax = nil
+    cmd('syntax include @TEX syntax/tex.vim')
+    b.current_syntax = nil
+    cmd('syntax include @lilypond syntax/lilypond.vim')
+    cmd [[ 
     syntax region litex 
       \ matchgroup=Snip 
       \ start="\\begin{lilypond}" 
@@ -43,16 +44,16 @@ function M.DetectLilypondSyntax()
       \ containedin=@TEX 
       \ contains=@lilypond
     ]]
-    vim.cmd('filetype plugin on')
-    vim.b.current_syntax = "litex"
-    vim.g.lytexSyn = 1
+    cmd('filetype plugin on')
+    b.current_syntax = "litex"
+    g.lytexSyn = 1
   end
 end
 
 function M.SelectMakePrgType()
-  if vim.fn.search("usepackage{lyluatex}", "n") ~= 0 then
+  if fn.search("usepackage{lyluatex}", "n") ~= 0 then
     require('nvls').make(makeLualatex,lualatexEfm,"lualatex")
-  elseif vim.fn.search("begin{lilypond}", "n") ~= 0 then
+  elseif fn.search("begin{lilypond}", "n") ~= 0 then
     require('nvls').make(makeLilypondBook,lilypondBookEfm,"lilypond-book")
   else
     require('nvls').make(makeLualatex,lualatexEfm,"lualatex")
