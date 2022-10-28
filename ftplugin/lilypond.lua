@@ -88,6 +88,7 @@ lilyMap(0, 'n', switch,      "<C-w>w",           nrm)
 lilyMap(0, 'i', switch,      "<esc><C-w>w",      nrm)
 lilyMap(0, 'n', play,        ":LilyPlayer<cr>",  nrm)
 lilyMap(0, '',  chlang,      ":HyphChLang<cr>",  nrm)
+lilyMap(0, 'n', hyphenation, "i -- <esc>",       nrm)
 lilyMap(0, 'v', hyphenation, 
   "y:lua<space>require('lilypond').loadPyphenModule()<cr>" ..
   "gv:py3do return py_vim_string_replace(line)<cr>", nrm)
