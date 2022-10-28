@@ -86,7 +86,7 @@ sudo pacman -S mpv ffmpeg
 
 #### Hyphenation function
 
-The Hyphenation function works with the [pyphen](https://pyphen.org/) python module.
+The _Hyphenation_ function works with the [pyphen](https://pyphen.org/) python module.
 
 Pyphen is available on [PyPI](https://pypi.org/project/pyphen/). To install, just type `pip install pyphen` as superuser. Pyphen is also packaged for ArchLinux, CentOS, Gentoo, Fedora and Mageia.
 
@@ -107,7 +107,8 @@ require('nvls').setup({
       open_pdf = "<F6>",
       switch_buffers = "<A-Space>",
       insert_version = "<F4>",
-      hyphenation = "<F12>"
+      hyphenation = "<F12>",
+      hyphenation_change_lang = "<F11>"
     },
     options = {
       pitches_language = "default",
@@ -165,7 +166,8 @@ require('nvls').setup({
 |                | `<F4>`           | Insert current version                                 |
 | `:LilyCmp`     | `<F5>`           | Save & compile pdf                                     |
 | `:Viewer`      | `<F6>`           | Open %.pdf                                             |
-| `:Hyphenation` | `<F12>`          | place hyphens ' -- ' inside visual selected words      |
+| `:HyphChLang`  | `<F11>`          | Quickly change _hyphenation_ language during editing   |
+|                | `<F12>`          | place hyphens ' -- ' inside visual selected words      |
 
 * LaTex files :
 
