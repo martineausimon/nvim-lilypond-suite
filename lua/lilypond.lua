@@ -60,7 +60,7 @@ function M.player()
     enter = true,
     focusable = true,
     border = {
-      text = { top = "[" .. vim.g.nvls_short .. ".mp3]" },
+      text = { top = "[" .. g.nvls_short .. ".mp3]" },
       style = plopts.border_style,
     },
       position = {
@@ -83,9 +83,9 @@ function M.player()
   lilyPlayer:mount()
   
   vim.api.nvim_buf_call(lilyPlayer.bufnr, function() 
-    vim.fn.execute("term mpv --msg-level=cplayer=no,ffmpeg=no " ..
-      "--loop --config-dir=/tmp/ " .. vim.g.lilyAudioFile)
-    vim.fn.execute('stopinsert')
+    fn.execute("term mpv --msg-level=cplayer=no,ffmpeg=no " ..
+      "--loop --config-dir=/tmp/ " .. g.lilyAudioFile)
+    fn.execute('stopinsert')
   end)
   
   local nrm = { noremap = true }
