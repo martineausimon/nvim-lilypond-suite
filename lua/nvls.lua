@@ -8,7 +8,8 @@ local default = {
       open_pdf = "<F6>",
       switch_buffers = "<A-Space>",
       insert_version = "<F4>",
-      hyphenation = "<F12>"
+      hyphenation = "<F12>",
+      hyphenation_change_lang = "<F11>"
     },
     options = {
       pitches_language = "default",
@@ -83,7 +84,7 @@ function M.make(makeprg,errorfm,ctrl)
       elseif ctrl == "fluidsynth" then
         vim.fn.execute('stopinsert')
         print(' ')
-        dofile(vim.b.lilyplay)
+        require('lilypond').player()
       else
         print(' ')
       end

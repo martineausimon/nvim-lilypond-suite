@@ -9,12 +9,9 @@ if not g.nvls_options then
   require('nvls').setup()
 end
 
+require('lilypond').DefineLilyVars()
 g.lilywords   = lilyWords
 vim.cmd[[let $LILYDICTPATH = g:lilywords]]
-
-b.lilyplay     = expand('<sfile>:p:h') .. '/../lua/player.lua'
-
-require('lilypond').DefineLilyVars()
 
 vim.bo.autoindent = true
 vim.bo.tabstop    = 2
@@ -47,25 +44,9 @@ lilyCmd('LilyCmp', function()
   require('nvls').make(makeprg,errorfm)
 end, {})
 
-lilyCmd('Hyphenation', function()
+lilyCmd('HyphChLang', function() 
   require('lilypond').DefineLilyVars()
-  local lang = g.nvls_options.lilypond.options.hyphenation_language
-  if fn.has('python3') == 0 then
-    print('[NVLS] python3 is not available')
-    do return end
-  end
-  fn.execute('py3 import pyphen')
-  fn.execute('py3 import vim')
-  fn.execute('py3 import re')
-  fn.execute([[let @"=substitute(@", '\n', '', 'g')]])
-  fn.execute('py3 def py_vim_string_replace(str):' ..
-  'return str.replace(a, b)')
-  fn.execute([[py3 dic = pyphen.Pyphen(lang=']] .. lang .. [[')]])
-  fn.execute([[py3 a = vim.eval('@"')]])
-  fn.execute([[py3 b = dic.inserted(a, hyphen = ' -- ')]])
-  fn.execute([[py3 b = re.sub('  -- ', ' ', b)]])
-  fn.execute([[py3 b = re.sub('" -- ', '"', b)]])
-  fn.execute('py3do return py_vim_string_replace(line)')
+  require('lilypond').quickLangInput()
 end, {})
 
 lilyHi(0, 'QuickFixLine', {bold = true})
@@ -92,19 +73,24 @@ vim.opt.dictionary:append({
   lilyWords .. '/translators'
 })
 
-local cmp         = g.nvls_options.lilypond.mappings.compile
-local view        = g.nvls_options.lilypond.mappings.open_pdf
-local switch      = g.nvls_options.lilypond.mappings.switch_buffers
-local version     = g.nvls_options.lilypond.mappings.insert_version
-local play        = g.nvls_options.lilypond.mappings.player
-local hyphenation = g.nvls_options.lilypond.mappings.hyphenation
+local nvlsMap = g.nvls_options.lilypond.mappings
+local cmp         = nvlsMap.compile
+local view        = nvlsMap.open_pdf
+local switch      = nvlsMap.switch_buffers
+local version     = nvlsMap.insert_version
+local play        = nvlsMap.player
+local hyphenation = nvlsMap.hyphenation
+local chlang      = nvlsMap.hyphenation_change_lang
 local nrm = { noremap = true }
 lilyMap(0, 'n', cmp,         ":LilyCmp<cr>",     nrm)
 lilyMap(0, 'n', view,        ":Viewer<cr>",      nrm)
 lilyMap(0, 'n', switch,      "<C-w>w",           nrm)
 lilyMap(0, 'i', switch,      "<esc><C-w>w",      nrm)
 lilyMap(0, 'n', play,        ":LilyPlayer<cr>",  nrm)
-lilyMap(0, 'v', hyphenation, "y:Hyphenation<cr>", nrm)
+lilyMap(0, '',  chlang,      ":HyphChLang<cr>",  nrm)
+lilyMap(0, 'v', hyphenation, 
+  "y:lua<space>require('lilypond').loadPyphenModule()<cr>" ..
+  "gv:py3do return py_vim_string_replace(line)<cr>", nrm)
 lilyMap(0, 'n', version,
   [[0O\version<space>]] .. 
   [[<Esc>:read<Space>!lilypond<Space>-v]] ..
