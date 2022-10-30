@@ -86,11 +86,11 @@ sudo pacman -S mpv ffmpeg
 
 #### Hyphenation function
 
-The _Hyphenation_ function works with the [pyphen](https://pyphen.org/) python module.
+The _Hyphenation_ function works by default (`en_DEFAULT` language) with the [same dictionary used within Finale](http://hindson.com.au/info/free/free-english-language-hyphenation-dictionary/), which is included in this plugin and does not require any dependency.
 
-Pyphen is available on [PyPI](https://pypi.org/project/pyphen/). To install, just type `pip install pyphen` as superuser. Pyphen is also packaged for ArchLinux, CentOS, Gentoo, Fedora and Mageia.
+If you want to use a different language, you'll need to install the [pyphen](https://pyphen.org/) python module. Pyphen is available on [PyPI](https://pypi.org/project/pyphen/). To install, just type `pip install pyphen` as superuser. Pyphen is also packaged for ArchLinux, CentOS, Gentoo, Fedora and Mageia. You will also need to install `python`, and a Python 3 provider in neovim (run `:checkhealth` to confirm if you have the correct runtimes for the provider)
 
-You'll need to install `python`, and a Python 3 provider in neovim (run `:checkhealth` to confirm if you have the correct runtimes for the provider)
+Read the [Hyphenation wiki page](https://github.com/martineausimon/nvim-lilypond-suite/wiki/Usage#hyphenation-function) to have more informations about this function.
 
 ## SETTINGS
 
@@ -108,14 +108,19 @@ require('nvls').setup({
       switch_buffers = "<A-Space>",
       insert_version = "<F4>",
       hyphenation = "<F12>",
-      hyphenation_change_lang = "<F11>"
+      hyphenation_change_lang = "<F11>",
+      insert_hyphen = "<leader>ih",
+      add_hyphen = "<leader>ah",
+      del_next_hyphen = "<leader>dfh",
+      del_prev_hyphen = "<leader>dFh",
+      del_selected_hyphen = "<leader>dh"
     },
     options = {
       pitches_language = "default",
       output = "pdf",
       main_file = "main.ly",
       main_folder = "%:p:h",
-      hyphenation_language = "en_EN",
+      hyphenation_language = "en_DEFAULT",
     },
   },
   latex = {
