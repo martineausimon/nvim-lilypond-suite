@@ -113,30 +113,6 @@ function M.player()
 
 end
 
-function M.loadPyphenModule()
-  require('lilypond').DefineLilyVars()
-  if g.nvls_hyphlang then
-    lang = g.nvls_hyphlang
-  else
-    lang = g.nvls_options.lilypond.options.hyphenation_language
-  end
-  if fn.has('python3') == 0 then
-    print('[NVLS] python3 is not available')
-    do return end
-  end
-  fn.execute('py3 import pyphen')
-  fn.execute('py3 import vim')
-  fn.execute('py3 import re')
-  fn.execute([[let @"=substitute(@", '\n', '', 'g')]])
-  fn.execute('py3 def py_vim_string_replace(str):' ..
-  'return str.replace(a, b, 1)')
-  fn.execute([[py3 dic = pyphen.Pyphen(lang=']] .. lang .. [[')]])
-  fn.execute([[py3 a = vim.eval('@"')]])
-  fn.execute([[py3 b = dic.inserted(a, hyphen = ' -- ')]])
-  fn.execute([[py3 b = re.sub('  -- ', ' ', b)]])
-  fn.execute([[py3 b = re.sub('" -- ', '"', b)]])
-end
-
 function M.quickLangInput()
   local Input = require("nui.input")
   local plopts = g.nvls_options.player.options
@@ -175,6 +151,50 @@ function M.quickLangInput()
   input:map("n", "<Esc>", function()
     input:unmount()
   end, { noremap = true })
+end
+
+function M.hyphenator()
+  local s_start = vim.fn.getpos("'<")
+  local s_end = vim.fn.getpos("'>")
+  local n_lines = math.abs(s_end[2] - s_start[2]) + 1
+  local lines = vim.api.nvim_buf_get_lines(0, s_start[2] - 1, s_end[2], false)
+  lines[1] = string.sub(lines[1], s_start[3], -1)
+  if n_lines == 1 then
+    lines[n_lines] = string.sub(lines[n_lines], 1, s_end[3] - s_start[3] + 1)
+  else
+    lines[n_lines] = string.sub(lines[n_lines], 1, s_end[3])
+  end
+  local input = table.concat(lines, '\n')
+
+  if g.nvls_hyphlang then
+    lang = g.nvls_hyphlang
+  else
+    lang = g.nvls_options.lilypond.options.hyphenation_language
+  end
+  if lang == "en_DEFAULT" then
+    require('Hyphs')
+    for i, j in pairs(hyphs) do 
+      input = input:gsub("%f[%w_]" .. i .. "s?%f[^%w_]", j)
+    end
+    fn.execute("normal gvc" .. input)
+  else
+    if fn.has('python3') == 0 then
+      print('[NVLS] python3 is not available')
+      do return end
+    end
+    input = input:gsub("[\n\r]", " ")
+    fn.execute('py3 import pyphen')
+    fn.execute('py3 import vim')
+    fn.execute('py3 import re')
+    fn.execute([[py3 def py_vim_string_replace(str):]] ..
+    [[return str.replace("]] .. input .. [[", b, 1)]])
+    fn.execute([[py3 dic = pyphen.Pyphen(lang=']] .. lang .. [[')]])
+    fn.execute([[py3 a = "]] .. input .. [["]])
+    fn.execute([[py3 b = dic.inserted(a, hyphen = ' -- ')]])
+    fn.execute([[py3 b = re.sub('  -- ', ' ', b)]])
+    fn.execute([[py3 b = re.sub('" -- ', '"', b)]])
+    fn.execute("'<,'>py3do return py_vim_string_replace(line)")
+  end
 end
 
 return M
