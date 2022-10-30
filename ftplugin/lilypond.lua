@@ -9,7 +9,7 @@ if not g.nvls_options then
   require('nvls').setup()
 end
 
-require('lilypond').DefineLilyVars()
+require('nvls.lilypond').DefineLilyVars()
 g.lilywords   = lilyWords
 vim.cmd[[let $LILYDICTPATH = g:lilywords]]
 
@@ -22,19 +22,19 @@ vim.opt_local.iskeyword:append([[\]])
 vim.opt_local.complete:append('k')
 
 lilyCmd('LilyPlayer', function() 
-  require('lilypond').DefineLilyVars()
-  require('lilypond').lilyPlayer() 
+  require('nvls.lilypond').DefineLilyVars()
+  require('nvls.lilypond').lilyPlayer() 
 end, {})
 
 lilyCmd('Viewer', function() 
-  require('lilypond').DefineLilyVars()
+  require('nvls.lilypond').DefineLilyVars()
   local output      = g.nvls_options.lilypond.options.output
   print('Opening ' .. g.nvls_short .. '.' .. output .. '...')
   require('nvls').viewer(g.nvls_main_name .. '.' .. output)
 end, {})
 
 lilyCmd('LilyCmp', function() 
-  require('lilypond').DefineLilyVars()
+  require('nvls.lilypond').DefineLilyVars()
   local output      = g.nvls_options.lilypond.options.output
   fn.execute('write')
   print('Compiling ' .. g.nvls_short .. '.ly...')
@@ -45,8 +45,8 @@ lilyCmd('LilyCmp', function()
 end, {})
 
 lilyCmd('HyphChLang', function() 
-  require('lilypond').DefineLilyVars()
-  require('lilypond').quickLangInput()
+  require('nvls.lilypond').DefineLilyVars()
+  require('nvls.lilypond').quickLangInput()
 end, {})
 
 lilyHi(0, 'QuickFixLine', {bold = true})
@@ -102,7 +102,7 @@ vim.cmd([[vmap <silent> ]] .. dels ..
   [[ <esc>:%s/\%V<space>--<space>//g<cr>:nohl<cr>]])
 
 lilyMap(0, 'v', hyphenation, 
-  ":lua<space>require('lilypond').hyphenator()<cr>", 
+  ":lua<space>require('nvls.lilypond').hyphenator()<cr>", 
   { noremap = true, silent = true })
 
 lilyMap(0, 'n', version,

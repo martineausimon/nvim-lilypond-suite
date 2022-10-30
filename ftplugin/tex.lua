@@ -12,12 +12,12 @@ texCmd('Viewer', function() require('nvls').viewer(texPdf) end, {})
 
 texCmd('LaTexCmp',  function() 
     fn.execute('write')
-    require('tex').SelectMakePrgType() 
+    require('nvls.tex').SelectMakePrgType() 
   end,    
 {})
 
 texCmd('ToggleSyn', function() 
-  require('tex').DetectLilypondSyntax() 
+  require('nvls.tex').DetectLilypondSyntax() 
 end, {})
 
 texCmd('Cleaner', function() 
@@ -27,7 +27,7 @@ texCmd('Cleaner', function()
 end, {})
 
 texAutoCmd("BufEnter", {
-  callback = function() require('tex').DetectLilypondSyntax() end,
+  callback = function() require('nvls.tex').DetectLilypondSyntax() end,
   group = vim.api.nvim_create_augroup(
     "DetectSyntax", 
     { clear = true }

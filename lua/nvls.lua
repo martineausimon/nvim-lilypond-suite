@@ -85,11 +85,11 @@ function M.make(makeprg,errorfm,ctrl)
       })
       vim.api.nvim_exec_autocmds("QuickFixCmdPost", {})
       if ctrl == "lilypond-book" then
-        require('tex').lytexCmp()
+        require('nvls.tex').lytexCmp()
       elseif ctrl == "fluidsynth" then
         vim.fn.execute('stopinsert')
         print(' ')
-        require('lilypond').player()
+        require('nvls.lilypond').player()
       else
         print(' ')
       end
