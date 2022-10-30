@@ -73,7 +73,7 @@ vim.opt.dictionary:append({
   lilyWords .. '/translators'
 })
 
-local nvlsMap = g.nvls_options.lilypond.mappings
+local nvlsMap     = g.nvls_options.lilypond.mappings
 local cmp         = nvlsMap.compile
 local view        = nvlsMap.open_pdf
 local switch      = nvlsMap.switch_buffers
@@ -81,17 +81,30 @@ local version     = nvlsMap.insert_version
 local play        = nvlsMap.player
 local hyphenation = nvlsMap.hyphenation
 local chlang      = nvlsMap.hyphenation_change_lang
-local nrm = { noremap = true }
-lilyMap(0, 'n', cmp,         ":LilyCmp<cr>",     nrm)
-lilyMap(0, 'n', view,        ":Viewer<cr>",      nrm)
-lilyMap(0, 'n', switch,      "<C-w>w",           nrm)
-lilyMap(0, 'i', switch,      "<esc><C-w>w",      nrm)
-lilyMap(0, 'n', play,        ":LilyPlayer<cr>",  nrm)
-lilyMap(0, '',  chlang,      ":HyphChLang<cr>",  nrm)
-lilyMap(0, 'n', hyphenation, "i -- <esc>",       nrm)
+local ins         = nvlsMap.insert_hyphen
+local add         = nvlsMap.add_hyphen
+local deln        = nvlsMap.del_next_hyphen
+local delp        = nvlsMap.del_prev_hyphen
+local dels        = nvlsMap.del_selected_hyphen
+local nrm         = { noremap = true }
+lilyMap(0, 'n', cmp,    ":LilyCmp<cr>",                      nrm)
+lilyMap(0, 'n', view,   ":Viewer<cr>",                       nrm)
+lilyMap(0, 'n', switch, "<C-w>w",                            nrm)
+lilyMap(0, 'i', switch, "<esc><C-w>w",                       nrm)
+lilyMap(0, 'n', play,   ":LilyPlayer<cr>",                   nrm)
+lilyMap(0, '',  chlang, ":HyphChLang<cr>",                   nrm)
+lilyMap(0, 'n', ins,    "i<space>--<space><esc>",            nrm)
+lilyMap(0, 'n', add,    "a<space>--<space><esc>",            nrm)
+lilyMap(0, 'n', deln,   "/<space>--<space><cr>:nohl<cr>4x",  nrm)
+lilyMap(0, 'n', delp,   "/<space>--<space><cr>N:nohl<cr>4x", nrm)
+
+vim.cmd([[vmap <silent> ]] .. dels .. 
+  [[ <esc>:%s/\%V<space>--<space>//g<cr>:nohl<cr>]])
+
 lilyMap(0, 'v', hyphenation, 
-  "y:lua<space>require('lilypond').loadPyphenModule()<cr>" ..
-  "gv:py3do return py_vim_string_replace(line)<cr>", nrm)
+  ":lua<space>require('lilypond').hyphenator()<cr>", 
+  { noremap = true, silent = true })
+
 lilyMap(0, 'n', version,
   [[0O\version<space>]] .. 
   [[<Esc>:read<Space>!lilypond<Space>-v]] ..
