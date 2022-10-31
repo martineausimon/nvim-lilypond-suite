@@ -99,7 +99,7 @@ lilyMap(0, 'n', deln,   "/<space>--<space><cr>:nohl<cr>4x",  nrm)
 lilyMap(0, 'n', delp,   "/<space>--<space><cr>N:nohl<cr>4x", nrm)
 
 vim.cmd([[vmap <silent> ]] .. dels .. 
-  [[ <esc>:%s/\%V<space>--<space>//g<cr>:nohl<cr>]])
+  [[ <esc>:%s/\%V<space>--<space>//g<cr>:nohl<cr>`<]])
 
 lilyMap(0, 'v', hyphenation, 
   ":lua<space>require('nvls.lilypond').hyphenator()<cr>", 
