@@ -97,13 +97,13 @@ endif
 
 
 syn match lilyNotesAttr "\(\'\+\|\,\+\|\)\(?\|!\|\)\(1024\|512\|256\|128\|64\|32\|16\|8\|4\|2\|1\|\)\(\M.\+\|\)\(\A\|\n\)"me=e-1
-  \ display contained
+  \ display contained nextgroup=lilySpecial, lilyArticulation
 
 
 syn match lilyVar            "\(\i\|\-\)\+\(\s\|\)\+="me=e-1
-syn match lilyAltVar2        "\l\(\-\|\u\|\l\)\+\."me=e-1
+syn match lilyAltVar2        "\l\(\-\|\u\|\l\)\+\l\."me=e-1
   \ display contained nextgroup=lilyVar
-syn match lilyAltVar1        "\l\(\-\|\u\|\l\)\+\."he=e-1 
+syn match lilyAltVar1        "\l\(\-\|\u\|\l\)\+\l\."he=e-1 
   \ display nextgroup=lilyAltVar2
 
 syn match lilyTranslators "\u\l\+\(_\)\w*\(engraver\|performer\|translator\)"
@@ -117,7 +117,6 @@ syn region lilyComment      start="%{"           skip="%$" end="%}"
 syn region lilyComment      start="%\([^{]\|$\)" end="$"
 syn match  lilySpecial      "[(~)]\|[(*)]\|[(:)]\|[(=)]"
 syn match  lilyDynamics     "\\[<!>\\]"
-syn match  lilyArticulation "[-_^][-_^+|>.]"
 
 if g:nvls_options.lilypond.options.pitches_language == "nohl"
   syn match  lilyNumber       "[-_^.]\?\(\-\.\|\)\d\+[.]\{,3}"
@@ -125,6 +124,7 @@ else
   syn match  lilyNumber       "[-_^.]\?\(\-\.\|\)\d\+[.]\?"
 end
 
+syn match  lilyArticulation "[-_^][-_^+|>|.]"
 
 syn match Error "}"
 syn match Error "\l\+\d[',]\+"
@@ -174,7 +174,6 @@ command -nargs=+ HiLink hi def link <args>
   HiLink lilyLyrics             Special
   HiLink lilyInnerLyrics        Special
   HiLink lilyFunctions          Statement
-  HiLink lilyDynamics           SpecialChar
   HiLink lilyArticulation       PreProc
   HiLink lilyContexts           Type
   HiLink lilyGrobs              Include
