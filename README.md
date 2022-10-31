@@ -111,8 +111,8 @@ require('nvls').setup({
       hyphenation_change_lang = "<F11>",
       insert_hyphen = "<leader>ih",
       add_hyphen = "<leader>ah",
-      del_next_hyphen = "<leader>dfh",
-      del_prev_hyphen = "<leader>dFh",
+      del_next_hyphen = "<leader>dh",
+      del_prev_hyphen = "<leader>dH",
       del_selected_hyphen = "<leader>dh"
     },
     options = {
