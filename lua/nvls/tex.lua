@@ -12,15 +12,15 @@ local lualatexEfm = "%+G! LaTeX %trror: %m," ..
     "%+GLaTeX %.%#Warning: %m," ..
     "%+G! %m,%+El.%l %m,%-G%.%#"
 
-local makeLytex = "cd " .. shellescape(b.tmpOutDir) .. 
+local makeLytex = "cd " .. shellescape(tmpOutDir) .. 
   " && " .. "lualatex" ..
     " --output-directory=" .. shellescape(expand('%:p:h')) ..
     " --shell-escape " ..
     "--interaction=nonstopmode " .. 
-    shellescape(b.tmpOutDir .. expand('%:t:r') .. '.tex')
+    shellescape(tmpOutDir .. expand('%:t:r') .. '.tex')
 
 local makeLilypondBook = "lilypond-book" .. 
-    " --output=" .. shellescape(b.tmpOutDir) .. " %:p:S"
+    " --output=" .. shellescape(tmpOutDir) .. " %:p:S"
 
 local lilypondBookEfm = '%+G%f:%l:%c:, %f:%l:%c: %m,%-G%.%#'
 

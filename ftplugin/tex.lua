@@ -6,7 +6,7 @@ local shellescape = vim.fn.shellescape
 local expand      = vim.fn.expand
 local g, b, fn    = vim.g, vim.b, vim.fn
 texPdf = shellescape(expand('%:p:r') .. '.pdf')
-b.tmpOutDir = expand('%:p:h') .. '/tmpOutDir/'
+tmpOutDir = expand('%:p:h') .. '/tmpOutDir/'
 
 texCmd('Viewer', function() require('nvls').viewer(texPdf) end, {})
 
@@ -23,7 +23,7 @@ end, {})
 texCmd('Cleaner', function() 
     fn.execute('!rm -rf ' ..
       '%:r:S.log %:r:S.aux %r:S.out tmp-ly/ ' ..
-      shellescape(b.tmpOutDir))
+      shellescape(tmpOutDir))
 end, {})
 
 texAutoCmd("BufEnter", {
