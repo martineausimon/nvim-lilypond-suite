@@ -5,22 +5,19 @@ local M = {}
 
 function M.lilyPlayer()
   local main_folder = nvls_options.lilypond.options.main_folder
-  if fn.empty(
-    fn.glob(expand(main_folder) 
-    .. '/' .. nvls_short .. '.midi')) == 0 then
+  if io.open(fn.glob(main_folder .. '/' .. 
+      nvls_short .. '.midi'), "r") then
     print('Converting ' .. nvls_short .. '.midi to mp3...') 
     local convert = 'rm -rf ' .. lilyAudioFile .. ' && ' ..
       'fluidsynth -T raw -F - ' .. lilyMidiFile .. 
       ' -s | ffmpeg -f s32le -i - ' .. lilyAudioFile
-    local efm = " " 
-    require('nvls').make(convert,efm,"fluidsynth")
-  elseif fn.empty(
-    fn.glob(expand(main_folder) 
-      .. '/' .. nvls_short .. '.mp3')) > 0 then
+    require('nvls').make(convert," ","fluidsynth")
+  elseif io.open(fn.glob(main_folder .. '/' .. 
+      nvls_short .. '.mp3', "r")) then
+    require('nvls.lilypond').player(lilyAudioFile)
+  else
     print("[LilyPlayer] No mp3 file in working directory")
     do return end
-  else
-    require('nvls.lilypond').player()
   end
 end
 
@@ -29,13 +26,16 @@ function M.DefineLilyVars()
   local main_file = nvls_options.lilypond.options.main_file
   local main_folder = nvls_options.lilypond.options.main_folder
 
-  if fn.empty(fn.glob(main_folder .. '/.lilyrc')) == 0 then
+  if io.open(fn.glob(main_folder .. '/.lilyrc')) then
     dofile(expand(main_folder) .. '/.lilyrc')
     nvls_main = "'" .. expand(main_folder) .. "/" .. 
     main_file .. "'"
+    if not io.open(fn.glob(nvls_main)) then
+      nvls_main = expand('%:p:S')
+    end
 
-  elseif fn.empty(fn.glob(expand(main_folder) .. '/' .. 
-    main_file)) == 0 then
+  elseif io.open(fn.glob(expand(main_folder) .. '/' .. 
+    main_file)) then
       nvls_main = "'" .. expand(main_folder) .. "/" .. 
       main_file .. "'"
   end
@@ -208,20 +208,19 @@ function M.pyphen()
 end
 
 -- WORK IN PROGRES...
---function M.tempLy()
---  local input = require('nvls.lilypond').getVisualSelection()
---  local code = "\\score { \\relative c' { " .. input .. " } \\midi {} }"
---  tmpOutDir = expand('%:p:h') .. '/tmpOutDir/'
---  os.execute('rm -rf ' .. tmpOutDir)
---  os.execute('mkdir -p ' .. tmpOutDir)
---  local tmpfile = io.open(tmpOutDir .. 'tmp.ly', 'w')
---  tmpfile:write(code)
---  tmpfile:close()
---  os.execute('lilypond -s -o ' .. tmpOutDir .. ' ' ..tmpOutDir .. 'tmp.ly')
---  local convert = 'fluidsynth -T raw -F - ' .. tmpOutDir .. 'tmp.midi' ..
---      ' -s | ffmpeg -f s32le -i - ' .. tmpOutDir .. 'tmp.mp3'
---  local efm = " "
---  require('nvls').make(convert,efm,"tmpplayer")
---end
+function M.tempLy()
+  local input = require('nvls.lilypond').getVisualSelection()
+  local code = "\\score { \\relative c' { " .. input .. " } \\midi {} }"
+  tmpOutDir = expand('%:p:h') .. '/tmpOutDir/'
+  os.execute('rm -rf ' .. tmpOutDir)
+  os.execute('mkdir -p ' .. tmpOutDir)
+  local tmpfile = io.open(tmpOutDir .. 'tmp.ly', 'w')
+  tmpfile:write(code)
+  tmpfile:close()
+  os.execute('lilypond -s -o ' .. tmpOutDir .. ' ' ..tmpOutDir .. 'tmp.ly')
+  local convert = 'fluidsynth -T raw -F - ' .. tmpOutDir .. 'tmp.midi' ..
+      ' -s | ffmpeg -f s32le -i - ' .. tmpOutDir .. 'tmp.mp3'
+  require('nvls').make(convert," ","tmpplayer")
+end
 
 return M
