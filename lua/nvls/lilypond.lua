@@ -1,4 +1,4 @@
-local g, b, fn = vim.g, vim.b, vim.fn
+local fn = vim.fn
 local expand = fn.expand
 
 local M = {}
