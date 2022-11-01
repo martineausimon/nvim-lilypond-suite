@@ -1,4 +1,4 @@
-local g, b, fn    = vim.g, vim.b, vim.fn
+local fn          = vim.fn
 local expand      = fn.expand
 local lilyMap     = vim.api.nvim_buf_set_keymap
 local lilyHi      = vim.api.nvim_set_hl
@@ -10,7 +10,7 @@ if not nvls_options then
 end
 
 require('nvls.lilypond').DefineLilyVars()
-g.lilywords   = lilyWords
+vim.g.lilywords   = lilyWords
 vim.cmd[[let $LILYDICTPATH = g:lilywords]]
 
 vim.bo.autoindent = true
