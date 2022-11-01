@@ -4,7 +4,7 @@ local texCmd      = vim.api.nvim_create_user_command
 local texAutoCmd  = vim.api.nvim_create_autocmd
 local shellescape = vim.fn.shellescape
 local expand      = vim.fn.expand
-local g, b, fn    = vim.g, vim.b, vim.fn
+local g, fn       = vim.g, vim.fn
 texPdf = shellescape(expand('%:p:r') .. '.pdf')
 tmpOutDir = expand('%:p:h') .. '/tmpOutDir/'
 
