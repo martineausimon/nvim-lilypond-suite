@@ -4,19 +4,19 @@ local expand = fn.expand
 local M = {}
 
 function M.lilyPlayer()
-  local main_folder = g.nvls_options.lilypond.options.main_folder
+  local main_folder = nvls_options.lilypond.options.main_folder
   if fn.empty(
     fn.glob(expand(main_folder) 
-    .. '/' .. g.nvls_short .. '.midi')) == 0 then
-    print('Converting ' .. g.nvls_short .. '.midi to mp3...') 
-    local convert = 'rm -rf ' .. g.lilyAudioFile .. ' && ' ..
-      'fluidsynth -T raw -F - ' .. g.lilyMidiFile .. 
-      ' -s | ffmpeg -f s32le -i - ' .. g.lilyAudioFile
-    local fluidsynthEfm = " " 
-    require('nvls').make(convert,fluidsynthEfm,"fluidsynth")
+    .. '/' .. nvls_short .. '.midi')) == 0 then
+    print('Converting ' .. nvls_short .. '.midi to mp3...') 
+    local convert = 'rm -rf ' .. lilyAudioFile .. ' && ' ..
+      'fluidsynth -T raw -F - ' .. lilyMidiFile .. 
+      ' -s | ffmpeg -f s32le -i - ' .. lilyAudioFile
+    local efm = " " 
+    require('nvls').make(convert,efm,"fluidsynth")
   elseif fn.empty(
     fn.glob(expand(main_folder) 
-      .. '/' .. g.nvls_short .. '.mp3')) > 0 then
+      .. '/' .. nvls_short .. '.mp3')) > 0 then
     print("[LilyPlayer] No mp3 file in working directory")
     do return end
   else
@@ -25,42 +25,42 @@ function M.lilyPlayer()
 end
 
 function M.DefineLilyVars()
-  g.nvls_main = expand('%:p:S')
-  local main_file = g.nvls_options.lilypond.options.main_file
-  local main_folder = g.nvls_options.lilypond.options.main_folder
+  nvls_main = expand('%:p:S')
+  local main_file = nvls_options.lilypond.options.main_file
+  local main_folder = nvls_options.lilypond.options.main_folder
 
   if fn.empty(fn.glob(main_folder .. '/.lilyrc')) == 0 then
     dofile(expand(main_folder) .. '/.lilyrc')
-    g.nvls_main = "'" .. expand(main_folder) .. "/" .. 
+    nvls_main = "'" .. expand(main_folder) .. "/" .. 
     main_file .. "'"
 
   elseif fn.empty(fn.glob(expand(main_folder) .. '/' .. 
     main_file)) == 0 then
-      g.nvls_main = "'" .. expand(main_folder) .. "/" .. 
+      nvls_main = "'" .. expand(main_folder) .. "/" .. 
       main_file .. "'"
   end
 
-  local name,out = g.nvls_main:gsub("%.(ly')", "'")
+  local name,out = nvls_main:gsub("%.(ly')", "'")
   if out == 0 then
-    name,out = g.nvls_main:gsub("%.(ily')", "'")
+    name,out = nvls_main:gsub("%.(ily')", "'")
   end
-  g.nvls_main_name = name
-  g.nvls_short = g.nvls_main_name:match('/([^/]+)$'):gsub("'", "")
-  g.lilyMidiFile = expand(
-    "'" .. g.nvls_main_name:gsub("'", "") .. ".midi'")
-  g.lilyAudioFile = expand(
-    "'" .. g.nvls_main_name:gsub("'", "") .. ".mp3'")
+  nvls_main_name = name
+  nvls_short = nvls_main_name:match('/([^/]+)$'):gsub("'", "")
+  lilyMidiFile = expand(
+    "'" .. nvls_main_name:gsub("'", "") .. ".midi'")
+  lilyAudioFile = expand(
+    "'" .. nvls_main_name:gsub("'", "") .. ".mp3'")
 end
 
-function M.player()
+function M.player(file)
   local lilyPopup = require("nui.popup")
-  local plopts = g.nvls_options.player.options
+  local plopts = nvls_options.player.options
   
   local lilyPlayer = lilyPopup({
     enter = true,
     focusable = true,
     border = {
-      text = { top = "[" .. g.nvls_short .. ".mp3]" },
+      text = { top = "[" .. nvls_short .. ".mp3]" },
       style = plopts.border_style,
     },
       position = {
@@ -84,13 +84,13 @@ function M.player()
   
   vim.api.nvim_buf_call(lilyPlayer.bufnr, function() 
     fn.execute("term mpv --msg-level=cplayer=no,ffmpeg=no " ..
-      "--loop --config-dir=/tmp/ " .. g.lilyAudioFile)
+      "--loop --config-dir=/tmp/ " .. file)
     fn.execute('stopinsert')
   end)
   
   local nrm = { noremap = true }
-  local opt = g.nvls_options.player.mappings
-  local lyopt = g.nvls_options.lilypond.mappings
+  local opt = nvls_options.player.mappings
+  local lyopt = nvls_options.lilypond.mappings
   
   function map(key,cmd)
     lilyPlayer:map('n', key, cmd, nrm)
@@ -115,12 +115,12 @@ end
 
 function M.quickLangInput()
   local Input = require("nui.input")
-  local plopts = g.nvls_options.player.options
+  local plopts = nvls_options.player.options
 
-  if g.nvls_hyphlang then
-    value = g.nvls_hyphlang
+  if nvls_hyphlang then
+    value = nvls_hyphlang
   else
-    value = g.nvls_options.lilypond.options.hyphenation_language
+    value = nvls_options.lilypond.options.hyphenation_language
   end
 
   local input = Input({
@@ -142,7 +142,7 @@ function M.quickLangInput()
     prompt = "> ",
     default_value = value,
     on_submit = function(value)
-      g.nvls_hyphlang = value
+      nvls_hyphlang = value
     end,
   })
 
@@ -153,48 +153,75 @@ function M.quickLangInput()
   end, { noremap = true })
 end
 
-function M.hyphenator()
-  local s_start = vim.fn.getpos("'<")
-  local s_end = vim.fn.getpos("'>")
-  local n_lines = math.abs(s_end[2] - s_start[2]) + 1
-  local lines = vim.api.nvim_buf_get_lines(0, s_start[2] - 1, s_end[2], false)
-  lines[1] = string.sub(lines[1], s_start[3], -1)
+function M.getVisualSelection()
+  local getLines = vim.api.nvim_buf_get_lines
+  local s_start  = vim.fn.getpos("'<")
+  local s_end    = vim.fn.getpos("'>")
+  local n_lines  = math.abs(s_end[2] - s_start[2]) + 1
+  local lines    = getLines(0, s_start[2] - 1, s_end[2], false)
+  lines[1]       = string.sub(lines[1], s_start[3], -1)
   if n_lines == 1 then
     lines[n_lines] = string.sub(lines[n_lines], 1, s_end[3] - s_start[3] + 1)
   else
     lines[n_lines] = string.sub(lines[n_lines], 1, s_end[3])
   end
-  local input = table.concat(lines, '\n')
+  return table.concat(lines, '\n')
+end
 
-  if g.nvls_hyphlang then
-    lang = g.nvls_hyphlang
-  else
-    lang = g.nvls_options.lilypond.options.hyphenation_language
+function M.getHyphType()
+  require('nvls.lilypond').DefineLilyVars()
+  if nvls_hyphlang then lang = nvls_hyphlang
+  else lang = nvls_options.lilypond.options.hyphenation_language
   end
-  if lang == "en_DEFAULT" then
-    require('nvls.hyphs')
-    for i, j in pairs(hyphs) do 
-      input = input:gsub("%f[%w_]" .. i .. "s?%f[^%w_]", j)
-    end
-    fn.execute("normal gvc" .. input)
-  else
-    if fn.has('python3') == 0 then
-      print('[NVLS] python3 is not available')
-      do return end
-    end
-    input = input:gsub("[\n\r]", " ")
-    fn.execute('py3 import pyphen')
-    fn.execute('py3 import vim')
-    fn.execute('py3 import re')
-    fn.execute([[py3 def py_vim_string_replace(str):]] ..
-    [[return str.replace("]] .. input .. [[", b, 1)]])
-    fn.execute([[py3 dic = pyphen.Pyphen(lang=']] .. lang .. [[')]])
-    fn.execute([[py3 a = "]] .. input .. [["]])
-    fn.execute([[py3 b = dic.inserted(a, hyphen = ' -- ')]])
-    fn.execute([[py3 b = re.sub('  -- ', ' ', b)]])
-    fn.execute([[py3 b = re.sub('" -- ', '"', b)]])
-    fn.execute("'<,'>py3do return py_vim_string_replace(line)")
+  if lang == "en_DEFAULT" then require('nvls.lilypond').hyphenator()
+  else require('nvls.lilypond').pyphen()
   end
 end
+
+function M.hyphenator()
+  local input = require('nvls.lilypond').getVisualSelection()
+  require('nvls.hyphs')
+  for i, j in pairs(hyphs) do 
+    input = input:gsub("%f[%w_]" .. i .. "s?%f[^%w_]", j)
+  end
+  fn.execute("normal gvc" .. input)
+end
+  
+function M.pyphen()
+  if fn.has('python3') == 0 then
+    print('[NVLS] python3 is not available')
+    do return end
+  end
+  local input = require('nvls.lilypond').getVisualSelection()
+  input = input:gsub("[\n\r]", " ")
+  fn.execute('py3 import pyphen')
+  fn.execute('py3 import vim')
+  fn.execute('py3 import re')
+  fn.execute([[py3 def py_vim_string_replace(str):]] ..
+  [[return str.replace("]] .. input .. [[", b, 1)]])
+  fn.execute([[py3 dic = pyphen.Pyphen(lang=']] .. lang .. [[')]])
+  fn.execute([[py3 a = "]] .. input .. [["]])
+  fn.execute([[py3 b = dic.inserted(a, hyphen = ' -- ')]])
+  fn.execute([[py3 b = re.sub('  -- ', ' ', b)]])
+  fn.execute([[py3 b = re.sub('" -- ', '"', b)]])
+  fn.execute("'<,'>py3do return py_vim_string_replace(line)")
+end
+
+-- WORK IN PROGRES...
+--function M.tempLy()
+--  local input = require('nvls.lilypond').getVisualSelection()
+--  local code = "\\score { \\relative c' { " .. input .. " } \\midi {} }"
+--  tmpOutDir = expand('%:p:h') .. '/tmpOutDir/'
+--  os.execute('rm -rf ' .. tmpOutDir)
+--  os.execute('mkdir -p ' .. tmpOutDir)
+--  local tmpfile = io.open(tmpOutDir .. 'tmp.ly', 'w')
+--  tmpfile:write(code)
+--  tmpfile:close()
+--  os.execute('lilypond -s -o ' .. tmpOutDir .. ' ' ..tmpOutDir .. 'tmp.ly')
+--  local convert = 'fluidsynth -T raw -F - ' .. tmpOutDir .. 'tmp.midi' ..
+--      ' -s | ffmpeg -f s32le -i - ' .. tmpOutDir .. 'tmp.mp3'
+--  local efm = " "
+--  require('nvls').make(convert,efm,"tmpplayer")
+--end
 
 return M

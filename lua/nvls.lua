@@ -63,7 +63,8 @@ local M = {}
 
 M.setup = function(opts)
   opts = opts or {}
-  vim.g.nvls_options = vim.tbl_deep_extend('keep', opts, vim.g.nvls_options or default)
+  nvls_options = vim.tbl_deep_extend('keep', opts, nvls_options or default)
+  vim.g.nvls_language = nvls_options.lilypond.options.pitches_language
 end
 
 function M.make(makeprg,errorfm,ctrl)
@@ -89,7 +90,11 @@ function M.make(makeprg,errorfm,ctrl)
       elseif ctrl == "fluidsynth" then
         vim.fn.execute('stopinsert')
         print(' ')
-        require('nvls.lilypond').player()
+        require('nvls.lilypond').player(lilyAudioFile)
+      elseif ctrl == "tmpplayer" then
+        vim.fn.execute('stopinsert')
+        print(' ')
+        require('nvls.lilypond').player(tmpOutDir .. 'tmp.mp3')
       else
         print(' ')
       end

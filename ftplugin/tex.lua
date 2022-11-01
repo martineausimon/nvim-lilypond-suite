@@ -37,18 +37,18 @@ texAutoCmd("BufEnter", {
 
 texHi(0, 'Snip', { ctermfg = "white", fg = "white", bold = true })
 
-if not g.nvls_options then
+if not nvls_options then
   require('nvls').setup()
 end
 
-local cmp = g.nvls_options.latex.mappings.compile
-local view = g.nvls_options.latex.mappings.open_pdf
-local lysyn = g.nvls_options.latex.mappings.lilypond_syntax
-local clean = g.nvls_options.latex.options.clean_logs
+local cmp = nvls_options.latex.mappings.compile
+local view = nvls_options.latex.mappings.open_pdf
+local lysyn = nvls_options.latex.mappings.lilypond_syntax
+local clean = nvls_options.latex.options.clean_logs
 texMap(0, 'n', lysyn, ":ToggleSyn<cr>", {noremap = true})
 texMap(0, 'n', cmp,   ":LaTexCmp<cr>",  {noremap = true})
 texMap(0, 'n', view,  ":Viewer<cr>",    {noremap = true})
-if clean or vim.g.nvls_clean_tex_files == 1 then
+if clean or g.nvls_clean_tex_files == 1 then
   vim.api.nvim_create_autocmd( 'VimLeave', {
     command = 'Cleaner',
     group = vim.api.nvim_create_augroup(

@@ -5,7 +5,7 @@ local lilyHi      = vim.api.nvim_set_hl
 local lilyCmd     = vim.api.nvim_create_user_command
 local lilyWords   = expand('<sfile>:p:h') .. '/../lilywords'
 
-if not g.nvls_options then
+if not nvls_options then
   require('nvls').setup()
 end
 
@@ -28,18 +28,18 @@ end, {})
 
 lilyCmd('Viewer', function() 
   require('nvls.lilypond').DefineLilyVars()
-  local output      = g.nvls_options.lilypond.options.output
-  print('Opening ' .. g.nvls_short .. '.' .. output .. '...')
-  require('nvls').viewer(g.nvls_main_name .. '.' .. output)
+  local output      = nvls_options.lilypond.options.output
+  print('Opening ' .. nvls_short .. '.' .. output .. '...')
+  require('nvls').viewer(nvls_main_name .. '.' .. output)
 end, {})
 
 lilyCmd('LilyCmp', function() 
   require('nvls.lilypond').DefineLilyVars()
-  local output      = g.nvls_options.lilypond.options.output
+  local output      = nvls_options.lilypond.options.output
   fn.execute('write')
-  print('Compiling ' .. g.nvls_short .. '.ly...')
+  print('Compiling ' .. nvls_short .. '.ly...')
   makeprg = "lilypond -f " .. output .. " -o" .. 
-    g.nvls_main_name .. ' ' .. g.nvls_main
+    nvls_main_name .. ' ' .. nvls_main
   errorfm = '%+G%f:%l:%c:, %f:%l:%c: %m,%-G%.%#'
   require('nvls').make(makeprg,errorfm)
 end, {})
@@ -73,7 +73,7 @@ vim.opt.dictionary:append({
   lilyWords .. '/translators'
 })
 
-local nvlsMap     = g.nvls_options.lilypond.mappings
+local nvlsMap     = nvls_options.lilypond.mappings
 local cmp         = nvlsMap.compile
 local view        = nvlsMap.open_pdf
 local switch      = nvlsMap.switch_buffers
@@ -102,7 +102,7 @@ vim.cmd([[vmap <silent> ]] .. dels ..
   [[ <esc>:%s/\%V<space>--<space>//g<cr>:nohl<cr>`<]])
 
 lilyMap(0, 'v', hyphenation, 
-  ":lua<space>require('nvls.lilypond').hyphenator()<cr>", 
+  ":lua<space>require('nvls.lilypond').getHyphType()<cr>", 
   { noremap = true, silent = true })
 
 lilyMap(0, 'n', version,
