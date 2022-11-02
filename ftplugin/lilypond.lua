@@ -28,18 +28,18 @@ end, {})
 
 lilyCmd('Viewer', function() 
   require('nvls.lilypond').DefineLilyVars()
-  local output      = nvls_options.lilypond.options.output
-  print('Opening ' .. nvls_short .. '.' .. output .. '...')
+  local output = nvls_options.lilypond.options.output
+  print('Opening ' .. nvls_file_name .. '.' .. output .. '...')
   require('nvls').viewer(nvls_main_name .. '.' .. output)
 end, {})
 
 lilyCmd('LilyCmp', function() 
   require('nvls.lilypond').DefineLilyVars()
-  local output      = nvls_options.lilypond.options.output
+  local output = nvls_options.lilypond.options.output
   fn.execute('write')
-  print('Compiling ' .. nvls_short .. '.ly...')
-  makeprg = "lilypond -f " .. output .. " -o" .. 
-    nvls_main_name .. ' ' .. nvls_main
+  print('Compiling ' .. nvls_file_name .. '.ly...')
+  makeprg = "lilypond -f " .. output .. " -o '" .. 
+    nvls_main_name .. "' '" .. nvls_main .. "'"
   errorfm = '%+G%f:%l:%c:, %f:%l:%c: %m,%-G%.%#'
   require('nvls').make(makeprg,errorfm)
 end, {})
@@ -92,7 +92,7 @@ lilyMap(0, 'n', view,   ":Viewer<cr>",                       nrm)
 lilyMap(0, 'n', switch, "<C-w>w",                            nrm)
 lilyMap(0, 'i', switch, "<esc><C-w>w",                       nrm)
 lilyMap(0, 'n', play,   ":LilyPlayer<cr>",                   nrm)
-lilyMap(0, '',  chlang, ":HyphChLang<cr>",                   nrm)
+lilyMap(0, 'n', chlang, ":HyphChLang<cr>",                   nrm)
 lilyMap(0, 'n', ins,    "i<space>--<space><esc>",            nrm)
 lilyMap(0, 'n', add,    "a<space>--<space><esc>",            nrm)
 lilyMap(0, 'n', deln,   "/<space>--<space><cr>:nohl<cr>4x",  nrm)
