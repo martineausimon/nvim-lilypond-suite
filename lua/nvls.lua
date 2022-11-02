@@ -94,7 +94,7 @@ function M.make(makeprg,errorfm,ctrl)
       elseif ctrl == "tmpplayer" then
         vim.fn.execute('stopinsert')
         print(' ')
-        require('nvls.lilypond').player(tmpOutDir .. 'tmp.mp3')
+        require('nvls.lilypond').player(tmpOutDir .. '/tmp.mp3')
       else
         print(' ')
       end
@@ -111,6 +111,11 @@ function M.make(makeprg,errorfm,ctrl)
         stderr_buffered = true,
       }
     )
+end
+
+function M.shellescape(file)
+  file = file:gsub(" ","\\ ")
+  return file
 end
 
 function M.viewer(file)
