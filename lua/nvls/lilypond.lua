@@ -17,7 +17,7 @@ function M.lilyPlayer()
     end
   end
 
-  if io.open(fn.glob(lilyMidiFile:gsub("'","")), "r") then
+  if io.open(fn.glob(lilyMidiFile), "r") then
 
     local midi_last = getLastMod(lilyMidiFile)
     local mp3_last = getLastMod(lilyAudioFile)
