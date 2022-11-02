@@ -5,51 +5,73 @@ local M = {}
 
 function M.lilyPlayer()
   local main_folder = nvls_options.lilypond.options.main_folder
-  if io.open(fn.glob(main_folder .. '/' .. 
-      nvls_short .. '.midi'), "r") then
-    print('Converting ' .. nvls_short .. '.midi to mp3...') 
-    local convert = 'rm -rf ' .. lilyAudioFile .. ' && ' ..
-      'fluidsynth -T raw -F - ' .. lilyMidiFile .. 
-      ' -s | ffmpeg -f s32le -i - ' .. lilyAudioFile
-    require('nvls').make(convert," ","fluidsynth")
+
+  local function getLastMod(file)
+    if io.open(fn.glob(file), "r") == nil then 
+      return 0
+    else
+      var = io.popen("stat -c %Y " .. file)
+      var = var:read()
+      var = tonumber(var)
+      return var
+    end
+  end
+
+  if io.open(fn.glob(lilyMidiFile:gsub("'","")), "r") then
+
+    local midi_last = getLastMod(lilyMidiFile)
+    local mp3_last = getLastMod(lilyAudioFile)
+    local main_last = getLastMod(nvls_main)
+
+    if (mp3_last and mp3_last > midi_last) then
+      require('nvls.lilypond').player(lilyAudioFile)
+
+    else
+      print('Converting ' .. nvls_file_name .. '.midi to mp3...') 
+      local convert = "rm -rf '" .. lilyAudioFile .. "' && " ..
+        "fluidsynth -T raw -F - '" .. lilyMidiFile .. 
+        "' -s | ffmpeg -f s32le -i - '" .. lilyAudioFile .. "'"
+      require('nvls').make(convert," ","fluidsynth")
+    end
+
   elseif io.open(fn.glob(main_folder .. '/' .. 
       nvls_short .. '.mp3', "r")) then
     require('nvls.lilypond').player(lilyAudioFile)
+
   else
-    print("[LilyPlayer] No mp3 file in working directory")
+    print("[NVLS] No mp3 file in working directory")
     do return end
   end
 end
 
 function M.DefineLilyVars()
-  nvls_main = expand('%:p:S')
+  nvls_main = require('nvls').shellescape(expand('%:p'))
   local main_file = nvls_options.lilypond.options.main_file
   local main_folder = nvls_options.lilypond.options.main_folder
 
   if io.open(fn.glob(main_folder .. '/.lilyrc')) then
     dofile(expand(main_folder) .. '/.lilyrc')
-    nvls_main = "'" .. expand(main_folder) .. "/" .. 
-    main_file .. "'"
+    nvls_main = require('nvls').shellescape(expand(main_folder) .. "/" .. 
+    main_file)
     if not io.open(fn.glob(nvls_main)) then
-      nvls_main = expand('%:p:S')
+      nvls_main = require('nvls').shellescape(expand('%:p'))
     end
 
   elseif io.open(fn.glob(expand(main_folder) .. '/' .. 
     main_file)) then
-      nvls_main = "'" .. expand(main_folder) .. "/" .. 
-      main_file .. "'"
+      nvls_main = require('nvls').shellescape(
+        expand(main_folder) .. "/" .. main_file)
   end
 
-  local name,out = nvls_main:gsub("%.(ly')", "'")
+  local name,out = nvls_main:gsub("%.(ly)", "")
   if out == 0 then
-    name,out = nvls_main:gsub("%.(ily')", "'")
+    name,out = nvls_main:gsub("%.(ily)", "")
   end
   nvls_main_name = name
-  nvls_short = nvls_main_name:match('/([^/]+)$'):gsub("'", "")
-  lilyMidiFile = expand(
-    "'" .. nvls_main_name:gsub("'", "") .. ".midi'")
-  lilyAudioFile = expand(
-    "'" .. nvls_main_name:gsub("'", "") .. ".mp3'")
+  nvls_short = nvls_main_name:match('/([^/]+)$')
+  nvls_file_name = nvls_short:gsub([[\ ]], " ")
+  lilyMidiFile = require('nvls').shellescape(expand(nvls_main_name .. ".midi"))
+  lilyAudioFile = require('nvls').shellescape(expand(nvls_main_name .. ".mp3"))
 end
 
 function M.player(file)
@@ -60,7 +82,7 @@ function M.player(file)
     enter = true,
     focusable = true,
     border = {
-      text = { top = "[" .. nvls_short .. ".mp3]" },
+      text = { top = "[" .. nvls_file_name .. ".mp3]" },
       style = plopts.border_style,
     },
       position = {
@@ -207,19 +229,41 @@ function M.pyphen()
   fn.execute("'<,'>py3do return py_vim_string_replace(line)")
 end
 
--- WORK IN PROGRES...
+-- WORK IN PROGRES
+-- MAKE FUNCTION TO PLAY VISUAL SELECTION
+
 function M.tempLy()
-  local input = require('nvls.lilypond').getVisualSelection()
-  local code = "\\score { \\relative c' { " .. input .. " } \\midi {} }"
-  tmpOutDir = expand('%:p:h') .. '/tmpOutDir/'
+
+  local sel = require('nvls.lilypond').getVisualSelection()
+
+  local function countChar(str,char)
+    local _,n = str:gsub(char,"")
+    return n
+  end
+
+  local op_curl_br  = countChar(sel,[[{]])
+  local cl_curl_br  = countChar(sel,[[}]])
+  local op_angle_br = countChar(sel,[[<]])
+  local cl_angle_br = countChar(sel,[[>]])
+
+  if op_curl_br ~= cl_curl_br then
+    print('[NVLS] Curly brackets not matching in visual selection')
+    do return end
+  elseif op_angle_br ~= cl_angle_br then
+    print('[NVLS] Angle brackets not matching in visual selection')
+    do return end
+  end
+
+  local code = "\\score { \\relative c' { " .. sel .. " } \\midi {} }"
+  tmpOutDir = "/tmp/nvls"
   os.execute('rm -rf ' .. tmpOutDir)
   os.execute('mkdir -p ' .. tmpOutDir)
-  local tmpfile = io.open(tmpOutDir .. 'tmp.ly', 'w')
+  local tmpfile = io.open(tmpOutDir .. '/tmp.ly', 'w')
   tmpfile:write(code)
   tmpfile:close()
-  os.execute('lilypond -s -o ' .. tmpOutDir .. ' ' ..tmpOutDir .. 'tmp.ly')
-  local convert = 'fluidsynth -T raw -F - ' .. tmpOutDir .. 'tmp.midi' ..
-      ' -s | ffmpeg -f s32le -i - ' .. tmpOutDir .. 'tmp.mp3'
+  os.execute('lilypond --loglevel=NONE -o ' .. tmpOutDir .. ' ' .. tmpOutDir .. '/tmp.ly')
+  local convert = 'fluidsynth -T raw -F - ' .. tmpOutDir .. '/tmp.midi' ..
+      ' -s | ffmpeg -f s32le -i - ' .. tmpOutDir .. '/tmp.mp3'
   require('nvls').make(convert," ","tmpplayer")
 end
 
