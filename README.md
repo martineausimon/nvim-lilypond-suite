@@ -22,7 +22,7 @@ This is a plugin ([Neovim](https://github.com/neovim/neovim) only) for writing [
 
 > **⚠ This plugin requires Nvim >= 0.7**
 
-If you want to use all the functions (player, hyphenation for various languages...), please read the [installation section](https://github.com/martineausimon/nvim-lilypond-suite/wiki/Installation) in the wiki to install dependencies
+If you want to use all the functions (player, hyphenation for various languages...), please read the [installation section](https://github.com/martineausimon/nvim-lilypond-suite/wiki/1.-Installation) in the wiki to install dependencies
 
 ### [packer.nvim](https://github.com/wbthomason/packer.nvim)
 
