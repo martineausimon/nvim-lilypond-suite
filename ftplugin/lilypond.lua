@@ -98,8 +98,9 @@ lilyMap(0, 'n', add,    "a<space>--<space><esc>",            nrm)
 lilyMap(0, 'n', deln,   "/<space>--<space><cr>:nohl<cr>4x",  nrm)
 lilyMap(0, 'n', delp,   "/<space>--<space><cr>N:nohl<cr>4x", nrm)
 
-vim.cmd([[vmap <silent> ]] .. dels .. 
-  [[ <esc>:%s/\%V<space>--<space>//g<cr>:nohl<cr>`<]])
+lilyMap(0, 'v', play, 
+  ":lua<space>require('nvls.lilypond').quickplayer()<cr>", 
+  { noremap = true, silent = true })
 
 lilyMap(0, 'v', hyphenation, 
   ":lua<space>require('nvls.lilypond').getHyphType()<cr>", 
@@ -112,3 +113,6 @@ lilyMap(0, 'n', version,
   [[kJi"<esc>A"<esc>]],
   {noremap = true, silent = true}
 )
+
+vim.cmd([[vmap <silent> ]] .. dels .. 
+  [[ <esc>:%s/\%V<space>--<space>//g<cr>:nohl<cr>`<]])
