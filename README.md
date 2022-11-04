@@ -28,6 +28,7 @@ If you want to use all the functions (player, hyphenation for various languages.
 
 ```lua 
 use { 'martineausimon/nvim-lilypond-suite',
+  requires = { 'MunifTanjim/nui.nvim' },
   config = function()
     require('nvls').setup({
       lilypond = {
