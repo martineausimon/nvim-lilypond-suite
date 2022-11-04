@@ -90,11 +90,11 @@ function M.make(makeprg,errorfm,ctrl)
       elseif ctrl == "fluidsynth" then
         vim.fn.execute('stopinsert')
         print(' ')
-        require('nvls.lilypond').player(lilyAudioFile)
+        require('nvls.lilypond').player(lilyAudioFile, nvls_file_name .. ".mp3")
       elseif ctrl == "tmpplayer" then
         vim.fn.execute('stopinsert')
         print(' ')
-        require('nvls.lilypond').player(tmpOutDir .. '/tmp.mp3')
+        require('nvls.lilypond').player(tmpOutDir .. '/tmp.mp3', "QuickPlayer")
       else
         print(' ')
       end
