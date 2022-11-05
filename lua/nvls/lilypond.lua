@@ -228,11 +228,12 @@ function M.pyphen(input)
   fn.execute("'<,'>py3do return py_vim_string_replace(line)")
 end
 
-function M.quickplayerInputType()
-  local sel = require('nvls.lilypond').inputString(fn.getpos("'<"), fn.getpos("'>"))
+function M.quickplayerInputType(sel)
   local from_top = require('nvls.lilypond').inputString({0, 1, 1, 0}, fn.getpos("'<"))
 
-  if string.find(sel, "%pfixed%s+%a*%p*%s*%{") or string.find(sel, "%prelative%s+%a*%p*%s*%{") or string.find(sel, "%pchords.*%{") then
+  if  string.find(sel, "%pfixed%s+%a*%p*%s*%{") or 
+      string.find(sel, "%prelative%s+%a*%p*%s*%{") or 
+      string.find(sel, "%pchords.*%{") then
     return ''
 
   elseif string.find(from_top, "%prelative%s+%a*%p*%s*%{") then
@@ -308,6 +309,23 @@ function M.quickplayerInputType()
   end
 end
 
+function M.quickplayerGetTempo(sel)
+  local from_top = require('nvls.lilypond').inputString({0, 1, 1, 0}, fn.getpos("'<"))
+
+  if string.find(sel, "%ptempo%s") then return '' end
+
+  if not string.find(from_top, "%ptempo%s") then 
+    return ''
+  else
+    local tempo = string.match(from_top, ".*%ptempo%s+(%d+%s*%=%s*%d+)") or 
+                  string.match(from_top, [[.*%ptempo%s+(%"%a*%"%s+%d+%s*%=%s*%d+)]]) or 
+                  string.match(from_top, [[.*%ptempo%s+(%"%a+%")]]) or 
+                  "4=60"
+    return "\\tempo " .. tempo
+  end
+
+end
+
 function M.quickplayerCheckErr(string)
   local function countChar(str,char)
     local _,n = str:gsub(char,"")
@@ -340,8 +358,9 @@ function M.quickplayer()
     do return end
   end
 
-  local input_type = require('nvls.lilypond').quickplayerInputType()
-  local code = "\\score { " .. input_type .. " { " .. sel .. " } \\midi {} }"
+  local input_type = require('nvls.lilypond').quickplayerInputType(sel)
+  local tempo = require('nvls.lilypond').quickplayerGetTempo(sel)
+  local code = "\\score { " .. input_type .. " { " .. sel .. " } \\midi { " .. tempo .. " } }"
 
   print("[NVLS] Converting to mp3...")
   tmpOutDir = "/tmp/nvls"
