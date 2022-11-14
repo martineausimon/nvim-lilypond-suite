@@ -79,25 +79,23 @@ syn match lilyGrobs          "\<\u\a\+\>"
 syn match lilyMarkupCommands "\\\a\(\i\|\-\)\+"
 syn match lilyFunctions      "\\\a\(\i\|\-\)\+"
 
-syn match lilyContexts "\(\\\|\<\)\(AncientRemoveEmptyStaffContext\|ChoirStaff\|ChordNames\|CueVoice\|Devnull\|DrumStaff\|DrumVoice\|Dynamics\|FiguredBass\|FretBoards\|Global\|GrandStaff\|GregorianTranscriptionStaff\|GregorianTranscriptionVoice\|KievanStaff\|KievanVoice\|Lyrics\|MensuralStaff\|MensuralVoice\|NoteNames\|NullVoice\|OneStaff\|PetrucciStaff\|PetrucciVoice\|PianoStaff\|RemoveEmptyDrumStaffContext\|RemoveEmptyRhythmicStaffContext\|RemoveEmptyStaffContext\|RemoveEmptyTabStaffContext\|RhythmicStaff\|Score\|Staff\|StaffGroup\|TabStaff\|TabVoice\|VaticanaStaff\|VaticanaVoice\|Voice\)\(\A\|\n\)"me=e-1
-
 syn match lilyDynamics "[-_^]\?\\\(cr\|cresc\|decr\|decresc\|dim\|endcr\|endcresc\|enddecr\|enddecresc\|enddim\|f\|ff\|fff\|ffff\|fffff\|fp\|fz\|mf\|mp\|n\|p\|pp\|ppp\|pppp\|ppppp\|rfz\|sf\|sff\|sfp\|sfz\|sp\|spp\)\(\A\|\n\)"me=e-1
 
 if g:nvls_language == "français"
   syn match lilyPitches "\<\(la\|si\|do\|re\|ré\|mi\|fa\|sol\|la\|s\|R\|r\)\(dd\|bb\|x\|sd\|sb\|dsd\|bsb\|d\|b\|\)\(\A\|\n\)"me=e-1
-  \ display nextgroup=lilyNotesAttr,lilySpecial,lilyArticulation
+  \ display nextgroup=lilyNotesAttr,lilySpecial,lilyArticulation,lilyFunctions
 elseif g:nvls_language == "english"
   syn match lilyPitches "\<\([a-g]\|s\|R\|r\)\(ss\|ff\|x\|qs\|qf\|tqs\|tqf\|s\|f\|\-flatflat\|\-sharpsharp\|\-flat\|\-sharp\|\)\(\A\|\n\)"me=e-1
-  \ display nextgroup=lilyNotesAttr,lilySpecial,lilyArticulation
+  \ display nextgroup=lilyNotesAttr,lilySpecial,lilyArticulation,lilyFunctions
 elseif g:nvls_language == "nohl"
 else
 syn match lilyPitches "\<\([a-g]\|s\|R\|r\)\(isis\|eses\|eh\|ih\|eseh\|isih\|is\|es\|\)\(\A\|\n\)"me=e-1
-  \ display nextgroup=lilyNotesAttr,lilySpecial,lilyArticulation
+  \ display nextgroup=lilyNotesAttr,lilySpecial,lilyArticulation,lilyFunctions
 endif
 
 
 syn match lilyNotesAttr "\(\'\+\|\,\+\|\)\(?\|!\|\)\(1024\|512\|256\|128\|64\|32\|16\|8\|4\|2\|1\|\)\(\M.\+\|\)\(\A\|\n\)"me=e-1
-  \ display contained nextgroup=lilySpecial, lilyArticulation
+  \ display contained nextgroup=lilySpecial,lilyArticulation,lilyFunctions
 
 
 syn match lilyVar            "\(\i\|\-\)\+\(\s\|\)\+="me=e-1
@@ -105,6 +103,8 @@ syn match lilyAltVar2        "\l\(\-\|\u\|\l\)\+\l\."me=e-1
   \ display contained nextgroup=lilyVar
 syn match lilyAltVar1        "\l\(\-\|\u\|\l\)\+\l\."he=e-1 
   \ display nextgroup=lilyAltVar2
+
+syn match lilyContexts "\(\\\|\<\)\(AncientRemoveEmptyStaffContext\|ChoirStaff\|ChordNames\|CueVoice\|Devnull\|DrumStaff\|DrumVoice\|Dynamics\|FiguredBass\|FretBoards\|Global\|GrandStaff\|GregorianTranscriptionStaff\|GregorianTranscriptionVoice\|KievanStaff\|KievanVoice\|Lyrics\|MensuralStaff\|MensuralVoice\|NoteNames\|NullVoice\|OneStaff\|PetrucciStaff\|PetrucciVoice\|PianoStaff\|RemoveEmptyDrumStaffContext\|RemoveEmptyRhythmicStaffContext\|RemoveEmptyStaffContext\|RemoveEmptyTabStaffContext\|RhythmicStaff\|Score\|Staff\|StaffGroup\|TabStaff\|TabVoice\|VaticanaStaff\|VaticanaVoice\|Voice\)\(\A\|\n\)"me=e-1
 
 syn match lilyTranslators "\u\l\+\(_\)\w*\(engraver\|performer\|translator\)"
 
