@@ -305,7 +305,7 @@ function M.quickplayerInputType(sel)
         return "\\chords"
     end
   else
-    print("[NVLS] Can't find input type") do return end
+    return ''
   end
 end
 
@@ -359,6 +359,7 @@ function M.quickplayer()
   end
 
   local input_type = require('nvls.lilypond').quickplayerInputType(sel)
+
   local tempo = require('nvls.lilypond').quickplayerGetTempo(sel)
   local code = "\\score { " .. input_type .. " { " .. sel .. " } \\midi { " .. tempo .. " } }"
 
