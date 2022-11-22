@@ -67,7 +67,7 @@ function M.DefineLilyVars()
   end
   nvls_main_name = name
   nvls_short = nvls_main_name:match('/([^/]+)$')
-  nvls_file_name = nvls_short:gsub([[\ ]], " ")
+  nvls_file_name = nvls_short:gsub([[\]], "")
   lilyMidiFile = require('nvls').shellescape(expand(nvls_main_name .. ".midi"))
   lilyAudioFile = require('nvls').shellescape(expand(nvls_main_name .. ".mp3"))
 end
