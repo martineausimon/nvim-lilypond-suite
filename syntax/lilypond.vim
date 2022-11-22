@@ -136,7 +136,19 @@ syn region lilyScheme
   \ matchgroup=Delimiter 
   \ start="#['`]\?(" 
   \ end=")" 
-  \ contains=@Scheme
+  \ contains=@Scheme,lilyInScheme
+
+syn region lilyInScheme
+  \ matchgroup=Delimiter 
+  \ start="#{" 
+  \ end="#}"
+  \ contained contains=ALL,lilyInScheme
+
+syn region lilyInScheme
+  \ matchgroup=Delimiter 
+  \ start="(" 
+  \ end=")"
+  \ contains=@Scheme,lilyInScheme
 
 syn region lilyInnerLyrics 
   \ matchgroup=Delimiter 
