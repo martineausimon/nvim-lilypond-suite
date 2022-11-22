@@ -115,6 +115,8 @@ end
 
 function M.shellescape(file)
   file = file:gsub(" ","\\ ")
+  file = file:gsub("%(","\\%(")
+  file = file:gsub("%)","\\%)")
   return file
 end
 
