@@ -103,8 +103,7 @@ function M.player(file,name)
   lilyPlayer:mount()
   
   vim.api.nvim_buf_call(lilyPlayer.bufnr, function() 
-    fn.execute("term mpv --msg-level=cplayer=no,ffmpeg=no " ..
-      "--loop --config-dir=/tmp/ " .. file)
+    fn.execute("term mpv " .. plopts.mpv_flags .. " " .. file)
     fn.execute('stopinsert')
   end)
   
