@@ -88,7 +88,8 @@ use { 'martineausimon/nvim-lilypond-suite',
           width = "37",
           height = "1",
           border_style = "single",
-          winhighlight = "Normal:Normal,FloatBorder:Normal"
+          winhighlight = "Normal:Normal,FloatBorder:Normal",
+          mpv_flags = "--msg-level=cplayer=no,ffmpeg=no --loop --config-dir=/dev/null"
         },
       },
     })
