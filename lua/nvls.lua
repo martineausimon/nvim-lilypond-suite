@@ -55,7 +55,11 @@ local default = {
       height = "1",
       border_style = "single",
       winhighlight = "Normal:Normal,FloatBorder:Normal",
-      mpv_flags = "--msg-level=cplayer=no,ffmpeg=no --loop --config-dir=/dev/null"
+      mpv_flags = {
+        "--msg-level=cplayer=no,ffmpeg=no",
+        "--loop",
+        "--config-dir=/dev/null"
+      }
     },
   },
 }
