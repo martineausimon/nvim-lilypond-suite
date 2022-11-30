@@ -103,7 +103,7 @@ function M.player(file,name)
   lilyPlayer:mount()
   
   vim.api.nvim_buf_call(lilyPlayer.bufnr, function() 
-    fn.execute("term mpv " .. plopts.mpv_flags .. " " .. file)
+    fn.execute("term mpv " .. table.concat(plopts.mpv_flags, " ") .. " " .. file)
     fn.execute('stopinsert')
   end)
   
