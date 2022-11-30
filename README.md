@@ -3,7 +3,7 @@
 This is a plugin ([Neovim](https://github.com/neovim/neovim) only) for writing [LilyPond](https://lilypond.org/index.html) scores, with asynchronous make, midi/MP3 player, "hyphenation" function for lyrics, fast syntax highlighting... This repository also contains an ftplugin for **LaTeX** files which allows embedded LilyPond syntax highlighting, and makeprg which support `lilypond-book` or `lyluatex` package out of the box.
 
 <p align=center>
-   <a href="https://github.com/martineausimon/nvim-lilypond-suite/wiki/1.-Installation">Installation</a> / <a href="https://github.com/martineausimon/nvim-lilypond-suite/wiki/2.-Configuration">Configuration</a> / <a href="https://github.com/martineausimon/nvim-lilypond-suite/wiki/3.-Usage">Usage</a> / <a href="https://github.com/martineausimon/nvim-lilypond-suite/wiki/4.-Tips-and-tricks">Tips & tricks</a>
+   <a href="https://github.com/martineausimon/nvim-lilypond-suite/wiki/1.-Installation">Installation</a> • <a href="https://github.com/martineausimon/nvim-lilypond-suite/wiki/2.-Configuration">Configuration</a> • <a href="https://github.com/martineausimon/nvim-lilypond-suite/wiki/3.-Usage">Usage</a> • <a href="https://github.com/martineausimon/nvim-lilypond-suite/wiki/4.-Tips-and-tricks">Tips & tricks</a>
 </p>
 
 ## FEATURES
@@ -89,7 +89,11 @@ use { 'martineausimon/nvim-lilypond-suite',
           height = "1",
           border_style = "single",
           winhighlight = "Normal:Normal,FloatBorder:Normal",
-          mpv_flags = "--msg-level=cplayer=no,ffmpeg=no --loop --config-dir=/dev/null"
+          mpv_flags = {
+            "--msg-level=cplayer=no,ffmpeg=no",
+            "--loop",
+            "--config-dir=/dev/null"
+          }
         },
       },
     })
