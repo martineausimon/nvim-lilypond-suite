@@ -55,7 +55,8 @@ use { 'martineausimon/nvim-lilypond-suite',
           output = "pdf",
           main_file = "main.ly",
           main_folder = "%:p:h",
-          hyphenation_language = "en_DEFAULT",
+          include_dir = "$HOME",
+          hyphenation_language = "en_DEFAULT"
         },
       },
       latex = {
