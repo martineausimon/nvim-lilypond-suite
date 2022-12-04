@@ -21,7 +21,8 @@ local default = {
       hyphenation_language = "en_DEFAULT",
       output = "pdf",
       main_file = "main.ly",
-      main_folder = "%:p:h"
+      main_folder = "%:p:h",
+      include_dir = "$HOME"
     },
   },
   latex = {
