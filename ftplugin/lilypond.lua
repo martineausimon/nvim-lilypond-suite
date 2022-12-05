@@ -36,7 +36,12 @@ end, {})
 lilyCmd('LilyCmp', function() 
   require('nvls.lilypond').DefineLilyVars()
   local output = nvls_options.lilypond.options.output
+
   local include_dir = nvls_options.lilypond.options.include_dir
+  if type(include_dir) == "table" then
+    include_dir = table.concat(include_dir, " -I ")
+  end
+
   fn.execute('write')
   print('Compiling ' .. nvls_file_name .. '.ly...')
   makeprg = "lilypond " .. 
