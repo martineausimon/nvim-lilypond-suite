@@ -113,6 +113,7 @@ use { 'martineausimon/nvim-lilypond-suite',
 * [Configuration](https://github.com/martineausimon/nvim-lilypond-suite/wiki/2.-Configuration)
   * [Customize default settings](https://github.com/martineausimon/nvim-lilypond-suite/wiki/2.-Configuration#customize-default-settings)
   * [Per-folder configuration](https://github.com/martineausimon/nvim-lilypond-suite/wiki/2.-Configuration#per-folder-configuration)
+  * [Include directories](https://github.com/martineausimon/nvim-lilypond-suite/wiki/2.-Configuration#include-directories)
   * [Highlightings](https://github.com/martineausimon/nvim-lilypond-suite/wiki/2.-Configuration#highlightings)
     * [Recommended syntax sync settings](https://github.com/martineausimon/nvim-lilypond-suite/wiki/2.-Configuration#recommended-syntax-sync-settings)
     * [Highlight groups](https://github.com/martineausimon/nvim-lilypond-suite/wiki/2.-Configuration#highlight-groups)
