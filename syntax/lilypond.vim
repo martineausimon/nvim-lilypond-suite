@@ -142,7 +142,7 @@ syn region lilyInScheme
   \ matchgroup=Delimiter 
   \ start="#{" 
   \ end="#}"
-  \ contained contains=ALL,lilyInScheme
+  \ contained contains=@lilyMatchGroup,lilyInScheme
 
 syn region lilyInScheme
   \ matchgroup=Delimiter 
@@ -174,6 +174,11 @@ syn region lilyMarkup
   \ start="\([\_\^\-]\\markup\s\+{\|\\markup\s\+{\)"
   \ end="}"
   \ contains=ALLBUT,lilyFunctions,lilyInnerLyrics,lilyNotesAttr
+
+syn region lilyInnerMarkup
+  \ matchgroup=Delimiter 
+  \ start="{" end="}" 
+  \ contained contains=ALLBUT,lilyFunctions,lilyInnerLyrics,lilyNotesAttr
 
 command -nargs=+ HiLink hi def link <args>
   HiLink lilyString             String
