@@ -153,19 +153,19 @@ syn region lilyInScheme
 syn region lilyInnerLyrics 
   \ matchgroup=Delimiter 
   \ start="{" end="}" 
-  \ contained contains=ALLBUT,lilyGrobs,lilyPitches,Error,lilyNotesAttr,lilyAltVar1,lilyAltVar2
+  \ contained contains=ALLBUT,lilyGrobs,lilyPitches,Error,lilyNotesAttr,lilyAltVar1,lilyAltVar2,lilyInnerMarkup
 
 syn region lilyInnerLyrics 
   \ matchgroup=Delimiter 
   \ start="<" end=">" 
-  \ contained contains=ALLBUT,lilyGrobs,lilyPitches,Error,lilyNotesAttr,lilyAltVar1,lilyAltVar2
+  \ contained contains=ALLBUT,lilyGrobs,lilyPitches,Error,lilyNotesAttr,lilyAltVar1,lilyAltVar2,lilyInnerMarkup
 
 
 syn region lilyLyrics
   \ matchgroup=lilyLyrics
   \ start="\(\\addlyrics\s\+{\|\\lyricmode\s\+{\|\\lyricsto\s\+\"\+\l\+\"\+\s\+{\)"
   \ end="}"
-  \ contains=ALLBUT,lilyGrobs,lilyPitches,Error,lilyNotesAttr,lilyAltVar1,lilyAltVar2
+  \ contains=ALLBUT,lilyGrobs,lilyPitches,Error,lilyNotesAttr,lilyAltVar1,lilyAltVar2,lilyInnerMarkup
 
 syn match lilyGrobsExcpt "LyricText"
 
