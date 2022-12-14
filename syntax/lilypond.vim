@@ -157,6 +157,11 @@ syn region lilyInnerLyrics
 
 syn region lilyInnerLyrics 
   \ matchgroup=Delimiter 
+  \ start="(" end=")" 
+  \ contained contains=ALLBUT,lilyGrobs,lilyPitches,Error,lilyNotesAttr,lilyAltVar1,lilyAltVar2,lilyInnerMarkup
+
+syn region lilyInnerLyrics 
+  \ matchgroup=Delimiter 
   \ start="<" end=">" 
   \ contained contains=ALLBUT,lilyGrobs,lilyPitches,Error,lilyNotesAttr,lilyAltVar1,lilyAltVar2,lilyInnerMarkup
 
