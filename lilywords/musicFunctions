@@ -147,6 +147,8 @@
 \tagGroup
 \tempo
 \temporary
+\textMark
+\textEndMark
 \tieDashPattern
 \time
 \times
