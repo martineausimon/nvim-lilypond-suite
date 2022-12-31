@@ -117,7 +117,7 @@ lilyMap(0, 'v', hyphenation,
 lilyMap(0, 'n', version,
   [[0O\version<space>]] .. 
   [[<Esc>:read<Space>!lilypond<Space>-v]] ..
-  [[<Bar>grep<Space>LilyPond<Bar>cut<Space>-c<Space>14-20<cr>]] ..
+  [[<Bar>grep<Space>LilyPond<Bar>awk<Space>{'print<Space>$3'}<cr>]] ..
   [[kJi"<esc>A"<esc>]],
   {noremap = true, silent = true}
 )
