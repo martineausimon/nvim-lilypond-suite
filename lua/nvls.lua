@@ -65,12 +65,42 @@ local default = {
   },
 }
 
+local default_hi = {
+  lilyString = { link = "String" },
+  lilyDynamics = { link = "SpecialChar" },
+  lilyComment = { link = "Comment" },
+  lilyNumber = { link = "Constant" },
+  lilySpecial = { link = "SpecialChar" },
+  lilyValue = { link = "PreCondit" },
+  lilySymbol = { link = "PreCondit" },
+  lilyLyrics = { link = "Special" },
+  lilyInnerLyrics = { link = "Special" },
+  lilyFunctions = { link = "Statement" },
+  lilyArticulation = { link = "PreProc" },
+  lilyContexts = { link = "Type" },
+  lilyGrobs = { link = "Include" },
+  lilyGrobsExcpt = { link = "Include" },
+  lilyTranslators = { link = "Type" },
+  lilyClefs = { link = "Label" },
+  lilyAccidentalsStyles = { link = "Label" },
+  lilyRepeatTypes = { link = "Label" },
+  lilyPitchLanguageNames = { link = "" },
+  lilyMisc = { link = "SpecialComment" },
+  lilyVar = { link = "Tag" },
+  lilyAltVar1 = { link = "PreCondit" },
+  lilyAltVar2 = { link = "SpecialComment" },
+  lilyMarkupCommands = { link = "Keyword" },
+  lilyPitches = { link = "Function" },
+  lilyNotesAttr = { link = "Function" }
+}
+
 local M = {}
 
 M.setup = function(opts)
   opts = opts or {}
   nvls_options = vim.tbl_deep_extend('keep', opts, nvls_options or default)
   vim.g.nvls_language = nvls_options.lilypond.options.pitches_language
+  M.syntax()
 end
 
 function M.make(makeprg,errorfm,ctrl)
@@ -124,6 +154,16 @@ function M.shellescape(file)
   file = file:gsub("%(","\\%(")
   file = file:gsub("%)","\\%)")
   return file
+end
+
+function M.syntax()
+  local hi = default_hi
+  if nvls_options and nvls_options.lilypond and nvls_options.lilypond.highlights then
+    hi = vim.tbl_extend('keep', nvls_options.lilypond.highlights, default_hi)
+  end
+  for i, j in pairs(hi) do
+    vim.api.nvim_set_hl(0, i, j)
+  end
 end
 
 function M.viewer(file)

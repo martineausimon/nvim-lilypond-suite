@@ -185,35 +185,6 @@ syn region lilyInnerMarkup
   \ start="{" end="}" 
   \ contained contains=ALLBUT,lilyFunctions,lilyInnerLyrics,lilyNotesAttr
 
-command -nargs=+ HiLink hi def link <args>
-  HiLink lilyString             String
-  HiLink lilyDynamics           SpecialChar
-  HiLink lilyComment            Comment
-  HiLink lilyNumber             Constant
-  HiLink lilySpecial            SpecialChar
-  HiLink lilyValue              PreCondit
-  HiLink lilySymbol             PreCondit
-  HiLink lilyLyrics             Special
-  HiLink lilyInnerLyrics        Special
-  HiLink lilyFunctions          Statement
-  HiLink lilyArticulation       PreProc
-  HiLink lilyContexts           Type
-  HiLink lilyGrobs              Include
-  HiLink lilyGrobsExcpt         Include
-  HiLink lilyTranslators        Type
-  HiLink lilyClefs              Label
-  HiLink lilyAccidentalsStyles  Label
-  HiLink lilyRepeatTypes        Label
-  HiLink lilyPitchLanguageNames Label
-  HiLink lilyMisc               SpecialComment
-  HiLink lilyVar                Tag
-  HiLink lilyAltVar1            PreCondit
-  HiLink lilyAltVar2            SpecialComment
-  HiLink lilyMarkupCommands     Keyword
-  HiLink lilyPitches            Function
-  HiLink lilyNotesAttr          Function
-delcommand HiLink
-
 let b:current_syntax = "lilypond"
 
 let &cpo = s:keepcpo
