@@ -84,7 +84,7 @@ local default_hi = {
   lilyClefs = { link = "Label" },
   lilyAccidentalsStyles = { link = "Label" },
   lilyRepeatTypes = { link = "Label" },
-  lilyPitchLanguageNames = { link = "" },
+  lilyPitchLanguageNames = { link = "Label" },
   lilyMisc = { link = "SpecialComment" },
   lilyVar = { link = "Tag" },
   lilyAltVar1 = { link = "PreCondit" },
