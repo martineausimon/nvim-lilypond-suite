@@ -6,6 +6,24 @@ This is a plugin ([Neovim](https://github.com/neovim/neovim) only) for writing [
    <a href="https://github.com/martineausimon/nvim-lilypond-suite/wiki/1.-Installation">Installation</a> • <a href="https://github.com/martineausimon/nvim-lilypond-suite/wiki/2.-Configuration">Configuration</a> • <a href="https://github.com/martineausimon/nvim-lilypond-suite/wiki/3.-Usage">Usage</a> • <a href="https://github.com/martineausimon/nvim-lilypond-suite/wiki/4.-Tips-and-tricks">Tips & tricks</a>
 </p>
 
+---
+
+#### IMPORTANT CHANGES (3rd of Jan 2023)
+
+There have been a lot of changes in the syntax file, which will certainly require you to adjust your configuration again, sorry for the inconvenience. Please read [Highlight groups](https://github.com/martineausimon/nvim-lilypond-suite/wiki/2.-Configuration#highlight-groups) !
+
+My goal was to clarify the different types of highlighting, and to easily allow them to be configured.
+
+Main news:
+
+* Better support for chord notation
+* Highlighting for fingerings (`-` and `\`)
+* Only one color now for all types of variables
+
+TODO:
+
+* Better support for chords with syntax like `<c e g>`
+
 ## FEATURES
 
 * **Fast syntax file for LilyPond**
@@ -60,31 +78,27 @@ use { 'martineausimon/nvim-lilypond-suite',
         },
         highlights = {
           lilyString = { link = "String" },
-          lilyDynamics = { link = "SpecialChar" },
+          lilyDynamic = { bold = true },
           lilyComment = { link = "Comment" },
-          lilyNumber = { link = "Constant" },
-          lilySpecial = { link = "SpecialChar" },
-          lilyValue = { link = "PreCondit" },
-          lilySymbol = { link = "PreCondit" },
-          lilyLyrics = { link = "Special" },
-          lilyInnerLyrics = { link = "Special" },
-          lilyFunctions = { link = "Statement" },
-          lilyArticulation = { link = "PreProc" },
-          lilyContexts = { link = "Type" },
-          lilyGrobs = { link = "Include" },
-          lilyGrobsExcpt = { link = "Include" },
-          lilyTranslators = { link = "Type" },
-          lilyClefs = { link = "Label" },
-          lilyAccidentalsStyles = { link = "Label" },
-          lilyRepeatTypes = { link = "Label" },
-          lilyPitchLanguageNames = { link = "Label" },
-          lilyMisc = { link = "SpecialComment" },
+          lilyNumber = { link = "Number" },
           lilyVar = { link = "Tag" },
-          lilyAltVar1 = { link = "PreCondit" },
-          lilyAltVar2 = { link = "SpecialComment" },
-          lilyMarkupCommands = { link = "Keyword" },
-          lilyPitches = { link = "Function" },
-          lilyNotesAttr = { link = "Function" }
+          lilyBoolean = { link = "Boolean" },
+          lilySpecial = { bold = true },
+          lilyArgument = { link = "Type" },
+          lilyScheme = { link = "Special" },
+          lilyLyrics = { link = "Special" },
+          lilyMarkup = { bold = true },
+          lilyFunction = { link = "Statement" },
+          lilyArticulation = { link = "PreProc" },
+          lilyContext = { link = "Type" },
+          lilyGrob = { link = "Include" },
+          lilyTranslator = { link = "Type" },
+          lilyPitch = { link = "Function" },
+          lilyChord = { 
+            ctermfg = "lightMagenta", 
+            fg = "lightMagenta", 
+            bold = true 
+          },
         },
       },
       latex = {
