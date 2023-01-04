@@ -17,7 +17,7 @@ My goal was to clarify the different types of highlighting, and to easily allow 
 Main news:
 
 * Better support for chord notation
-* Highlighting for fingerings (`-` and `\`)
+* Highlighting for fingerings
 * Only one color now for all types of variables
 
 TODO:
