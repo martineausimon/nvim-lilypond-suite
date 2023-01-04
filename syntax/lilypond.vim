@@ -78,30 +78,22 @@ syn match lilyFunction "\(\\tweak\|\\set\)\s\+" nextgroup=lilyVarReg,lilyContext
 syn match lilyDynamic "[-_^]\?\\\(cr\|cresc\|decr\|decresc\|dim\|endcr\|endcresc\|enddecr\|enddecresc\|enddim\|f\|ff\|fff\|ffff\|fffff\|fp\|fz\|mf\|mp\|n\|p\|pp\|ppp\|pppp\|ppppp\|rfz\|sf\|sff\|sfp\|sfz\|sp\|spp\)\(\A\|\n\)"me=e-1
 
 syn cluster lilyPitchGroup contains=
-  \lilyPitch,lilyAlt,lilyNotesAttr,lilyRythm,lilyDotted,lilyChordStart,lilyChordNat,lilyChordExt
+  \lilyPitch,lilyRythm,lilyChordStart,lilyChordNat,lilyChordExt
 
 if g:nvls_language == "français"
-  syn match lilyPitch "\<\(la\|si\|do\|re\|ré\|mi\|fa\|sol\|la\|s\|R\|r\)\(dd\|bb\|x\|sd\|sb\|dsd\|bsb\|d\|b\|\)\(\A\|\n\)"me=e-1
-  \ nextgroup=lilyNotesAttr,lilyArticulation,lilyFunction
+  syn match lilyPitch "\<\(la\|si\|do\|re\|ré\|mi\|fa\|sol\|la\|s\|R\|r\)\(dd\|bb\|x\|sd\|sb\|dsd\|bsb\|d\|b\)\{}\(\'\+\|\,\+\)\{}\(?\|!\)\="
+    \ nextgroup=lilyRythm
 elseif g:nvls_language == "english"
-  syn match lilyPitch "\<\([a-g]\|s\|R\|r\)\(ss\|ff\|x\|qs\|qf\|tqs\|tqf\|s\|f\|\-flatflat\|\-sharpsharp\|\-flat\|\-sharp\|\)\(\A\|\n\)"me=e-1
-  \ nextgroup=lilyNotesAttr,lilyArticulation,lilyFunction
+  syn match lilyPitch "\<\([a-g]\|s\|R\|r\)\(ss\|ff\|x\|qs\|qf\|tqs\|tqf\|s\|f\|\-flatflat\|\-sharpsharp\|\-flat\|\-sharp\)\{}\(\'\+\|\,\+\)\{}\(?\|!\)\="
+    \ nextgroup=lilyRythm
 elseif g:nvls_language == "nohl"
 else
-
-syn match lilyPitch "\<\([a-g]\|s\|R\|r\)"
-  \ nextgroup=lilyAlt
+  syn match lilyPitch "\<\([a-g]\|s\|R\|r\)\(isis\|eses\|eh\|ih\|eseh\|isih\|is\|es\)\{}\(\'\+\|\,\+\)\{}\(?\|!\)\="
+    \ nextgroup=lilyRythm
 endif
 
-syn match lilyAlt "\(isis\|eses\|eh\|ih\|eseh\|isih\|is\|es\)\=" contained containedin=lilyPitch nextgroup=lilyNotesAttr,lilyArticulation,lilyFunction,lilySpecial,lilyChordStart
-
-syn match lilyNotesAttr "\(\'\+\|\,\+\|\)\(?\|!\)\="
-  \ contained containedin=lilyPitch,lilyAlt nextgroup=lilyRythm,lilySpecial
-
-syn match lilyRythm "\(1024\|512\|256\|128\|64\|32\|16\|8\|4\|2\|1\)\="
-  \ contained containedin=lilyNotesAttr nextgroup=lilyDotted,lilyArticulation,lilyFunction,lilyChordStart,lilyChordBass,lilyFing,lilySpecial
-
-syn match lilyDotted "\.\{}" contained containedin=lilyRythm nextgroup=lilyArticulation,lilyFunction,lilyChordStart,lilyChordBass,lilyFing,lilySpecial 
+syn match lilyRythm "\(1024\|512\|256\|128\|64\|32\|16\|8\|4\|2\|1\)\=\.\{}"
+  \ contained containedin=lilyPitch nextgroup=lilyArticulation,lilyFunction,lilyChordStart,lilyChordBass,lilyFing,lilySpecial
 
 if g:nvls_language != "nohl"
   syn match lilyChordStart "\:" contained 
