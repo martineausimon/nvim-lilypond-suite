@@ -61,7 +61,7 @@ syn region lilyMatcher
   \ contains=@lilyMatchGroup 
   \ fold
 
-syn match  lilyFing "\(\-\|[(\)]\)" contained nextgroup=lilyNumber
+syn match  lilyFing "\(\-\|[(\)]\|[(^)]\|[(_)]\)" contained nextgroup=lilyNumber
 syn match  lilyChordBass "\/" contained containedin=@lilyPitchGroup nextgroup=lilyPitch
 
 syn match lilyClef "\<\(C\|F\|G\|G2\|GG\|alto\|altovarC\|baritone\|baritonevarC\|baritonevarF\|bass\|blackmensural-c1\|blackmensural-c2\|blackmensural-c3\|blackmensural-c4\|blackmensural-c5\|french\|hufnagel-do-fa\|hufnagel-do1\|hufnagel-do2\|hufnagel-do3\|hufnagel-fa1\|hufnagel-fa2\|kievan-do\|medicaea-do1\|medicaea-do2\|medicaea-do3\|medicaea-fa1\|medicaea-fa2\|mensural-c1\|mensural-c2\|mensural-c3\|mensural-c4\|mensural-c5\|mensural-f\|mensural-g\|mezzosoprano\|moderntab\|neomensural-c1\|neomensural-c2\|neomensural-c3\|neomensural-c4\|neomensural-c5\|percussion\|petrucci-c1\|petrucci-c2\|petrucci-c3\|petrucci-c4\|petrucci-c5\|petrucci-f\|petrucci-f2\|petrucci-f3\|petrucci-f4\|petrucci-f5\|petrucci-g\|petrucci-g1\|petrucci-g2\|soprano\|subbass\|tab\|tenor\|tenorG\|tenorvarC\|treble\|varC\|varbaritone\|varpercussion\|vaticana-do1\|vaticana-do2\|vaticana-do3\|vaticana-fa1\|vaticana-fa2\|violin\)\(\A\|\n\)"
@@ -72,10 +72,9 @@ syn match lilyPitchLanguageNames "\<\(arabic\|catalan\|català\|deutsch\|english
 
 syn match lilyAccidentalsStyle "\<\(choral-cautionary\|choral\|default\|dodecaphonic-first\|dodecaphonic-no-repeat\|dodecaphonic\|forget \|modern-cautionary\|modern-voice\|modern-voice-cautionary\|neo-modern-cautionary\|neo-modern-voice\|neo-modern-voice-cautionary\|neo-modern\|modern\|no-reset\|piano-cautionary\|piano\|teaching\|voice\)\(\A\|\n\)"me=e,ms=s
 
-syn match lilyGrob     "\<\u\a\+\>" nextgroup=lilyVarReg
 syn match lilyMarkup   "\\\a\(\i\|\-\)\+"
 syn match lilyFunction "\\\a\(\i\|\-\)\+"
-syn match lilyFunction "\(\\tweak\|\\set\)\s\+" nextgroup=lilyVarReg
+syn match lilyFunction "\(\\tweak\|\\set\)\s\+" nextgroup=lilyVarReg,lilyContext
 syn match lilyDynamic "[-_^]\?\\\(cr\|cresc\|decr\|decresc\|dim\|endcr\|endcresc\|enddecr\|enddecresc\|enddim\|f\|ff\|fff\|ffff\|fffff\|fp\|fz\|mf\|mp\|n\|p\|pp\|ppp\|pppp\|ppppp\|rfz\|sf\|sff\|sfp\|sfz\|sp\|spp\)\(\A\|\n\)"me=e-1
 
 syn cluster lilyPitchGroup contains=
@@ -119,6 +118,8 @@ if g:nvls_language != "nohl"
         \ contains=lilyDots
 end
 
+syn match lilyGrob     "\<\u\a\+\>" nextgroup=lilyVarReg
+
 syn cluster lilyVarGroup contains=lilyVarReg,LilyVar,lilyDefineVar
 
 syn match  lilyDefineVar "\(\i\|\-\)\+\i\+\s\{}="he=e-1
@@ -133,7 +134,7 @@ syn match lilyContext "\(\\\|\<\)\(AncientRemoveEmptyStaffContext\|ChoirStaff\|C
 
 syn match lilyTranslator "\u\l\+\(_\)\w*\(engraver\|performer\|translator\)"
 
-syn match  lilyScheme  "\(#['`]\?\|\$\)[^'\"(0-9 ]*[\n ]"
+syn match  lilyScheme  "\(#['`]\?\|\$\)[^'\"(0-9 ]*[\n ]"ms=s+1
 syn match  lilyBoolean "\(##f\|##t\|#f\|#t\)\(\A\|\n\)"
 syn region lilyString  start=/"/  end=/"/   skip=/\\"/
 syn region lilyComment start="%{" skip="%$" end="%}"
