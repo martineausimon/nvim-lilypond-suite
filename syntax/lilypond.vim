@@ -69,9 +69,9 @@ endif
 
 syn match  lilyChordBass "\/" contained containedin=@lilyPitchGroup nextgroup=lilyPitch
 
-syn match lilyMarkup   "[-_^]\?\\\a\(\a\|\-\)\{}\a\+"
-syn match lilyFunction "[-_^]\?\\\a\(\a\|\-\)\{}\a\+\s\=" nextgroup=lilyPitch
-syn match lilyFunction "[-_^]\?\(\\tweak\|\\set\)\s\+" nextgroup=lilyVar,lilyContext
+syn match lilyMarkup   "\([-_^]\\\a\)\?\\\a\(\(\a\|_\|\-\)\{}\a\)\{}\s\{}"
+syn match lilyFunction "\([-_^]\\\a\)\?\\\a\(\(\a\|_\|\-\)\{}\a\)\{}\s\{}" nextgroup=lilyPitch
+syn match lilyFunction "\([-_^]\\\a\)\?\(\\tweak\|\\set\)\s\+" nextgroup=lilyVar,lilyContext
 syn match lilyDynamic "[-_^]\?\\\(cr\|cresc\|decr\|decresc\|dim\|endcr\|endcresc\|enddecr\|enddecresc\|enddim\|f\|ff\|fff\|ffff\|fffff\|fp\|fz\|mf\|mp\|n\|p\|pp\|ppp\|pppp\|ppppp\|rfz\|sf\|sff\|sfp\|sfz\|sp\|spp\)\(\A\|\n\)"me=e-1
 
 syn cluster lilyPitchGroup contains=
@@ -85,7 +85,7 @@ elseif g:nvls_language == "english"
     \ nextgroup=lilyRythm contained
 elseif g:nvls_language == "nohl"
 else
-  syn match lilyPitch "\<\([a-g]\|s\|R\|r\)\(isis\|eses\|eh\|ih\|eseh\|isih\|is\|es\)\{}\(\'\+\|\,\+\)\{}\(?\|!\)\="
+  syn match lilyPitch "\<\([a-g]\|s\|R\|r\)\(isis\|eses\|eh\|ih\|eseh\|isih\|is\|es\)\{}\(\'\+\|\,\+\)\{}\(?\|!\)\=\(\A\|\n\)"me=e-1
     \ nextgroup=lilyRythm contained
 endif
 
@@ -99,26 +99,27 @@ syn match lilyAccidentalsStyle "\<\(choral-cautionary\|choral\|default\|dodecaph
 
 
 syn match lilyRythm "\(1024\|512\|256\|128\|64\|32\|16\|8\|4\|2\|1\)\=\.\{}"
-  \ contained containedin=lilyPitch nextgroup=lilyArticulation,lilyFunction,lilyChordStart,lilyChordBass,lilyFing,lilySpecial,lilyDynamic,lilyMarkupReg
+  \ contained containedin=lilyPitch nextgroup=lilyArticulation,lilyFunction,lilyChordNat,lilyChordBass,lilyFing,lilySpecial,lilyDynamic,lilyMarkupReg
 
 if g:nvls_language != "nohl"
   syn match lilyChordStart "\:" contained 
+        \ containedin=lilyChordNat
+
+  syn match lilyChordNat "\:\d\{,2}\(maj\|dim\|sus\|aug\|m\)\=\d\{,2}\(\A\|\n\)"me=e-1,hs=s+1 contained 
         \ containedin=@lilyPitchGroup
-        \ nextgroup=lilyChordNat
-
-  syn match lilyChordNat "\d\{,2}\(maj\|dim\|sus\|aug\|m\)\=\d\{,2}" contained 
-        \ containedin=lilyChordStart 
         \ nextgroup=lilyChordExt,lilyChordBass
+        \ contains=lilyChordStart
 
-  syn match lilyChordExt "\.\([2-9]\|1[0-3]\)\(+\|\-\)\=" contained 
+  syn match lilyChordExt "\.\([2-9]\|1[0-3]\)\(+\|\-\)\=\(\A\|\n\)"me=e-1 contained 
         \ containedin=lilyChordNat,lilyChordExt
         \ nextgroup=lilyChordExt,lilyChordBass
         \ contains=lilyDots
 end
 
-syn match lilyGrob     "\<\u\a\+\n\{}\s\{}" nextgroup=lilyVar
+syn match lilyGrob     "\<\u\a\+"
+syn match lilyGrob     "\<\u\a\+\n\{}\s\{}\." nextgroup=lilyVar contains=lilyDots
 
-syn match lilyDefineVar "\a\(\a\|\-\|_\)\+\a\+\s\{}="he=e-1 contains=lilySpecial
+syn match lilyDefineVar "\a\(\(\a\|\-\|_\)\{}\a\)\{}\s\{}="he=e-1 contains=lilySpecial
 syn match lilyVar "\(\s\|\.\)\=\s\{}\(\l\|\-\|X\|Y\)\{}\(X\|Y\|\l\)\+" contained nextgroup=lilyVar,lilyDefineVar contains=lilyDots
 syn match lilyDefineVar "\l\(\l\|\-\)\+\l\+\." contains=lilyDots nextgroup=lilyVar
 syn match lilyDots "\." contained
@@ -135,9 +136,9 @@ syn region lilyComment start="%\([^{]\|$\)" end="$"
 syn match  lilyDynamic "\\[<!>\\]"
 
 if g:nvls_language == "nohl"
-  syn match  lilyNumber       "[-_^.]\?\(\-\.\|\)\d\+[.]\{,3}" nextgroup=lilyChordStart,lilyArticulation,lilyFing
+  syn match  lilyNumber       "[-_^.]\?\(\-\.\|\)\d\+[.]\{,3}" nextgroup=lilyChordNat,lilyArticulation,lilyFing
 else 
-  syn match  lilyNumber       "[-_^.]\?\(\-\.\|\)\d\+[.]\?" nextgroup=@lilyMatchGroup,lilyChordStart,lilyArticulation,lilyFing
+  syn match  lilyNumber       "[-_^.]\?\(\-\.\|\)\d\+[.]\?" nextgroup=@lilyMatchGroup,lilyChordNat,lilyArticulation,lilyFing
 end
 syn match  lilySpecial "[(~)]\|[(*)]\|[(=)]"
 
