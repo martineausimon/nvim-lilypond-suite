@@ -91,13 +91,13 @@ else
 endif
 
 syn match lilyRythm "\(1024\|512\|256\|128\|64\|32\|16\|8\|4\|2\|1\)\=\.\{}"
-  \ contained containedin=lilyPitch nextgroup=lilyArticulation,lilyFunction,lilyChordNat,lilyChordBass,lilyFing,lilySpecial,lilyDynamic,lilyMarkupReg
+  \ contained containedin=lilyPitch nextgroup=lilyPitch,lilyArticulation,lilyFunction,lilyChordNat,lilyChordBass,lilyFing,lilySpecial,lilyDynamic,lilyMarkupReg
 
 if g:nvls_language != "nohl"
   syn match lilyChordStart "\:" contained 
         \ containedin=lilyChordNat
 
-  syn match lilyChordNat "\:\d\{,2}\(maj\|dim\|sus\|aug\|m\)\=\d\{,2}\(\A\|\n\)"me=e-1,hs=s+1 contained 
+  syn match lilyChordNat "\:\(\d\{1,2}+\=\)\=\(maj\|dim\|sus\|aug\|m\)\=\(\d\{1,2}+\=\)\=\(\A\|\n\)"me=e-1,hs=s+1 contained 
         \ containedin=@lilyPitchGroup
         \ nextgroup=lilyChordExt,lilyChordBass
         \ contains=lilyChordStart
@@ -110,7 +110,7 @@ end
 
 syn match lilyClef "\<\(C\|F\|G\|G2\|GG\|alto\|altovarC\|baritone\|baritonevarC\|baritonevarF\|bass\|blackmensural-c1\|blackmensural-c2\|blackmensural-c3\|blackmensural-c4\|blackmensural-c5\|french\|hufnagel-do-fa\|hufnagel-do1\|hufnagel-do2\|hufnagel-do3\|hufnagel-fa1\|hufnagel-fa2\|kievan-do\|medicaea-do1\|medicaea-do2\|medicaea-do3\|medicaea-fa1\|medicaea-fa2\|mensural-c1\|mensural-c2\|mensural-c3\|mensural-c4\|mensural-c5\|mensural-f\|mensural-g\|mezzosoprano\|moderntab\|neomensural-c1\|neomensural-c2\|neomensural-c3\|neomensural-c4\|neomensural-c5\|percussion\|petrucci-c1\|petrucci-c2\|petrucci-c3\|petrucci-c4\|petrucci-c5\|petrucci-f\|petrucci-f2\|petrucci-f3\|petrucci-f4\|petrucci-f5\|petrucci-g\|petrucci-g1\|petrucci-g2\|soprano\|subbass\|tab\|tenor\|tenorG\|tenorvarC\|treble\|varC\|varbaritone\|varpercussion\|vaticana-do1\|vaticana-do2\|vaticana-do3\|vaticana-fa1\|vaticana-fa2\|violin\)\(\A\|\n\)"
 
-syn match lilyRepeatType "\<\(percent\|segno\|tremolo\|unfold\|volta\)\(\A\|\n\)"
+syn match lilyRepeatType "\<\(percent\|segno\|tremolo\|unfold\|volta\)\(\A\|\n\)"me=e-1
 
 syn match lilyPitchLanguageNames "\<\(arabic\|catalan\|català\|deutsch\|english\|espanol\|español\|français\|italiano\|nederlands\|norsk\|portugues\|português\|suomi\|svenska\|vlaams\)\(\A\|\n\)"
 
@@ -130,7 +130,7 @@ syn match lilyTranslator "\u\l\+\(_\)\w*\(engraver\|performer\|translator\)"
 
 syn match  lilyScheme  "\(#['`]\?\|\$\)[^'\"(0-9 ]*[\n ]"ms=s+1
 syn match  lilyBoolean "\(##f\|##t\|#f\|#t\)\(\A\|\n\)"
-syn region lilyString  start=/"/  end=/"/   skip=/\\"/
+syn region lilyString  start=/[_^-]\?"/  end=/"/   skip=/\\"/
 syn region lilyComment start="%{" skip="%$" end="%}"
 syn region lilyComment start="%\([^{]\|$\)" end="$"
 syn match  lilyDynamic "\\[<!>\\]"
@@ -141,7 +141,7 @@ else
   syn match  lilyNumber       "[-_^.]\?\(\-\.\|\)\d\+[.]\?" nextgroup=@lilyMatchGroup,lilyChordNat,lilyArticulation,lilyFing
 end
 
-syn match  lilySpecial "[(~)]\|[(*)]\|[(=)]"
+syn match  lilySpecial "[-_^]\?[(~)]\|[(*)]\|[(=)]"
 syn match  lilyArticulation "\s\{}[-_^][-_^+|>|.]"
 
 syn match Error ">>"
