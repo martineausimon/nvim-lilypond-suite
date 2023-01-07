@@ -77,10 +77,10 @@ syn match lilyDynamic "[-_^]\?\\\v((end)?(de)?cr(esc)?|(end)?dim|f{1,5}(p|z)?|m(
 syn cluster lilyPitchGroup contains=lilyPitch,lilyRythm,lilyChordStart,lilyChordNat,lilyChordExt
 
 if g:nvls_language == "français"
-  syn match lilyPitch "\<\(la\|si\|do\|re\|ré\|mi\|fa\|sol\|la\|s\|R\|r\)\(dd\|bb\|x\|sd\|sb\|dsd\|bsb\|d\|b\)\{}\(\'\+\|\,\+\)\{}\(?\|!\)\="
+  syn match lilyPitch "\<\v(la|si|do|re|ré|mi|fa|sol|la|si|R|r)(dd|bb|x|sd|sb|dsd|bsb|d|b){}('+|,+){}(\?|\!)=(\A|\n)"me=e-1
     \ nextgroup=lilyRythm contained
 elseif g:nvls_language == "english"
-  syn match lilyPitch "\<\([a-g]\|s\|R\|r\)\(ss\|ff\|x\|qs\|qf\|tqs\|tqf\|s\|f\|\-flatflat\|\-sharpsharp\|\-flat\|\-sharp\)\{}\(\'\+\|\,\+\)\{}\(?\|!\)\="
+  syn match lilyPitch "\<\v([a-g]|s|R|r)(ss|ff|x|qs|qf|tqs|tqf|s|f|-flatflat|-sharpsharp|-flat|-sharp){}('+|,+){}(\?|\!)=(\A|\n)"me=e-1
     \ nextgroup=lilyRythm contained
 elseif g:nvls_language == "nohl"
 else
