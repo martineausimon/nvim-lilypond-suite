@@ -64,15 +64,15 @@ syn region lilyMatcher
   \ fold
 
 if g:nvls_language != "nohl"
-  syn match  lilyFing "\s\{}\(\-\|[(\)]\|[(^)]\|[(_)]\)\d\+" contained nextgroup=lilyFing
+  syn match  lilyFing "\s\{}[-_^\\]\d\+" contained nextgroup=lilyFing
 endif
 
 syn match  lilyChordBass "\/" contained containedin=@lilyPitchGroup nextgroup=lilyPitch
 
-syn match lilyMarkup   "\([-_^]\\\a\)\?\\\a\(\(\a\|_\|\-\)\{}\a\)\{}\s\{}"
-syn match lilyFunction "\([-_^]\\\a\)\?\\\a\(\(\a\|_\|\-\)\{}\a\)\{}\s\{}" nextgroup=lilyPitch
-syn match lilyFunction "\([-_^]\\\a\)\?\(\\tweak\|\\set\|\\unset\)\s\+" nextgroup=lilyVar,lilyContext
-syn match lilyDynamic "[-_^]\?\\\(cr\|cresc\|decr\|decresc\|dim\|endcr\|endcresc\|enddecr\|enddecresc\|enddim\|f\|ff\|fff\|ffff\|fffff\|fp\|fz\|mf\|mp\|n\|p\|pp\|ppp\|pppp\|ppppp\|rfz\|sf\|sff\|sfp\|sfz\|sp\|spp\)\(\A\|\n\)"me=e-1
+syn match lilyMarkup   "[-_^]\?\\\a\([-_]\{}\a\)\{}\s\{}"
+syn match lilyFunction "[-_^]\?\\\a\([-_]\{}\a\)\{}\s\{}" nextgroup=lilyPitch
+syn match lilyFunction "[-_^]\?\(\\tweak\|\\set\|\\unset\)\s\+" nextgroup=lilyVar,lilyContext
+syn match lilyDynamic "[-_^]\?\\\v((end)?(de)?cr(esc)?|(end)?dim|f{1,5}(p|z)?|m(f|p)?|n|p{1,5}|rfz|sf{1,2}|sf(p|z)?|sp{1,2})(\A|\n)"me=e-1
 
 syn cluster lilyPitchGroup contains=lilyPitch,lilyRythm,lilyChordStart,lilyChordNat,lilyChordExt
 
@@ -84,37 +84,37 @@ elseif g:nvls_language == "english"
     \ nextgroup=lilyRythm contained
 elseif g:nvls_language == "nohl"
 else
-  syn match lilyPitch "\<\([a-g]\|s\|R\|r\)\(isis\|eses\|eh\|ih\|eseh\|isih\|is\|es\)\{}\(\'\+\|\,\+\)\{}\(?\|!\)\=\(\A\|\n\)"me=e-1
+  syn match lilyPitch "\<\v([a-g]|s|R|r)(isis|eses|eh|ih|eseh|isih|is|es){}('+|,+){}(\?|\!)=(\A|\n)"me=e-1
     \ nextgroup=lilyRythm contained
-  syn match lilyPitch "\<\(a\|e\)\(ses\|s\)\{}\(\'\+\|\,\+\)\{}\(?\|!\)\=\(\A\|\n\)"me=e-1
+  syn match lilyPitch "\<\v(a|e)(ses|s){}('+|,+){}(\?|\!)=(\A|\n)"me=e-1
     \ nextgroup=lilyRythm contained
 endif
 
-syn match lilyRythm "\(1024\|512\|256\|128\|64\|32\|16\|8\|4\|2\|1\)\=\.\{}"
+syn match lilyRythm "\v(1024|512|256|128|64|32|16|8|4|2|1)=\.{}"
   \ contained containedin=lilyPitch nextgroup=lilyPitch,lilyArticulation,lilyFunction,lilyChordNat,lilyChordBass,lilyFing,lilySpecial,lilyDynamic,lilyMarkupReg
 
 if g:nvls_language != "nohl"
   syn match lilyChordStart "\:" contained 
         \ containedin=lilyChordNat
 
-  syn match lilyChordNat "\:\(\d\{1,2}+\=\)\=\(maj\|dim\|sus\|aug\|m\)\=\(\d\{1,2}+\=\)\=\(\A\|\n\)"me=e-1,hs=s+1 contained 
+  syn match lilyChordNat "\:\v(\d{1,2}(\+|-)=)=(maj|dim|sus|aug|m)=(\d{,2}(\+|-)=)=>"me=e+1,hs=s+1,he=e+1 contained 
         \ containedin=@lilyPitchGroup
         \ nextgroup=lilyChordExt,lilyChordBass
         \ contains=lilyChordStart
 
-  syn match lilyChordExt "\.\([2-9]\|1[0-3]\)\(+\|\-\)\=\(\A\|\n\)"me=e-1 contained 
+  syn match lilyChordExt "\.\v([2-9]|1[0-3])(\+|-)=(\A|\n)"me=e-1 contained 
         \ containedin=lilyChordNat,lilyChordExt
         \ nextgroup=lilyChordExt,lilyChordBass
         \ contains=lilyDots
 end
 
-syn match lilyClef "\<\(C\|F\|G\|G2\|GG\|alto\|altovarC\|baritone\|baritonevarC\|baritonevarF\|bass\|blackmensural-c1\|blackmensural-c2\|blackmensural-c3\|blackmensural-c4\|blackmensural-c5\|french\|hufnagel-do-fa\|hufnagel-do1\|hufnagel-do2\|hufnagel-do3\|hufnagel-fa1\|hufnagel-fa2\|kievan-do\|medicaea-do1\|medicaea-do2\|medicaea-do3\|medicaea-fa1\|medicaea-fa2\|mensural-c1\|mensural-c2\|mensural-c3\|mensural-c4\|mensural-c5\|mensural-f\|mensural-g\|mezzosoprano\|moderntab\|neomensural-c1\|neomensural-c2\|neomensural-c3\|neomensural-c4\|neomensural-c5\|percussion\|petrucci-c1\|petrucci-c2\|petrucci-c3\|petrucci-c4\|petrucci-c5\|petrucci-f\|petrucci-f2\|petrucci-f3\|petrucci-f4\|petrucci-f5\|petrucci-g\|petrucci-g1\|petrucci-g2\|soprano\|subbass\|tab\|tenor\|tenorG\|tenorvarC\|treble\|varC\|varbaritone\|varpercussion\|vaticana-do1\|vaticana-do2\|vaticana-do3\|vaticana-fa1\|vaticana-fa2\|violin\)\(\A\|\n\)"
+syn match lilyClef "\<\v(C|F|G|G2|GG|alto(varC)?|baritone(var(C|F))?|bass|blackmensural-c[1-5]|french|hufnagel-do-fa|hufnagel-do[1-3]|hufnagel-fa[1-2]|kievan-do|medicaea-do[1-3]|medicaea-fa[1-2]|mensural-(f|g|c[1-5])|mezzosoprano|moderntab|neomensural-c[1-5]|percussion|petrucci-c[1-5]|petrucci-f[2-5]?|petrucci-g(1|2)?|soprano|subbass|tab|tenor(G|varC)?|treble|var(C|baritone|percussion)|vaticana-do[1-3]|vaticana-fa[1-2]|violin)(\A|\n)"me=e-1
 
 syn match lilyRepeatType "\<\(percent\|segno\|tremolo\|unfold\|volta\)\(\A\|\n\)"me=e-1
 
 syn match lilyPitchLanguageNames "\<\(arabic\|catalan\|català\|deutsch\|english\|espanol\|español\|français\|italiano\|nederlands\|norsk\|portugues\|português\|suomi\|svenska\|vlaams\)\(\A\|\n\)"
 
-syn match lilyAccidentalsStyle "\<\(choral-cautionary\|choral\|default\|dodecaphonic-first\|dodecaphonic-no-repeat\|dodecaphonic\|forget \|modern-cautionary\|modern-voice\|modern-voice-cautionary\|neo-modern-cautionary\|neo-modern-voice\|neo-modern-voice-cautionary\|neo-modern\|modern\|no-reset\|piano-cautionary\|piano\|teaching\|voice\)\(\A\|\n\)"
+syn match lilyAccidentalsStyle "\v(choral-cautionary|choral|default|dodecaphonic-first|dodecaphonic-no-repeat|dodecaphonic|forget|modern-cautionary|modern-voice|modern-voice-cautionary|neo-modern-cautionary|neo-modern-voice|neo-modern-voice-cautionary|neo-modern|modern|no-reset|piano-cautionary|piano|teaching|voice)(\A|\n)"me=e-1
 
 syn match lilyGrob     "\<\u\a\+"
 syn match lilyGrob     "\<\u\a\+\n\{}\s\{}\." nextgroup=lilyVar contains=lilyDots
@@ -124,12 +124,13 @@ syn match lilyVar "\(\s\|\.\)\=\s\{}\(\l\|\u\|\-\|X\|Y\)\{}\(X\|Y\|\l\)\+" conta
 syn match lilyDefineVar "\l\(\l\|\-\)\+\l\+\." contains=lilyDots nextgroup=lilyVar
 syn match lilyDots "\." contained
 
-syn match lilyContext "\(\\\|\<\)\(AncientRemoveEmptyStaffContext\|ChoirStaff\|ChordNames\|CueVoice\|Devnull\|DrumStaff\|DrumVoice\|Dynamics\|FiguredBass\|FretBoards\|Global\|GrandStaff\|GregorianTranscriptionStaff\|GregorianTranscriptionVoice\|KievanStaff\|KievanVoice\|Lyrics\|MensuralStaff\|MensuralVoice\|NoteNames\|NullVoice\|OneStaff\|PetrucciStaff\|PetrucciVoice\|PianoStaff\|RemoveEmptyDrumStaffContext\|RemoveEmptyRhythmicStaffContext\|RemoveEmptyStaffContext\|RemoveEmptyTabStaffContext\|RhythmicStaff\|Score\|Staff\|StaffGroup\|TabStaff\|TabVoice\|VaticanaStaff\|VaticanaVoice\|Voice\)\(\A\|\n\)"me=e-1 nextgroup=lilyDots
+syn match lilyContext "\v<(Choir|Drum|Grand|Mensural|One|Petrucci|Piano|Rhythmic|Tab|Vaticana|GregorianTranscription|Kievan)?Staff(Group)?>" nextgroup=lilyDots
+syn match lilyContext "\v<((Chord|Note)?Names|(Devnull|Dynamics|FiguredBass|FretBoards|Global|Lyrics|Score)|(Cue|Drum|Gregorian|Kievan|Mensural|Null|Tab|Vaticana)?Voice)|((Ancient)?(RemoveEmpty))?(Drums|Rythmic|Tab)?(StaffContext)?>" nextgroup=lilyDots
 
-syn match lilyTranslator "\u\l\+\(_\)\w*\(engraver\|performer\|translator\)"
+syn match lilyTranslator "\u\l\+\(_\a\+\)\{}\v(_engraver|_performer|_translator)"
 
 syn match  lilyScheme  "\(#['`]\?\|\$\)[^'\"(0-9 ]*[\n ]"ms=s+1
-syn match  lilyBoolean "\(##f\|##t\|#f\|#t\)\(\A\|\n\)"
+syn match  lilyBoolean "\v(##f|##t|#f|#t)(\A|\n)"
 syn region lilyString  start=/[_^-]\?"/  end=/"/   skip=/\\"/
 syn region lilyComment start="%{" skip="%$" end="%}"
 syn region lilyComment start="%\([^{]\|$\)" end="$"
@@ -198,24 +199,19 @@ syn region lilyInnerMarkup
 
 hi link lilyInnerLyrics       lilyLyrics
 hi link lilyGrobsExcpt        lilyGrob
-
 hi link lilyRepeatType        lilyArgument
 hi link lilyPitchLanguageName lilyArgument
 hi link lilyAccidentalsStyle  lilyArgument
 hi link lilyClef              lilyArgument
-
 hi link lilyDefineVar         lilyVar
-
 hi link lilyNotesAttr         lilyPitch
 hi link lilyAlt               lilyPitch
 hi link lilyRythm             lilyPitch
 hi link lilyDotted            lilyPitch
-
 hi link lilyFing              lilySpecial
 hi link lilyChordBass         lilySpecial
 hi link lilyChordStart        lilySpecial
 hi link lilyDots              lilySpecial
-
 hi link lilyChordNat          lilyChord
 hi link lilyChordExt          lilyChord
 
