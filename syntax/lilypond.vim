@@ -24,6 +24,7 @@ syn cluster lilyMatchGroup contains=
   \lilyDynamic,
   \lilySchemeReg,
   \lilyMarkupReg,
+  \lilyChordReg,
   \lilyMarkup,
   \lilyScheme,
   \lilyBoolean,
@@ -57,9 +58,9 @@ syn region lilyMatcher
 
 syn region lilyMatcher  
   \ matchgroup=Delimiter 
-  \ start="<" 
+  \ start="<\{2}" 
   \ skip="\\\\\|\\[{<>}]" 
-  \ end=">" 
+  \ end=">\{2}" 
   \ contains=@lilyMatchGroup 
   \ fold
 
@@ -90,7 +91,7 @@ else
     \ nextgroup=lilyRythm contained
 endif
 
-syn match lilyRythm "\(\/\l\+\)\@<!\v(1024|512|256|128|64|32|16|8|4|2|1)=\.{}(*\d{,2})="
+syn match lilyRythm "\(\/\l\+\)\@<!\v(1024|512|256|128|64|32|16|8|4|2|1)=\.{}(\*\d{1,2})="
   \ contained contains=lilySpecial nextgroup=lilyArticulation,lilyFunction,lilyChordNat,lilyChordBass,lilyFing,lilySpecial,lilyDynamic,lilyMarkupReg
 
 if g:nvls_language != "nohl"
@@ -198,6 +199,13 @@ syn region lilyInnerMarkup
   \ contained contains=ALLBUT,lilyFunction,lilyInnerLyrics,@lilyPitchGroup,lilyVar,lilyDefineVar
   \ containedin=lilyMarkupReg
 
+syn region lilyChordReg
+  \ start="<[^<]"
+  \ end=">"
+  \ contained
+  \ contains=lilyPitch,lilyFing
+  \ nextgroup=lilyRythm
+
 hi link lilyInnerLyrics       lilyLyrics
 hi link lilyGrobsExcpt        lilyGrob
 hi link lilyRepeatType        lilyArgument
@@ -205,10 +213,7 @@ hi link lilyPitchLanguageName lilyArgument
 hi link lilyAccidentalsStyle  lilyArgument
 hi link lilyClef              lilyArgument
 hi link lilyDefineVar         lilyVar
-hi link lilyNotesAttr         lilyPitch
-hi link lilyAlt               lilyPitch
 hi link lilyRythm             lilyPitch
-hi link lilyDotted            lilyPitch
 hi link lilyFing              lilySpecial
 hi link lilyChordBass         lilySpecial
 hi link lilyChordStart        lilySpecial
