@@ -68,12 +68,12 @@ if g:nvls_language != "nohl"
   syn match  lilyFing "\s\{}[-_^\\]\d\+" contained nextgroup=lilyFing
 endif
 
-syn match  lilyChordBass "\/" contained containedin=@lilyPitchGroup nextgroup=lilyPitch
+syn match lilyChordBass "\/" contained containedin=@lilyPitchGroup nextgroup=lilyPitch
 
 syn match lilyMarkup   "[-_^]\?\\\a\([-_]\{}\a\)\{}\s\{}"
 syn match lilyFunction "[-_^]\?\\\a\([-_]\{}\a\)\{}\s\{}" nextgroup=lilyPitch
 syn match lilyFunction "[-_^]\?\(\\tweak\|\\set\|\\unset\)\s\+" nextgroup=lilyVar,lilyContext,lilyGrob
-syn match lilyDynamic "[-_^]\?\\\v((end)?(de)?cr(esc)?|(end)?dim|f{1,5}(p|z)?|m(f|p)?|n|p{1,5}|rfz|sf{1,2}|sf(p|z)?|sp{1,2})(\A|\n)"me=e-1
+syn match lilyDynamic  "[-_^]\?\\\v((end)?(de)?cr(esc)?|(end)?dim|f{1,5}(p|z)?|m(f|p)?|n|p{1,5}|rfz|sf{1,2}|sf(p|z)?|sp{1,2})(\A|\n)"me=e-1
 
 syn cluster lilyPitchGroup contains=lilyPitch,lilyRythm,lilyChordStart,lilyChordNat,lilyChordExt
 
@@ -98,7 +98,7 @@ if g:nvls_language != "nohl"
   syn match lilyChordStart "\:" contained 
         \ containedin=lilyChordNat
 
-  syn match lilyChordNat "\:\v(\d{1,2}(\+|-)=)=(maj|dim|sus|aug|m)=(\d{,2}(\+|-)=)=>"me=e+1,hs=s+1,he=e+1 contained
+  syn match lilyChordNat "\:\v(\d{1,2}(\+|-)?)?(maj|dim|sus|aug|min|m)?(\d{,2}(\+|-)?)?>"me=e+1,hs=s+1,he=e+1 contained
         \ containedin=@lilyPitchGroup
         \ nextgroup=lilyChordExt,lilyChordBass
         \ contains=lilyChordStart
@@ -115,7 +115,7 @@ syn match lilyRepeatType "\<\v(percent|segno|tremolo|unfold|volta)(\A|\n)"me=e-1
 
 syn match lilyPitchLanguageNames "\<\v(arabic|catal(an|à)|deutsch|english|espa(n|ñ)ol|français|italiano|nederlands|norsk|portugu(e|ê)s|suomi|svenska|vlaams)(\A|\n)"
 
-syn match lilyAccidentalsStyle "\v(choral-cautionary|choral|default|dodecaphonic-first|dodecaphonic-no-repeat|dodecaphonic|forget|modern-cautionary|modern-voice|modern-voice-cautionary|neo-modern-cautionary|neo-modern-voice|neo-modern-voice-cautionary|neo-modern|modern|no-reset|piano-cautionary|piano|teaching|voice)(\A|\n)"me=e-1
+syn match lilyAccidentalsStyle "\v<(choral(-cautionary)?|default|dodecaphonic(-first|-no-repeat)?|forget|(neo-)?modern(-voice)?(-cautionary)?|modern|no-reset|piano(-cautionary)?|teaching|voice)(\A|\n)"me=e-1
 
 syn match lilyGrob     "\<\u\a\+"
 
