@@ -20,10 +20,6 @@ Main news:
 * Highlighting for fingerings
 * Only one color now for all types of variables
 
-TODO:
-
-* Better support for chords with syntax like `<c e g>`
-
 ## FEATURES
 
 * **Fast syntax file for LilyPond**
