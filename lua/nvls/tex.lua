@@ -1,6 +1,10 @@
 local b, g, fn, cmd = vim.b, vim.g, vim.fn, vim.cmd
 local shellescape = vim.fn.shellescape
 local expand = vim.fn.expand
+local include_dir = nvls_options.lilypond.options.include_dir
+if type(include_dir) == "table" then
+  include_dir = table.concat(include_dir, " -I ")
+end
 
 local makeLualatex = "lualatex" ..
     " --output-directory=" .. shellescape(expand('%:p:h')) .. 
@@ -20,6 +24,7 @@ local makeLytex = "cd " .. shellescape(tmpOutDir) ..
     shellescape(tmpOutDir .. expand('%:t:r') .. '.tex')
 
 local makeLilypondBook = "lilypond-book" .. 
+    " -I " .. include_dir .. 
     " --output=" .. shellescape(tmpOutDir) .. " %:p:S"
 
 local lilypondBookEfm = '%+G%f:%l:%c:, %f:%l:%c: %m,%-G%.%#'
