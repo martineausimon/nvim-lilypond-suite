@@ -5,12 +5,23 @@ local M = {}
 
 function M.lilyPlayer()
   local main_folder = nvls_options.lilypond.options.main_folder
+  local uname = io.popen("uname -a")
+  local kernel = uname:read("*a")
+  uname:close()
+  if not kernel:match("Linux") or kernel:match("Darwin") then
+    print("[NVLS] Function not supported on your system")
+    do return end
+  end
 
   local function getLastMod(file)
     if io.open(fn.glob(file), "r") == nil then 
       return 0
     else
-      var = io.popen("stat -c %Y " .. file)
+      if kernel:match("Darwin") then
+        var = io.popen("stat -f %m " .. fn.glob(file))
+      else
+        var = io.popen("stat -c %Y " .. fn.glob(file))
+      end
       var = var:read()
       var = tonumber(var)
       return var
@@ -21,9 +32,8 @@ function M.lilyPlayer()
 
     local midi_last = getLastMod(lilyMidiFile)
     local mp3_last = getLastMod(lilyAudioFile)
-    local main_last = getLastMod(nvls_main)
 
-    if (mp3_last and mp3_last > midi_last) then
+    if (mp3_last > midi_last) then
       require('nvls.lilypond').player(lilyAudioFile, nvls_file_name .. ".mp3")
 
     else
