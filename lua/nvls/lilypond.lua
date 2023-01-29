@@ -8,7 +8,7 @@ function M.lilyPlayer()
   local uname = io.popen("uname")
   local kernel = uname:read("*a")
   uname:close()
-  if kernel ~= "Linux\n" and kernel ~= "Darwin" then
+  if kernel ~= "Linux\n" and kernel ~= "Darwin\n" then
     print("[NVLS] Function not supported on your system")
     do return end
   end
