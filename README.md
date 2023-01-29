@@ -104,7 +104,8 @@ use { 'martineausimon/nvim-lilypond-suite',
           lilypond_syntax = "<F3>"
         },
         options = {
-          clean_logs = false
+          clean_logs = false,
+          include_dir = nil
         },
       },
       player = {

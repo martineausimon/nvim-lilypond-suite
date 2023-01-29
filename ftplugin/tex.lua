@@ -59,3 +59,12 @@ if clean or g.nvls_clean_tex_files == 1 then
   })
 end
 
+local tex_include_dir = nvls_options.latex.options.include_dir or nil
+
+if tex_include_dir ~= "" and tex_include_dir ~= nil then
+  if type(tex_include_dir) == "table" then
+    tex_include_dir = table.concat(tex_include_dir, ":")
+  end
+  vim.cmd([[let $TEXINPUTS = $TEXINPUTS . ":]] .. tex_include_dir .. [["]])
+end
+  
