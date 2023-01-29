@@ -5,10 +5,10 @@ local M = {}
 
 function M.lilyPlayer()
   local main_folder = nvls_options.lilypond.options.main_folder
-  local uname = io.popen("uname -a")
+  local uname = io.popen("uname")
   local kernel = uname:read("*a")
   uname:close()
-  if not kernel:match("Linux") or kernel:match("Darwin") then
+  if kernel ~= "Linux\n" and kernel ~= "Darwin" then
     print("[NVLS] Function not supported on your system")
     do return end
   end
@@ -17,7 +17,7 @@ function M.lilyPlayer()
     if io.open(fn.glob(file), "r") == nil then 
       return 0
     else
-      if kernel:match("Darwin") then
+      if kernel == "Darwin\n" then
         var = io.popen("stat -f %m " .. fn.glob(file))
       else
         var = io.popen("stat -c %Y " .. fn.glob(file))
