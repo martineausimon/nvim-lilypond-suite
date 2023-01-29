@@ -164,7 +164,19 @@ function M.syntax()
 end
 
 function M.viewer(file)
-  vim.fn.jobstart('xdg-open ' .. file)
+  local uname = io.popen("uname")
+  local kernel = uname:read("*a")
+  uname:close()
+  if kernel ~= "Linux\n" and kernel ~= "Darwin" then
+    print("[NVLS] Function not supported on your system")
+  do return end
+  end
+
+  if kernel == "Darwin\n" then
+    vim.fn.jobstart("open " .. file)
+  else
+    vim.fn.jobstart("xdg-open " .. file)
+  end
 end
 
 return M
