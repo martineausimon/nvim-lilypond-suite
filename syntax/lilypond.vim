@@ -71,7 +71,7 @@ endif
 syn match lilyChordBass "\/" contained containedin=@lilyPitchGroup nextgroup=lilyPitch
 
 syn match lilyMarkup   "[-_^]\?\\\a\([-_]\{}\a\)\{}\s\{}"
-syn match lilyFunction "[-_^]\?\\\a\([-_]\{}\a\)\{}\s\{}" nextgroup=lilyPitch
+syn match lilyFunction "[-_^]\?\\\a\([-_]\{}\a\)\{}\s\{}" nextgroup=lilyPitch,lilyMatcher
 syn match lilyFunction "[-_^]\?\(\\tweak\|\\set\|\\unset\)\s\+" nextgroup=lilyVar,lilyContext,lilyGrob
 syn match lilyDynamic  "[-_^]\?\\\v((end)?(de)?cr(esc)?|(end)?dim|f{1,5}(p|z)?|m(f|p)?|n|p{1,5}|rfz|sf{1,2}|sf(p|z)?|sp{1,2})(\A|\n)"me=e-1
 
