@@ -40,6 +40,14 @@ syn cluster lilyMatchGroup contains=
   \lilyDefineVar,
   \Error
 
+syn region lilyChordReg
+  \ matchgroup=lilyChord
+  \ start="<"
+  \ end=">"
+  \ contained
+  \ contains=lilyPitch,lilyFing
+  \ nextgroup=lilyRythm
+
 syn region lilyMatcher  
   \ matchgroup=Delimiter
   \ start="{"
@@ -198,13 +206,6 @@ syn region lilyInnerMarkup
   \ end="}" 
   \ contained contains=ALLBUT,lilyFunction,lilyInnerLyrics,@lilyPitchGroup,lilyVar,lilyDefineVar
   \ containedin=lilyMarkupReg
-
-syn region lilyChordReg
-  \ start="<[^<]"
-  \ end=">"
-  \ contained
-  \ contains=lilyPitch,lilyFing
-  \ nextgroup=lilyRythm
 
 hi link lilyInnerLyrics       lilyLyrics
 hi link lilyGrobsExcpt        lilyGrob
