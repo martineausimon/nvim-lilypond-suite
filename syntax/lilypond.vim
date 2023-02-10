@@ -22,7 +22,6 @@ syn cluster lilyMatchGroup contains=
   \lilyNumber,
   \lilySpecial,
   \lilyDynamic,
-  \lilySchemeReg,
   \lilyMarkupReg,
   \lilyChordReg,
   \lilyMarkup,
@@ -162,7 +161,7 @@ syn match Error "\<\\tuplet\(\s\|\)\+{"me=e-1
 
 syn include @Scheme syntax/scheme.vim
 unlet b:current_syntax
-syn region lilySchemeReg
+syn region lilyScheme
   \ matchgroup=Delimiter 
   \ start="#['`]\?\s\{}\(\n\|\s\)\{}(" 
   \ end=")" 
