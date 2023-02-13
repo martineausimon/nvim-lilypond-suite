@@ -36,106 +36,33 @@ Main news:
 <img src="https://user-images.githubusercontent.com/89019438/191845626-4ba6224c-46c3-484f-a355-5cf10a66889f.png">
 </p>
 
-## QUICK INSTALL WITH CONFIG
+## QUICK INSTALL
 
 > **⚠ This plugin requires Nvim >= 0.7**
 
 If you want to use all the functions (player, hyphenation for various languages...), please read the [installation section](https://github.com/martineausimon/nvim-lilypond-suite/wiki/1.-Installation) in the wiki to install dependencies
 
+### [lazy.nvim](https://github.com/folke/lazy.nvim)
+
+```lua 
+{ 'martineausimon/nvim-lilypond-suite',
+  dependencies = 'MunifTanjim/nui.nvim',
+  config = function()
+    require('nvls').setup({
+      -- edit config here (see "Customize default settings" in wiki)
+    })
+  end
+}
+```
+
 ### [packer.nvim](https://github.com/wbthomason/packer.nvim)
 
 ```lua 
 use { 'martineausimon/nvim-lilypond-suite',
-  requires = { 'MunifTanjim/nui.nvim' },
+  requires = 'MunifTanjim/nui.nvim',
   config = function()
     require('nvls').setup({
-      lilypond = {
-        mappings = {
-          player = "<F3>",
-          compile = "<F5>",
-          open_pdf = "<F6>",
-          switch_buffers = "<A-Space>",
-          insert_version = "<F4>",
-          hyphenation = "<F12>",
-          hyphenation_change_lang = "<F11>",
-          insert_hyphen = "<leader>ih",
-          add_hyphen = "<leader>ah",
-          del_next_hyphen = "<leader>dh",
-          del_prev_hyphen = "<leader>dH",
-          del_selected_hyphen = "<leader>dh"
-        },
-        options = {
-          pitches_language = "default",
-          output = "pdf",
-          main_file = "main.ly",
-          main_folder = "%:p:h",
-          include_dir = "$HOME",
-          hyphenation_language = "en_DEFAULT"
-        },
-        highlights = {
-          lilyString = { link = "String" },
-          lilyDynamic = { bold = true },
-          lilyComment = { link = "Comment" },
-          lilyNumber = { link = "Number" },
-          lilyVar = { link = "Tag" },
-          lilyBoolean = { link = "Boolean" },
-          lilySpecial = { bold = true },
-          lilyArgument = { link = "Type" },
-          lilyScheme = { link = "Special" },
-          lilyLyrics = { link = "Special" },
-          lilyMarkup = { bold = true },
-          lilyFunction = { link = "Statement" },
-          lilyArticulation = { link = "PreProc" },
-          lilyContext = { link = "Type" },
-          lilyGrob = { link = "Include" },
-          lilyTranslator = { link = "Type" },
-          lilyPitch = { link = "Function" },
-          lilyChord = { 
-            ctermfg = "lightMagenta", 
-            fg = "lightMagenta", 
-            bold = true 
-          },
-        },
-      },
-      latex = {
-        mappings = {
-          compile = "<F5>",
-          open_pdf = "<F6>",
-          lilypond_syntax = "<F3>"
-        },
-        options = {
-          clean_logs = false,
-          include_dir = nil
-        },
-      },
-      player = {
-        mappings = {
-          quit = "q",
-          play_pause = "p",
-          loop = "<A-l>",
-          backward = "h",
-          small_backward = "<S-h>",
-          forward = "l",
-          small_forward = "<S-l>",
-          decrease_speed = "j",
-          increase_speed = "k",
-          halve_speed = "<S-j>",
-          double_speed = "<S-k>"
-        },
-        options = {
-          row = "2%",
-          col = "99%",
-          width = "37",
-          height = "1",
-          border_style = "single",
-          winhighlight = "Normal:Normal,FloatBorder:Normal",
-          mpv_flags = {
-            "--msg-level=cplayer=no,ffmpeg=no",
-            "--loop",
-            "--config-dir=/dev/null"
-          }
-        },
-      },
+      -- edit config here (see "Customize default settings" in wiki)
     })
   end
 }
