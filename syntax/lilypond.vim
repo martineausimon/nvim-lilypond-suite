@@ -133,8 +133,8 @@ syn match lilyDots "\." contained
 
 syn match lilyGrob     "\<\u\a\+\n\{}\s\{}\." nextgroup=lilyVar contains=lilyDots
 
-syn match lilyContext "\v<(Choir|Drum|Grand|Mensural|One|Petrucci|Piano|Rhythmic|Tab|Vaticana|GregorianTranscription|Kievan)?Staff(Group)?>" nextgroup=lilyDots
-syn match lilyContext "\v<((Chord|Note)?Names|(Devnull|Dynamics|FiguredBass|FretBoards|Global|Lyrics|Score)|(Cue|Drum|Gregorian|Kievan|Mensural|Null|Tab|Vaticana)?Voice)|((Ancient)?(RemoveEmpty))?(Drums|Rythmic|Tab)?(StaffContext)?>" nextgroup=lilyDots
+syn match lilyContext "\v<\\?(Choir|Drum|Grand|Mensural|One|Petrucci|Piano|Rhythmic|Tab|Vaticana|GregorianTranscription|Kievan)?Staff(Group)?>" nextgroup=lilyDots
+syn match lilyContext "\v<\\?((Chord|Note)?Names|(Devnull|Dynamics|FiguredBass|FretBoards|Global|Lyrics|Score)|(Cue|Drum|Gregorian|Kievan|Mensural|Null|Tab|Vaticana)?Voice)|((Ancient)?(RemoveEmpty))?(Drums|Rythmic|Tab)?(StaffContext)?>" nextgroup=lilyDots
 
 syn match lilyTranslator "\u\l\+\(_\a\+\)\{}\v(_engraver|_performer|_translator)"
 
