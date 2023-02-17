@@ -31,12 +31,18 @@ local lilypondBookEfm = '%+G%f:%l:%c:, %f:%l:%c: %m,%-G%.%#'
 
 local M = {}
 
-function M.DetectLilypondSyntax()
+function M.ToggleLilypondSyntax()
   if g.lytexSyn == 1 then
     g.lytexSyn = 0
     cmd[[set syntax=tex]]
     return
-  elseif fn.search("begin{lilypond}", "n") ~= 0 then
+  else
+  M.DetectLilypondSyntax()
+  end
+end
+    
+function M.DetectLilypondSyntax()
+  if fn.search("begin{lilypond}", "n") ~= 0 then
     b.current_syntax = nil
     cmd('syntax include @TEX syntax/tex.vim')
     b.current_syntax = nil

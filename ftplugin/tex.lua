@@ -17,7 +17,7 @@ texCmd('LaTexCmp',  function()
 {})
 
 texCmd('ToggleSyn', function() 
-  require('nvls.tex').DetectLilypondSyntax() 
+  require('nvls.tex').ToggleLilypondSyntax() 
 end, {})
 
 texCmd('Cleaner', function() 
