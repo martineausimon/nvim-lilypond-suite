@@ -26,7 +26,13 @@ texCmd('Cleaner', function()
       shellescape(tmpOutDir))
 end, {})
 
-texAutoCmd("BufEnter", {
+if not nvls_options then
+  require('nvls').setup()
+end
+
+local acmd = nvls_options.latex.options.lilypond_syntax_au
+
+texAutoCmd(acmd, {
   callback = function() require('nvls.tex').DetectLilypondSyntax() end,
   group = vim.api.nvim_create_augroup(
     "DetectSyntax", 
@@ -36,10 +42,6 @@ texAutoCmd("BufEnter", {
 })
 
 texHi(0, 'Snip', { ctermfg = "white", fg = "white", bold = true })
-
-if not nvls_options then
-  require('nvls').setup()
-end
 
 local cmp = nvls_options.latex.mappings.compile
 local view = nvls_options.latex.mappings.open_pdf

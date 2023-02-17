@@ -33,7 +33,8 @@ local default = {
     },
     options = {
       clean_logs = false,
-      include_dir = nil
+      include_dir = nil,
+      lilypond_syntax_au = "BufEnter"
     },
   },
   player = {
