@@ -2,16 +2,26 @@ local texMap      = vim.api.nvim_buf_set_keymap
 local texHi       = vim.api.nvim_set_hl
 local texCmd      = vim.api.nvim_create_user_command
 local texAutoCmd  = vim.api.nvim_create_autocmd
-local shellescape = vim.fn.shellescape
+local shellescape = require('nvls').shellescape
 local expand      = vim.fn.expand
 local g, fn       = vim.g, vim.fn
-texPdf = shellescape(expand('%:p:r') .. '.pdf')
-tmpOutDir = expand('%:p:h') .. '/tmpOutDir/'
 
-texCmd('Viewer', function() require('nvls').viewer(texPdf) end, {})
+if not nvls_options then
+  require('nvls').setup()
+end
+
+require('nvls.tex').DefineTexVars()
+
+texCmd('Viewer', function() 
+  require('nvls.tex').DefineTexVars()
+  print('Opening ' .. nvls_file_name .. '.pdf')
+  require('nvls').viewer(texPdf) 
+end, {})
 
 texCmd('LaTexCmp',  function() 
     fn.execute('write')
+    require('nvls.tex').DefineTexVars()
+    print('Compiling ' .. nvls_file_name .. '.tex...')
     require('nvls.tex').SelectMakePrgType() 
   end,    
 {})
@@ -21,14 +31,14 @@ texCmd('ToggleSyn', function()
 end, {})
 
 texCmd('Cleaner', function() 
+    require('nvls.tex').DefineTexVars()
     fn.execute('!rm -rf ' ..
-      '%:r:S.log %:r:S.aux %r:S.out tmp-ly/ ' ..
+      shellescape(nvls_main_name .. '.log') .. ' ' ..
+      shellescape(nvls_main_name .. '.aux') .. ' ' ..
+      shellescape(nvls_main_name .. '.out') .. ' ' ..
+      shellescape(main_folder .. '/tmp-ly/') .. ' ' ..
       shellescape(tmpOutDir))
 end, {})
-
-if not nvls_options then
-  require('nvls').setup()
-end
 
 local acmd = nvls_options.latex.options.lilypond_syntax_au
 

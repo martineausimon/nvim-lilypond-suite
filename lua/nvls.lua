@@ -33,6 +33,8 @@ local default = {
     },
     options = {
       clean_logs = false,
+      main_file = "main.tex",
+      main_folder = "%:p:h",
       include_dir = nil,
       lilypond_syntax_au = "BufEnter"
     },
