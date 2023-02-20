@@ -45,7 +45,8 @@ If you want to use all the functions (player, hyphenation for various languages.
 ### [lazy.nvim](https://github.com/folke/lazy.nvim)
 
 ```lua 
-{ 'martineausimon/nvim-lilypond-suite',
+{ 
+  'martineausimon/nvim-lilypond-suite',
   dependencies = 'MunifTanjim/nui.nvim',
   config = function()
     require('nvls').setup({
