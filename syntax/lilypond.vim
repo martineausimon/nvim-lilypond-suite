@@ -154,6 +154,7 @@ end
 syn match  lilySpecial "[-_^]\?[(~)]\|[(*)]\|[(=)]"
 syn match  lilyArticulation "\s\{}[-_^][-_^+|>|.]"
 
+syn match Error " "
 syn match Error ">>"
 syn match Error "}"
 syn match Error "\l\+\d[',]\+"
@@ -222,6 +223,5 @@ hi link lilyChordNat          lilyChord
 hi link lilyChordExt          lilyChord
 
 let b:current_syntax = "lilypond"
-
 let &cpo = s:keepcpo
 unlet s:keepcpo
