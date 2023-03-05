@@ -8,6 +8,7 @@
 \consists
 \context
 \defaultchild
+\default
 \denies
 \description
 \drummode
