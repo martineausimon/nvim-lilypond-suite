@@ -85,20 +85,20 @@ syn match lilyDynamic  "[-_^]\?\\\v((end)?(de)?cr(esc)?|(end)?dim|f{1,5}(p|z)?|m
 syn cluster lilyPitchGroup contains=lilyPitch,lilyRythm,lilyChordStart,lilyChordNat,lilyChordExt
 
 if g:nvls_language == "français"
-  syn match lilyPitch "\_^\?\v<(la|si|do|re|ré|mi|fa|sol|la|si|R|r)(dd|bb|x|sd|sb|dsd|bsb|d|b){}('+|,+){}(\?|\!)=(\A|\n)"me=e-1
+  syn match lilyPitch "^\?\v<(la|si|do|re|ré|mi|fa|sol|la|si|R|r)(dd|bb|x|sd|sb|dsd|bsb|d|b){}('+|,+){}(\?|\!)=(\A|\n)"me=e-1
     \ nextgroup=lilyRythm contained
 elseif g:nvls_language == "english"
-  syn match lilyPitch "\_^\?\v<([a-g]|s|R|r)(ss|ff|x|qs|qf|tqs|tqf|s|f|-flatflat|-sharpsharp|-flat|-sharp){}('+|,+){}(\?|\!)=(\A|\n)"me=e-1
+  syn match lilyPitch "^\?\v<([a-g]|s|R|r)(ss|ff|x|qs|qf|tqs|tqf|s|f|-flatflat|-sharpsharp|-flat|-sharp){}('+|,+){}(\?|\!)=(\A|\n)"me=e-1
     \ nextgroup=lilyRythm contained
 elseif g:nvls_language == "nohl"
 else
-  syn match lilyPitch "\_^\?\v<([a-g]|s|R|r)(isis|eses|eh|ih|eseh|isih|is|es){}('+|,+){}(\?|\!)=(\A|\n)"me=e-1
+  syn match lilyPitch "^\?\v<([a-g]|s|R|r)(isis|eses|eh|ih|eseh|isih|is|es){}('+|,+){}(\?|\!)=(\A|\n)"me=e-1
     \ nextgroup=lilyRythm contained
-  syn match lilyPitch "\_^\?\v<(a|e)(ses|s)('+|,+){}(\?|\!)=(\A|\n)"me=e-1
+  syn match lilyPitch "^\?\v<(a|e)(ses|s)('+|,+){}(\?|\!)=(\A|\n)"me=e-1
     \ nextgroup=lilyRythm contained
 endif
 
-syn match lilyRythm "\(\/\l\+\)\@<!\v(1024|512|256|128|64|32|16|8|4|2|1)=\.{}(\*\d{1,2})="
+syn match lilyRythm "\v(\/\l+)@<!(1024|512|256|128|64|32|16|8|4|2|1)=\.{}(\*\d{1,2})=(\A|\n)"me=e-1
   \ contained contains=lilySpecial nextgroup=lilyArticulation,lilyFunction,lilyChordNat,lilyChordBass,lilyFing,lilySpecial,lilyDynamic,lilyMarkupReg
 
 if g:nvls_language != "nohl"
