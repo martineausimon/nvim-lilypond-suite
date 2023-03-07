@@ -8,18 +8,6 @@ This is a plugin ([Neovim](https://github.com/neovim/neovim) only) for writing [
 
 ---
 
-#### IMPORTANT CHANGES (3rd of Jan 2023)
-
-There have been a lot of changes in the syntax file, which will certainly require you to adjust your configuration again, sorry for the inconvenience. Please read [Highlight groups](https://github.com/martineausimon/nvim-lilypond-suite/wiki/2.-Configuration#highlight-groups) !
-
-My goal was to clarify the different types of highlighting, and to easily allow them to be configured.
-
-Main news:
-
-* Better support for chord notation
-* Highlighting for fingerings
-* Only one color now for all types of variables
-
 ## FEATURES
 
 * **Fast syntax file for LilyPond**
