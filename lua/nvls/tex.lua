@@ -33,14 +33,12 @@ function M.DefineTexVars()
   tmpOutDir = expand(main_folder) .. '/tmpOutDir/'
 
   makeLualatex = "lualatex" ..
+      " --file-line-error" ..
       " --output-directory=" .. shellescape(expand(main_folder)) .. 
       " --shell-escape" ..
       " --interaction=nonstopmode " .. nvls_main
 
-  lualatexEfm = "%+G! LaTeX %trror: %m," ..
-      "%+GLaTeX %.%#Warning: %.%#line %l%.%#," ..
-      "%+GLaTeX %.%#Warning: %m," ..
-      "%+G! %m,%+El.%l %m,%-G%.%#"
+  lualatexEfm = "%f:%l:%m,%-G%.%#"
 
   makeLytex = "cd " .. shellescape(tmpOutDir) .. 
     " && " .. "lualatex" ..

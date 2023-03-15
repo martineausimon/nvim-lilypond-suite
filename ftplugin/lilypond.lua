@@ -48,7 +48,7 @@ lilyCmd('LilyCmp', function()
     "-I " .. include_dir .. 
     " -f " .. output .. 
     " -o '" .. nvls_main_name .. "' '" .. nvls_main .. "'"
-  errorfm = '%+G%f:%l:%c:, %f:%l:%c: %m,%-G%.%#'
+  errorfm = "%f:%l:%c:%m,%f:%l:%m,%-G%.%#"
   require('nvls').make(makeprg,errorfm)
 end, {})
 
