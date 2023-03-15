@@ -42,6 +42,7 @@ function M.DefineTexVars()
 
   makeLytex = "cd " .. shellescape(tmpOutDir) .. 
     " && " .. "lualatex" ..
+      " --file-line-error" ..
       " --output-directory=" .. shellescape(expand(main_folder)) ..
       " --shell-escape " ..
       "--interaction=nonstopmode " .. 
