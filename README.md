@@ -16,8 +16,8 @@ This is a plugin ([Neovim](https://github.com/neovim/neovim) only) for writing [
 * **QuickPlayer** (LilyPond only) - convert and play only visual selection
 * **Hyphenation** : automatically place hyphens ' **--** ' inside texts to make those texts usable as lyrics (LilyPond only)
 * **Simple ftplugin for LilyPond** with `makeprg`, correct `errorformat`
-* **Compile only main file when working on multiple files project** (LilyPond only)
-* **ftplugin for TeX files** whith detect and allows embedded LilyPond syntax, adaptive `makeprg` function for `lyluatex` or `lilypond-book`, correct `errorformat`
+* **Multiple files support** - Compile only main file when working on multiple files project
+* **ftplugin for TeX files** which detects and allows embedded LilyPond syntax, adaptive `makeprg` function for `lyluatex` or `lilypond-book`, correct `errorformat`
 * **Easy auto-completion and Point & Click configuration**
 
 <p align="center">
@@ -47,7 +47,8 @@ If you want to use all the functions (player, hyphenation for various languages.
 ### [packer.nvim](https://github.com/wbthomason/packer.nvim)
 
 ```lua 
-use { 'martineausimon/nvim-lilypond-suite',
+use { 
+  'martineausimon/nvim-lilypond-suite',
   requires = 'MunifTanjim/nui.nvim',
   config = function()
     require('nvls').setup({
