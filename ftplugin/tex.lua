@@ -38,6 +38,7 @@ texCmd('Cleaner', function()
       shellescape(nvls_main_name .. '.out') .. ' ' ..
       shellescape(main_folder .. '/tmp-ly/') .. ' ' ..
       shellescape(tmpOutDir))
+    vim.cmd('sleep 10m')
 end, {})
 
 local acmd = nvls_options.latex.options.lilypond_syntax_au
