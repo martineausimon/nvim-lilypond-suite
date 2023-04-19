@@ -383,7 +383,7 @@ function M.quickplayer()
 
   local convert = 'fluidsynth -T raw -F - ' .. tmpOutDir .. '/tmp.midi' ..
       ' -s | ffmpeg -f s32le -i - ' .. tmpOutDir .. '/tmp.mp3'
-  require('nvls').make(convert," ","tmpplayer")
+  require('nvls').make(convert,"%-G%.%#","tmpplayer")
 end
 
 return M
