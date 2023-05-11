@@ -15,7 +15,7 @@ This is a plugin ([Neovim](https://github.com/neovim/neovim) only) for writing [
 * **mp3 player in floating window** (LilyPond only) - convert and play midi file while writing score (using `mpv`, `fluidsynth` & `ffmpeg`)
 * **QuickPlayer** (LilyPond only) - convert and play only visual selection
 * **Hyphenation** : automatically place hyphens ' **--** ' inside texts to make those texts usable as lyrics (LilyPond only)
-* **Simple ftplugin for LilyPond** with `makeprg`, correct `errorformat`
+* **Simple ftplugin for LilyPond** with `makeprg`, correct `errorformat`, `diagnostics` (experimental)
 * **Multiple files support** - Compile only main file when working on multiple files project
 * **ftplugin for TeX files** which detects and allows embedded LilyPond syntax, adaptive `makeprg` function for `lyluatex` or `lilypond-book`, correct `errorformat`
 * **Easy auto-completion and Point & Click configuration**
@@ -79,7 +79,7 @@ use {
   * [Auto-completion](https://github.com/martineausimon/nvim-lilypond-suite/wiki/2.-Configuration#auto-completion)
     * [Recommended settings](https://github.com/martineausimon/nvim-lilypond-suite/wiki/2.-Configuration#recommended-settings)
     * [Dictionary files](https://github.com/martineausimon/nvim-lilypond-suite/wiki/2.-Configuration#dictionary-files)
-    * [My current config](https://github.com/martineausimon/nvim-lilypond-suite/wiki/2.-Configuration#my-current-config)
+    * [Configuration example](https://github.com/martineausimon/nvim-lilypond-suite/wiki/2.-Configuration#configuration-example)
   * [Point and click](https://github.com/martineausimon/nvim-lilypond-suite/wiki/2.-Configuration#point-and-click)
     * [Neovim remote](https://github.com/martineausimon/nvim-lilypond-suite/wiki/2.-Configuration#neovim-remote)
     * [Configure point and click](https://github.com/martineausimon/nvim-lilypond-suite/wiki/2.-Configuration#configure-the-point-and-click)
