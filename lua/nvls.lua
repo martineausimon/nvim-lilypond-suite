@@ -22,7 +22,8 @@ local default = {
       output = "pdf",
       main_file = "main.ly",
       main_folder = "%:p:h",
-      include_dir = "$HOME"
+      include_dir = "$HOME",
+      diagnostics = false,
     },
   },
   latex = {
@@ -36,7 +37,7 @@ local default = {
       main_file = "main.tex",
       main_folder = "%:p:h",
       include_dir = nil,
-      lilypond_syntax_au = "BufEnter"
+      lilypond_syntax_au = "BufEnter",
     },
   },
   player = {
@@ -120,7 +121,6 @@ function M.make(makeprg,errorfm,ctrl)
         lines = lines,
         efm = errorfm,
       })
-      vim.api.nvim_exec_autocmds("QuickFixCmdPost", {})
       if ctrl == "lilypond-book" then
         require('nvls.tex').lytexCmp()
       elseif ctrl == "fluidsynth" then
@@ -131,7 +131,15 @@ function M.make(makeprg,errorfm,ctrl)
         vim.fn.execute('stopinsert')
         print(' ')
         require('nvls.lilypond').player(tmpOutDir .. '/tmp.mp3', "QuickPlayer")
+      elseif ctrl == "lilypond" then
+        if nvls_options.lilypond.options.diagnostics == true then
+          M.showDiagnostics(lines,errorfm,ctrl)
+        else
+          vim.api.nvim_exec_autocmds("QuickFixCmdPost", {})
+        end
+        print(' ')
       else
+          vim.api.nvim_exec_autocmds("QuickFixCmdPost", {})
         print(' ')
       end
     end
@@ -180,6 +188,36 @@ function M.viewer(file)
   else
     vim.fn.jobstart("xdg-open " .. file)
   end
+end
+
+function M.showDiagnostics(lines,errorfm,ctrl)
+  local filtered_lines = {}
+  local diagnostics = {}
+  for _, line in pairs(lines) do
+    local filename, row, col, message = string.match(line,'^([^%s].+):(%d+):(%d+): (.+)$')
+    if filename == vim.fn.expand("%:p") then
+      message = string.gsub(message, '^error: ', '')
+      table.insert(diagnostics, {
+        severity = vim.diagnostic.severity.ERROR,
+        message = message,
+        lnum = tonumber(row) - 1,
+        col = tonumber(col) -1,
+      })
+    else
+      table.insert(filtered_lines, line)
+    end
+
+  end
+
+  vim.fn.setqflist({}, " ", {
+    title = ctrl,
+    lines = filtered_lines,
+    efm = errorfm,
+  })
+
+  local ns = vim.api.nvim_create_namespace("lilypond-diagnostics")
+  vim.diagnostic.set(ns, 0, diagnostics, {})
+  vim.api.nvim_exec_autocmds("QuickFixCmdPost", {})
 end
 
 return M

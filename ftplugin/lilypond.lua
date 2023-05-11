@@ -49,7 +49,7 @@ lilyCmd('LilyCmp', function()
     " -f " .. output .. 
     " -o '" .. nvls_main_name .. "' '" .. nvls_main .. "'"
   errorfm = "%f:%l:%c:%m,%f:%l:%m%[^;],%f:%l:%m,%-G%.%#"
-  require('nvls').make(makeprg,errorfm)
+  require('nvls').make(makeprg,errorfm,"lilypond")
 end, {})
 
 lilyCmd('HyphChLang', function() 
