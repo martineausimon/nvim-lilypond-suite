@@ -93,7 +93,6 @@ local ins         = nvlsMap.insert_hyphen
 local add         = nvlsMap.add_hyphen
 local deln        = nvlsMap.del_next_hyphen
 local delp        = nvlsMap.del_prev_hyphen
-local dels        = nvlsMap.del_selected_hyphen
 local nrm         = { noremap = true }
 lilyMap(0, 'n', cmp,    ":LilyCmp<cr>",                      nrm)
 lilyMap(0, 'n', view,   ":Viewer<cr>",                       nrm)
@@ -114,13 +113,15 @@ lilyMap(0, 'v', hyphenation,
   ":lua<space>require('nvls.lilypond').getHyphType()<cr>", 
   { noremap = true, silent = true })
 
+function insertLilypondVersion()
+  local v = "lilypond -v | grep LilyPond | awk {'print $3'}"
+  local v = io.popen(v):read("*line")
+  v = [[\version "]] .. v .. [["]]
+  local c = vim.api.nvim_win_get_cursor(0)
+  vim.api.nvim_buf_set_lines(0, c[1] - 1, c[1] - 1, true, { v })
+end
+
 lilyMap(0, 'n', version,
-  [[0O\version<space>]] .. 
-  [[<Esc>:read<Space>!lilypond<Space>-v]] ..
-  [[<Bar>grep<Space>LilyPond<Bar>awk<Space>{'print<Space>$3'}<cr>]] ..
-  [[kJi"<esc>A"<esc>]],
+  ":lua insertLilypondVersion()<cr>",
   {noremap = true, silent = true}
 )
-
-vim.cmd([[vmap <silent> ]] .. dels .. 
-  [[ <esc>:%s/\%V<space>--<space>//g<cr>:nohl<cr>`<]])

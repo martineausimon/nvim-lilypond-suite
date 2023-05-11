@@ -14,7 +14,6 @@ local default = {
       add_hyphen = "<leader>ah",
       del_next_hyphen = "<leader>dh",
       del_prev_hyphen = "<leader>dH",
-      del_selected_hyphen = "<leader>dh"
     },
     options = {
       pitches_language = "default",
