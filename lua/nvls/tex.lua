@@ -1,7 +1,7 @@
 local b, g, fn, cmd = vim.b, vim.g, vim.fn, vim.cmd
 local expand = vim.fn.expand
 local shellescape = require('nvls').shellescape
-local include_dir = nvls_options.lilypond.options.include_dir
+local include_dir = nvls_options.lilypond.options.include_dir or nil
 if type(include_dir) == "table" then
   include_dir = table.concat(include_dir, " -I ")
 end
@@ -48,9 +48,10 @@ function M.DefineTexVars()
       "--interaction=nonstopmode " .. 
       shellescape(tmpOutDir .. expand(nvls_file_name) .. '.tex')
 
-  makeLilypondBook = "lilypond-book" .. 
-      " -I " .. include_dir .. 
-      " --output=" .. shellescape(tmpOutDir) .. " " .. shellescape(expand(nvls_main))
+  makeLilypondBook = "lilypond-book " .. 
+    (include_dir and "-I " .. include_dir or "") .. 
+      " --output=" .. shellescape(tmpOutDir) .. " " ..
+      shellescape(expand(nvls_main))
 
   lilypondBookEfm = '%+G%f:%l:%c:, %f:%l:%c: %m,%-G%.%#'
 

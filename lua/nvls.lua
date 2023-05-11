@@ -22,7 +22,7 @@ local default = {
       output = "pdf",
       main_file = "main.ly",
       main_folder = "%:p:h",
-      include_dir = "$HOME",
+      include_dir = nil,
       diagnostics = false,
     },
   },
