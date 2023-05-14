@@ -68,7 +68,7 @@ function M.ToggleLilypondSyntax()
 end
     
 function M.DetectLilypondSyntax()
-  if fn.search("begin{lilypond}", "n") ~= 0 then
+  if fn.search("\\\\begin{lilypond}[^%]*$", "nw") ~= 0 then
     b.current_syntax = nil
     cmd('syntax include @TEX syntax/tex.vim')
     b.current_syntax = nil
@@ -76,7 +76,7 @@ function M.DetectLilypondSyntax()
     cmd [[ 
     syntax region litex 
       \ matchgroup=Snip 
-      \ start="\\begin{lilypond}" 
+      \ start="\(%.\{}\)\@<!\\begin{lilypond}" 
       \ end="\\end{lilypond}" 
       \ containedin=@TEX 
       \ contains=@lilypond
