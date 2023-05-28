@@ -19,6 +19,7 @@ local default = {
       pitches_language = "default",
       hyphenation_language = "en_DEFAULT",
       output = "pdf",
+      backend = nil,
       main_file = "main.ly",
       main_folder = "%:p:h",
       include_dir = nil,

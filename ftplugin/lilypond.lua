@@ -42,9 +42,15 @@ lilyCmd('LilyCmp', function()
     include_dir = table.concat(include_dir, " -I ")
   end
 
+  local backend = nvls_options.lilypond.options.backend or nil
+  if backend then
+    backend = "-dbackend=" .. backend .. " "
+  end
+
   fn.execute('write')
   print('Compiling ' .. nvls_file_name .. '.ly...')
   makeprg = "lilypond " .. 
+    (backend or "") ..
     (include_dir and "-I " .. include_dir or "") .. 
     " -f " .. output .. 
     " -o '" .. nvls_main_name .. "' '" .. nvls_main .. "'"
