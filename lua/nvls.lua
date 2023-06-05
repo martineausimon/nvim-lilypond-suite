@@ -192,9 +192,11 @@ end
 function M.showDiagnostics(lines,errorfm,ctrl)
   local filtered_lines = {}
   local diagnostics = {}
+  local ns = vim.api.nvim_create_namespace("lilypond-diagnostics")
   for _, line in pairs(lines) do
     local filename, row, col, message = string.match(line,'^([^%s].+):(%d+):(%d+): (.+)$')
-    if filename == vim.fn.expand("%:p") then
+    if filename then
+      local bfnr = vim.fn.bufnr(vim.fn.expand(filename))
       message = string.gsub(message, '^error: ', '')
       table.insert(diagnostics, {
         severity = vim.diagnostic.severity.ERROR,
@@ -202,10 +204,11 @@ function M.showDiagnostics(lines,errorfm,ctrl)
         lnum = tonumber(row) - 1,
         col = tonumber(col) -1,
       })
-    else
+      vim.diagnostic.set(ns, bfnr, diagnostics, {})
+    end
+    if filename ~= vim.fn.expand("%:p") then
       table.insert(filtered_lines, line)
     end
-
   end
 
   vim.fn.setqflist({}, " ", {
@@ -214,8 +217,6 @@ function M.showDiagnostics(lines,errorfm,ctrl)
     efm = errorfm,
   })
 
-  local ns = vim.api.nvim_create_namespace("lilypond-diagnostics")
-  vim.diagnostic.set(ns, 0, diagnostics, {})
   vim.api.nvim_exec_autocmds("QuickFixCmdPost", {})
 end
 
