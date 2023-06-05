@@ -85,7 +85,7 @@ end
 function M.player(file,name)
   local lilyPopup = require("nui.popup")
   local plopts = nvls_options.player.options
-  
+  local event = require("nui.utils.autocmd").event
   local lilyPlayer = lilyPopup({
     enter = true,
     focusable = true,
@@ -140,6 +140,12 @@ function M.player(file,name)
   map(':',                  "")
   map('i',                  "")
 
+  lilyPlayer:on({ event.TermClose }, function()
+    vim.schedule(function()
+      lilyPlayer:unmount()
+    end)
+  end, { once = true })
+  
 end
 
 function M.quickLangInput()
