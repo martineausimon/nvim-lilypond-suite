@@ -191,6 +191,7 @@ function M.viewer(file)
 end
 
 function M.showDiagnostics(lines,errorfm,ctrl)
+  vim.diagnostic.reset()
   local filtered_lines = {}
   local diagnostics = {}
   local ns = vim.api.nvim_create_namespace("lilypond-diagnostics")
