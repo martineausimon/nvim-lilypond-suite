@@ -24,6 +24,7 @@ local default = {
       main_folder = "%:p:h",
       include_dir = nil,
       diagnostics = false,
+      pdf_viewer = nil,
     },
   },
   latex = {
@@ -38,6 +39,7 @@ local default = {
       main_folder = "%:p:h",
       include_dir = nil,
       lilypond_syntax_au = "BufEnter",
+      pdf_viewer = nil,
     },
   },
   player = {
@@ -183,10 +185,15 @@ function M.viewer(file)
   do return end
   end
 
-  if kernel == "Darwin\n" then
-    vim.fn.jobstart("open " .. file)
+
+  if nvls_options.lilypond.options.pdf_viewer ~= nil then
+    vim.fn.jobstart(nvls_options.lilypond.options.pdf_viewer .. " " .. file)
   else
-    vim.fn.jobstart("xdg-open " .. file)
+    if kernel == "Darwin\n" then
+      vim.fn.jobstart("open " .. file)
+    else
+      vim.fn.jobstart("xdg-open " .. file)
+    end
   end
 end
 
