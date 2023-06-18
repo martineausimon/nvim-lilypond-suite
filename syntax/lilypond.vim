@@ -80,7 +80,7 @@ syn match lilyChordBass "\/" contained containedin=@lilyPitchGroup nextgroup=lil
 syn match lilyMarkup   "[-_^]\?\\\a\([-_]\{}\a\)\{}\s\{}"
 syn match lilyFunction "[-_^]\?\\\a\([-_]\{}\a\)\{}\s\{}" nextgroup=lilyPitch,lilyMatcher
 syn match lilyFunction "[-_^]\?\(\\tweak\|\\set\|\\unset\)\s\+" nextgroup=lilyVar,lilyContext,lilyGrob
-syn match lilyDynamic  "[-_^]\?\\\v((end)?(de)?cr(esc)?|(end)?dim|f{1,5}(p|z)?|m(f|p)?|n|p{1,5}|rfz|sf{1,2}|sf(p|z)?|sp{1,2})(\A|\n)"me=e-1
+syn match lilyDynamic  "[-_^]\?\\\v((end)?(de)?cr(esc)?|(end)?dim|f{1,5}(p|z)?|m(f|p)?|n|p{1,5}|rfz|sf{1,2}|sf(p|z)?|sp{1,2}|[\)]|[\(])(\A|\n)"me=e-1
 
 syn cluster lilyPitchGroup contains=lilyPitch,lilyRythm,lilyChordStart,lilyChordNat,lilyChordExt
 
@@ -128,7 +128,7 @@ syn match lilyGrob     "\<\u\a\+"
 
 syn match lilyDefineVar "\a\(\(\a\|\-\|_\)\{}\a\)\{}\s\{}="he=e-1 contains=lilySpecial
 syn match lilyVar "\(\s\|\.\)\=\s\{}\(\l\|\u\|\-\|X\|Y\)\{}\(X\|Y\|\l\)\+" contained nextgroup=lilyVar,lilyDefineVar contains=lilyDots
-syn match lilyDefineVar "\l\(\l\|\-\)\+\l\+\." contains=lilyDots nextgroup=lilyVar
+syn match lilyDefineVar "\l\(\l\|\-\)\+\l\+\." contains=lilyDots nextgroup=lilyVar,lilyContext
 syn match lilyDots "\." contained
 
 syn match lilyGrob     "\<\u\a\+\n\{}\s\{}\." nextgroup=lilyVar contains=lilyDots
@@ -178,7 +178,8 @@ syn region lilyInScheme
   \ matchgroup=Delimiter 
   \ start="(" 
   \ end=")"
-  \ contains=@Scheme,lilyInScheme
+  \ contained contains=@Scheme,lilyInScheme
+  \ containedin=LilyScheme
 
 syn region lilyLyrics
   \ matchgroup=lilyLyrics
