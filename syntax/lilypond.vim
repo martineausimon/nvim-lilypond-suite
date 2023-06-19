@@ -44,7 +44,7 @@ syn region lilyChordReg
   \ start="<"
   \ end=">"
   \ contained
-  \ contains=lilyPitch,lilyFing
+  \ contains=lilyPitch,lilyFing,lilyFunction
   \ nextgroup=lilyRythm
 
 syn region lilyMatcher  
