@@ -164,7 +164,7 @@ syn include @Scheme syntax/scheme.vim
 unlet b:current_syntax
 syn region lilyScheme
   \ matchgroup=Delimiter 
-  \ start="#['`]\?\s\{}\(\n\|\s\)\{}(" 
+  \ start="\(#\|\$\)['`]\?\s\{}\(\n\|\s\)\{}(" 
   \ end=")" 
   \ contains=@Scheme,lilyInScheme
 
