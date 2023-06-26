@@ -32,25 +32,25 @@ function M.DefineTexVars()
   texPdf = shellescape(expand(nvls_main_name) .. '.pdf')
   tmpOutDir = expand(main_folder) .. '/tmpOutDir/'
 
-  makeLualatex = "lualatex" ..
-      " --file-line-error" ..
-      " --output-directory=" .. shellescape(expand(main_folder)) .. 
-      " --shell-escape" ..
-      " --interaction=nonstopmode " .. nvls_main
+  makeLualatex = 'lualatex' ..
+      ' --file-line-error' ..
+      ' --output-directory=' .. shellescape(expand(main_folder)) .. 
+      ' --shell-escape' ..
+      ' --interaction=nonstopmode ' .. nvls_main
 
   lualatexEfm = "%f:%l:%m,%-G%.%#"
 
-  makeLytex = "cd " .. shellescape(tmpOutDir) .. 
-    " && " .. "lualatex" ..
-      " --file-line-error" ..
-      " --output-directory=" .. shellescape(expand(main_folder)) ..
-      " --shell-escape " ..
-      "--interaction=nonstopmode " .. 
+  makeLytex = 'cd ' .. shellescape(tmpOutDir) .. 
+    ' && ' .. 'lualatex' ..
+      ' --file-line-error' ..
+      ' --output-directory=' .. shellescape(expand(main_folder)) ..
+      ' --shell-escape ' ..
+      '--interaction=nonstopmode ' .. 
       shellescape(tmpOutDir .. expand(nvls_file_name) .. '.tex')
 
-  makeLilypondBook = "lilypond-book " .. 
-    (include_dir and "-I " .. include_dir or "") .. 
-      " --output=" .. shellescape(tmpOutDir) .. " " ..
+  makeLilypondBook = 'lilypond-book ' .. 
+    (include_dir and '-I ' .. include_dir or '') .. 
+      ' --output=' .. shellescape(tmpOutDir) .. ' ' ..
       shellescape(expand(nvls_main))
 
   lilypondBookEfm = '%+G%f:%l:%c:, %f:%l:%c: %m,%-G%.%#'

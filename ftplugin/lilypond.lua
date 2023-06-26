@@ -49,11 +49,11 @@ lilyCmd('LilyCmp', function()
 
   fn.execute('write')
   print('Compiling ' .. nvls_file_name .. '.ly...')
-  makeprg = "lilypond " .. 
-    (backend or "") ..
-    (include_dir and "-I " .. include_dir or "") .. 
-    " -f " .. output .. 
-    " -o '" .. nvls_main_name .. "' '" .. nvls_main .. "'"
+  makeprg = 'lilypond ' .. 
+    (backend or '') ..
+    (include_dir and '-I ' .. include_dir or '') .. 
+    ' -f ' .. output .. 
+    ' -o "' .. nvls_main_name .. '" "' .. nvls_main .. '"'
   errorfm = "%f:%l:%c:%m,%f:%l:%m%[^;],%f:%l:%m,%-G%.%#"
   require('nvls').make(makeprg,errorfm,"lilypond")
 end, {})

@@ -38,9 +38,9 @@ function M.lilyPlayer()
 
     else
       print('[NVLS] Converting ' .. nvls_file_name .. '.midi to mp3...') 
-      local convert = "rm -rf '" .. lilyAudioFile .. "' && " ..
-        "fluidsynth -T raw -F - '" .. lilyMidiFile .. 
-        "' -s | ffmpeg -f s32le -i - '" .. lilyAudioFile .. "'"
+      local convert = 'rm -rf "' .. lilyAudioFile .. '" && ' ..
+        'fluidsynth -T raw -F - "' .. lilyMidiFile .. 
+        '" -s | ffmpeg -f s32le -i - "' .. lilyAudioFile .. '"'
       require('nvls').make(convert," ","fluidsynth")
     end
 
