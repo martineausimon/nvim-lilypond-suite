@@ -134,7 +134,7 @@ function M.make(makeprg,errorfm,ctrl)
         print(' ')
         require('nvls.lilypond').player(tmpOutDir .. '/tmp.mp3', "QuickPlayer")
       elseif ctrl == "lilypond" then
-        if nvls_options.lilypond.options.diagnostics == true then
+        if nvls_options.lilypond.options.diagnostics then
           M.showDiagnostics(lines,errorfm,ctrl)
         else
           vim.api.nvim_exec_autocmds("QuickFixCmdPost", {})
