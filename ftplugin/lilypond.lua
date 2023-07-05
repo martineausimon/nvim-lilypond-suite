@@ -112,11 +112,11 @@ lilyMap(0, 'n', deln,   "/<space>--<space><cr>:nohl<cr>4x",  nrm)
 lilyMap(0, 'n', delp,   "/<space>--<space><cr>N:nohl<cr>4x", nrm)
 
 lilyMap(0, 'v', play, 
-  "<cmd>lua<space>require('nvls.lilypond').quickplayer()<cr>",
+  ":lua<space>require('nvls.lilypond').quickplayer()<cr>",
   { noremap = true, silent = true })
 
 lilyMap(0, 'v', hyphenation, 
-  "<cmd>lua<space>require('nvls.lilypond').getHyphType()<cr>",
+  ":lua<space>require('nvls.lilypond').getHyphType()<cr>",
   { noremap = true, silent = true })
 
 function insertLilypondVersion()
