@@ -100,23 +100,23 @@ local add         = nvlsMap.add_hyphen
 local deln        = nvlsMap.del_next_hyphen
 local delp        = nvlsMap.del_prev_hyphen
 local nrm         = { noremap = true }
-lilyMap(0, 'n', cmp,    ":LilyCmp<cr>",                      nrm)
-lilyMap(0, 'n', view,   ":Viewer<cr>",                       nrm)
+lilyMap(0, 'n', cmp,    "<cmd>LilyCmp<cr>",                  nrm)
+lilyMap(0, 'n', view,   "<cmd>Viewer<cr>",                   nrm)
 lilyMap(0, 'n', switch, "<C-w>w",                            nrm)
 lilyMap(0, 'i', switch, "<esc><C-w>w",                       nrm)
-lilyMap(0, 'n', play,   ":LilyPlayer<cr>",                   nrm)
-lilyMap(0, 'n', chlang, ":HyphChLang<cr>",                   nrm)
+lilyMap(0, 'n', play,   "<cmd>LilyPlayer<cr>",               nrm)
+lilyMap(0, 'n', chlang, "<cmd>HyphChLang<cr>",               nrm)
 lilyMap(0, 'n', ins,    "i<space>--<space><esc>",            nrm)
 lilyMap(0, 'n', add,    "a<space>--<space><esc>",            nrm)
 lilyMap(0, 'n', deln,   "/<space>--<space><cr>:nohl<cr>4x",  nrm)
 lilyMap(0, 'n', delp,   "/<space>--<space><cr>N:nohl<cr>4x", nrm)
 
 lilyMap(0, 'v', play, 
-  ":lua<space>require('nvls.lilypond').quickplayer()<cr>", 
+  "<cmd>lua<space>require('nvls.lilypond').quickplayer()<cr>",
   { noremap = true, silent = true })
 
 lilyMap(0, 'v', hyphenation, 
-  ":lua<space>require('nvls.lilypond').getHyphType()<cr>", 
+  "<cmd>lua<space>require('nvls.lilypond').getHyphType()<cr>",
   { noremap = true, silent = true })
 
 function insertLilypondVersion()
@@ -128,6 +128,6 @@ function insertLilypondVersion()
 end
 
 lilyMap(0, 'n', version,
-  ":lua insertLilypondVersion()<cr>",
+  "<cmd>lua insertLilypondVersion()<cr>",
   {noremap = true, silent = true}
 )

@@ -58,9 +58,9 @@ local cmp = nvls_options.latex.mappings.compile
 local view = nvls_options.latex.mappings.open_pdf
 local lysyn = nvls_options.latex.mappings.lilypond_syntax
 local clean = nvls_options.latex.options.clean_logs
-texMap(0, 'n', lysyn, ":ToggleSyn<cr>", {noremap = true})
-texMap(0, 'n', cmp,   ":LaTexCmp<cr>",  {noremap = true})
-texMap(0, 'n', view,  ":Viewer<cr>",    {noremap = true})
+texMap(0, 'n', lysyn, "<cmd>ToggleSyn<cr>", {noremap = true})
+texMap(0, 'n', cmp,   "<cmd>LaTexCmp<cr>",  {noremap = true})
+texMap(0, 'n', view,  "<cmd>Viewer<cr>",    {noremap = true})
 if clean or g.nvls_clean_tex_files == 1 then
   vim.api.nvim_create_autocmd( 'VimLeave', {
     command = 'Cleaner',
