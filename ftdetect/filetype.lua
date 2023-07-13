@@ -15,7 +15,7 @@ if vim.g.do_filetype_lua == 1 then
       command = 'set ft=lilypond',
       pattern = { '*.ly', '*.ily' },
       group =  vim.api.nvim_create_augroup(
-        'lilyFtdetect', { clear = true}) 
+        'lilyFtdetect', { clear = true})
   })
   vim.api.nvim_create_autocmd(
     { 'BufNewFile', 'BufRead' },
@@ -23,8 +23,6 @@ if vim.g.do_filetype_lua == 1 then
       command = 'set ft=lua',
       pattern = { '.lilyrc' },
       group =  vim.api.nvim_create_augroup(
-        'lilyrcFtdetect', { clear = true}) 
+        'lilyrcFtdetect', { clear = true})
   })
 end
-
-

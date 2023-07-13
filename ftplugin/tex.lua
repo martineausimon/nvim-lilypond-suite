@@ -3,7 +3,6 @@ local texHi       = vim.api.nvim_set_hl
 local texCmd      = vim.api.nvim_create_user_command
 local texAutoCmd  = vim.api.nvim_create_autocmd
 local shellescape = require('nvls').shellescape
-local expand      = vim.fn.expand
 local g, fn       = vim.g, vim.fn
 
 if not nvls_options then
@@ -12,25 +11,25 @@ end
 
 require('nvls.tex').DefineTexVars()
 
-texCmd('Viewer', function() 
+texCmd('Viewer', function()
   require('nvls.tex').DefineTexVars()
   print('Opening ' .. nvls_file_name .. '.pdf')
-  require('nvls').viewer(texPdf) 
+  require('nvls').viewer(texPdf)
 end, {})
 
-texCmd('LaTexCmp',  function() 
+texCmd('LaTexCmp',  function()
     fn.execute('write')
     require('nvls.tex').DefineTexVars()
     print('Compiling ' .. nvls_file_name .. '.tex...')
-    require('nvls.tex').SelectMakePrgType() 
-  end,    
+    require('nvls.tex').SelectMakePrgType()
+  end,
 {})
 
-texCmd('ToggleSyn', function() 
-  require('nvls.tex').ToggleLilypondSyntax() 
+texCmd('ToggleSyn', function()
+  require('nvls.tex').ToggleLilypondSyntax()
 end, {})
 
-texCmd('Cleaner', function() 
+texCmd('Cleaner', function()
     require('nvls.tex').DefineTexVars()
     fn.execute('!rm -rf ' ..
       shellescape(nvls_main_name .. '.log') .. ' ' ..
@@ -46,7 +45,7 @@ local acmd = nvls_options.latex.options.lilypond_syntax_au
 texAutoCmd(acmd, {
   callback = function() require('nvls.tex').DetectLilypondSyntax() end,
   group = vim.api.nvim_create_augroup(
-    "DetectSyntax", 
+    "DetectSyntax",
     { clear = true }
   ),
   pattern = "*.tex"
@@ -65,7 +64,7 @@ if clean or g.nvls_clean_tex_files == 1 then
   vim.api.nvim_create_autocmd( 'VimLeave', {
     command = 'Cleaner',
     group = vim.api.nvim_create_augroup(
-      "RemoveOutFiles", 
+      "RemoveOutFiles",
       { clear = true }
     ),
     pattern = '*.tex'
@@ -80,4 +79,3 @@ if tex_include_dir ~= "" and tex_include_dir ~= nil then
   end
   vim.cmd([[let $TEXINPUTS = $TEXINPUTS . ":]] .. tex_include_dir .. [["]])
 end
-  

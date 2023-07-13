@@ -20,7 +20,7 @@ function M.DefineTexVars()
       nvls_main = shellescape(expand('%:p'))
     end
 
-  elseif io.open(fn.glob(expand(main_folder) .. '/' .. 
+  elseif io.open(fn.glob(expand(main_folder) .. '/' ..
     main_file)) then
       nvls_main = shellescape(expand(main_folder) .. "/" .. main_file)
   end
@@ -34,22 +34,22 @@ function M.DefineTexVars()
 
   makeLualatex = 'lualatex' ..
       ' --file-line-error' ..
-      ' --output-directory=' .. shellescape(expand(main_folder)) .. 
+      ' --output-directory=' .. shellescape(expand(main_folder)) ..
       ' --shell-escape' ..
       ' --interaction=nonstopmode ' .. nvls_main
 
   lualatexEfm = "%f:%l:%m,%-G%.%#"
 
-  makeLytex = 'cd ' .. shellescape(tmpOutDir) .. 
+  makeLytex = 'cd ' .. shellescape(tmpOutDir) ..
     ' && ' .. 'lualatex' ..
       ' --file-line-error' ..
       ' --output-directory=' .. shellescape(expand(main_folder)) ..
       ' --shell-escape ' ..
-      '--interaction=nonstopmode ' .. 
+      '--interaction=nonstopmode ' ..
       shellescape(tmpOutDir .. expand(nvls_file_name) .. '.tex')
 
-  makeLilypondBook = 'lilypond-book ' .. 
-    (include_dir and '-I ' .. include_dir or '') .. 
+  makeLilypondBook = 'lilypond-book ' ..
+    (include_dir and '-I ' .. include_dir or '') ..
       ' --output=' .. shellescape(tmpOutDir) .. ' ' ..
       shellescape(expand(nvls_main))
 
@@ -66,7 +66,7 @@ function M.ToggleLilypondSyntax()
   M.DetectLilypondSyntax()
   end
 end
-    
+
 function M.DetectLilypondSyntax()
   if fn.search("\\\\begin{lilypond}[^%]*$", "nw") ~= 0 then
     b.current_syntax = nil

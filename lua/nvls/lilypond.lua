@@ -14,7 +14,8 @@ function M.lilyPlayer()
   end
 
   local function getLastMod(file)
-    if io.open(fn.glob(file), "r") == nil then 
+    local var
+    if io.open(fn.glob(file), "r") == nil then
       return 0
     else
       if kernel == "Darwin\n" then
@@ -37,14 +38,14 @@ function M.lilyPlayer()
       require('nvls.lilypond').player(lilyAudioFile, nvls_file_name .. ".mp3")
 
     else
-      print('[NVLS] Converting ' .. nvls_file_name .. '.midi to mp3...') 
+      print('[NVLS] Converting ' .. nvls_file_name .. '.midi to mp3...')
       local convert = 'rm -rf "' .. lilyAudioFile .. '" && ' ..
-        'fluidsynth -T raw -F - "' .. lilyMidiFile .. 
+        'fluidsynth -T raw -F - "' .. lilyMidiFile ..
         '" -s | ffmpeg -f s32le -i - "' .. lilyAudioFile .. '"'
       require('nvls').make(convert," ","fluidsynth")
     end
 
-  elseif io.open(fn.glob(main_folder .. '/' .. 
+  elseif io.open(fn.glob(main_folder .. '/' ..
       nvls_short .. '.mp3', "r")) then
     require('nvls.lilypond').player(lilyAudioFile, nvls_file_name .. ".mp3")
 
@@ -66,7 +67,7 @@ function M.DefineLilyVars()
       nvls_main = require('nvls').shellescape(expand('%:p'))
     end
 
-  elseif io.open(fn.glob(expand(main_folder) .. '/' .. 
+  elseif io.open(fn.glob(expand(main_folder) .. '/' ..
     main_file)) then
       nvls_main = require('nvls').shellescape(expand(main_folder) .. "/" .. main_file)
   end
@@ -109,22 +110,22 @@ function M.player(file,name)
       winhighlight = plopts.winhighlight,
     },
   })
-  
+
   lilyPlayer:mount()
-  
-  vim.api.nvim_buf_call(lilyPlayer.bufnr, function() 
+
+  vim.api.nvim_buf_call(lilyPlayer.bufnr, function()
     fn.execute("term mpv " .. table.concat(plopts.mpv_flags, " ") .. " " .. file)
     fn.execute('stopinsert')
   end)
-  
+
   local nrm = { noremap = true }
   local opt = nvls_options.player.mappings
   local lyopt = nvls_options.lilypond.mappings
-  
-  function map(key,cmd)
+
+  local function map(key,cmd)
     lilyPlayer:map('n', key, cmd, nrm)
   end
-  
+
   map(opt.quit, function() lilyPlayer:unmount() end)
   map(lyopt.switch_buffers, "<cmd>stopinsert<cr><C-w>w")
   map(opt.backward,         "i<Left><cmd>stopinsert<cr>")
@@ -145,7 +146,7 @@ function M.player(file,name)
       lilyPlayer:unmount()
     end)
   end, { once = true })
-  
+
 end
 
 function M.quickLangInput()
@@ -215,7 +216,7 @@ end
 
 function M.hyphenator(input)
   require('nvls.hyphs')
-  for i, j in pairs(hyphs) do 
+  for i, j in pairs(hyphs) do
     input = input:gsub("%f[%w_]" .. i .. "s?%f[^%w_]", j)
   end
   fn.execute("set paste")
@@ -223,7 +224,7 @@ function M.hyphenator(input)
   fn.execute("normal g`<")
   fn.execute("set nopaste")
 end
-  
+
 function M.pyphen(input)
   if fn.has('python3') == 0 then
     print('[NVLS] python3 is not available')
@@ -246,7 +247,7 @@ end
 function M.quickplayerInputType(sel)
   local from_top = require('nvls.lilypond').inputString({0, 1, 1, 0}, fn.getpos("'<"))
 
-  if  string.find(sel, "%pfixed%s+%a*%p*%s*%{") or 
+  if  string.find(sel, "%pfixed%s+%a*%p*%s*%{") or
       string.find(sel, "%prelative%s+%a*%p*%s*%{") or 
       string.find(sel, "%pchords.*%{") then
     return ''

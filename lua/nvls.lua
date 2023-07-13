@@ -1,5 +1,3 @@
-local shellescape = vim.fn.shellescape
-
 local default = {
   lilypond = {
     mappings = {
@@ -90,10 +88,10 @@ local default_hi = {
   lilyGrob = { link = "Include" },
   lilyTranslator = { link = "Type" },
   lilyPitch = { link = "Function" },
-  lilyChord = { 
-    ctermfg = "lightMagenta", 
-    fg = "lightMagenta", 
-    bold = true 
+  lilyChord = {
+    ctermfg = "lightMagenta",
+    fg = "lightMagenta",
+    bold = true
   },
 }
 

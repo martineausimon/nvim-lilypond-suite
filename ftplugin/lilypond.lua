@@ -21,19 +21,19 @@ vim.opt_local.iskeyword:append([[-]])
 vim.opt_local.iskeyword:append([[\]])
 vim.opt_local.complete:append('k')
 
-lilyCmd('LilyPlayer', function() 
+lilyCmd('LilyPlayer', function()
   require('nvls.lilypond').DefineLilyVars()
-  require('nvls.lilypond').lilyPlayer() 
+  require('nvls.lilypond').lilyPlayer()
 end, {})
 
-lilyCmd('Viewer', function() 
+lilyCmd('Viewer', function()
   require('nvls.lilypond').DefineLilyVars()
   local output = nvls_options.lilypond.options.output
   print('Opening ' .. nvls_file_name .. '.' .. output .. '...')
   require('nvls').viewer(nvls_main_name .. '.' .. output)
 end, {})
 
-lilyCmd('LilyCmp', function() 
+lilyCmd('LilyCmp', function()
   require('nvls.lilypond').DefineLilyVars()
   local output = nvls_options.lilypond.options.output
 
@@ -49,10 +49,10 @@ lilyCmd('LilyCmp', function()
 
   fn.execute('write')
   print('Compiling ' .. nvls_file_name .. '.ly...')
-  makeprg = 'lilypond ' .. 
+  makeprg = 'lilypond ' ..
     (backend or '') ..
-    (include_dir and '-I ' .. include_dir or '') .. 
-    ' -f ' .. output .. 
+    (include_dir and '-I ' .. include_dir or '') ..
+    ' -f ' .. output ..
     ' -o "' .. nvls_main_name .. '" "' .. nvls_main .. '"'
   errorfm = "%f:%l:%c:%m,%f:%l:%m%[^;],%f:%l:%m,%-G%.%#"
   require('nvls').make(makeprg,errorfm,"lilypond")
@@ -111,17 +111,17 @@ lilyMap(0, 'n', add,    "a<space>--<space><esc>",            nrm)
 lilyMap(0, 'n', deln,   "/<space>--<space><cr>:nohl<cr>4x",  nrm)
 lilyMap(0, 'n', delp,   "/<space>--<space><cr>N:nohl<cr>4x", nrm)
 
-lilyMap(0, 'v', play, 
+lilyMap(0, 'v', play,
   ":lua<space>require('nvls.lilypond').quickplayer()<cr>",
   { noremap = true, silent = true })
 
-lilyMap(0, 'v', hyphenation, 
+lilyMap(0, 'v', hyphenation,
   ":lua<space>require('nvls.lilypond').getHyphType()<cr>",
   { noremap = true, silent = true })
 
 function insertLilypondVersion()
   local v = "lilypond -v | grep LilyPond | awk {'print $3'}"
-  local v = io.popen(v):read("*line")
+  v = io.popen(v):read("*line")
   v = [[\version "]] .. v .. [["]]
   local c = vim.api.nvim_win_get_cursor(0)
   vim.api.nvim_buf_set_lines(0, c[1] - 1, c[1] - 1, true, { v })
