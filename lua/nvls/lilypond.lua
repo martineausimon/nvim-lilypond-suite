@@ -19,9 +19,9 @@ function M.lilyPlayer()
       return 0
     else
       if kernel == "Darwin\n" then
-        var = io.popen("stat -f %m " .. fn.glob(file))
+        var = io.popen("stat -f %m " .. file)
       else
-        var = io.popen("stat -c %Y " .. fn.glob(file))
+        var = io.popen("stat -c %Y " .. file)
       end
       var = var:read()
       var = tonumber(var)
