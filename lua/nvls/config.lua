@@ -18,30 +18,30 @@ function M.fileInfos(ft)
   end
 
   local main = Utils.shellescape(vim.fn.expand('%:p'))
+  local main_path = Utils.joinpath(vim.fn.expand(main_folder), main_file)
 
-  if Utils.exists(Utils.joinpath(main_folder, '.lilyrc')) then
-    dofile(Utils.joinpath(main_folder, '.lilyrc'))
-    main = Utils.exists(Utils.joinpath(main_folder, main_file)) and Utils.shellescape(Utils.joinpath(main_folder, main_file)) or main
-  elseif Utils.exists(Utils.joinpath(main_folder, main_file)) then
-    main = Utils.shellescape(Utils.joinpath(main_folder, main_file))
+  if Utils.exists(Utils.joinpath(vim.fn.expand(main_folder), '.lilyrc')) then
+    dofile(Utils.joinpath(vim.fn.expand(main_folder), '.lilyrc'))
+    main = Utils.exists(main_path) and Utils.shellescape(main_path) or main
+  elseif Utils.exists(main_path) then
+    main = Utils.shellescape(main_path)
   end
 
   local os_type = Utils.os_type()
 
+  local name = main:gsub("%.(i?ly)$", ""):gsub("%.tex$", "")
   if os_type == "Windows" then
-    local name = main:gsub("%.(i?ly)$", ""):gsub("%.tex$", "")
-    file.name   = name:match('.*\\([^\\]+)$')
+    file.name = name:match('.*\\([^\\]+)$')
   else
-    local name = main:gsub("%.(i?ly)$", ""):gsub("%.tex$", "")
-    file.name   = name:match('.*/([^/]+)$'):gsub([[\]], "")
+    file.name = name:match('.*/([^/]+)$'):gsub([[\]], "")
   end
 
-  file.pdf    = Utils.change_extension(main, "pdf")
-  file.mp3    = Utils.change_extension(main, "mp3")
-  file.midi   = Utils.change_extension(main, "midi")
-  file.main   = main
+  file.pdf = Utils.change_extension(main, "pdf")
+  file.mp3 = Utils.change_extension(main, "mp3")
+  file.midi = Utils.change_extension(main, "midi")
+  file.main = main
   file.folder = main_folder
-  file.tmp    = Utils.joinpath(vim.fn.stdpath('cache'), 'nvls/')
+  file.tmp = Utils.joinpath(vim.fn.stdpath('cache'), 'nvls/')
 
   return file
 end

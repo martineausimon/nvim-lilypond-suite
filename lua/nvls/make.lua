@@ -19,35 +19,40 @@ end
 local M = {}
 
 function M.commands()
-  local file = Config.fileInfos()
-  local folder = Utils.shellescape(vim.fn.expand(file.folder))
-  local main = Utils.shellescape(file.main)
-  local tmp = Utils.shellescape(file.tmp)
+  local ly = Config.fileInfos("lilypond")
+  local ly_main = Utils.shellescape(ly.main)
+  local ly_tmp = Utils.shellescape(ly.tmp)
+  local ly_name = Utils.shellescape(ly.name)
+  local tex = Config.fileInfos("tex")
+  local tex_folder = Utils.shellescape(vim.fn.expand(tex.folder))
+  local tex_main = Utils.shellescape(tex.main)
+  local tex_tmp = Utils.shellescape(tex.tmp)
+  local tex_name = Utils.shellescape(tex.name)
 
   local commands = {
     lilypond = {
       efm = "%f:%l:%c:%m,%f:%l:%m%[^;],%f:%l:%m,%-G%.%#",
-      make = string.format('lilypond %s%s -f %s -o "%s" "%s"', backend or '', include_dir and (' -I ' .. include_dir) or '', output, file.name, main)
+      make = string.format('lilypond %s %s -f %s -o %s %s', backend or '', include_dir and ('-I ' .. include_dir) or '', output, ly_name, ly_main)
     },
     lualatex = {
       efm = "%f:%l:%m,%-G%.%#",
-      make = string.format('lualatex --file-line-error --output-directory=%s --shell-escape --interaction=nonstopmode %s', folder, main)
+      make = string.format('lualatex --file-line-error --output-directory=%s --shell-escape --interaction=nonstopmode %s', tex_folder, tex_main)
     },
     lilypondBook = {
       efm = '%+G%f:%l:%c:, %f:%l:%c: %m,%-G%.%#',
-      make = string.format('lilypond-book %s --output=%s %s', include_dir and ('-I ' .. include_dir) or '', tmp, vim.fn.expand(main))
+      make = string.format('lilypond-book %s --output=%s %s', include_dir and ('-I ' .. include_dir) or '', tex_tmp, vim.fn.expand(tex_main))
     },
     lytex = {
       efm = "%f:%l:%m,%-G%.%#",
-      make = string.format('cd %s && lualatex --file-line-error --output-directory=%s --shell-escape --interaction=nonstopmode %s', tmp, folder, Utils.shellescape(Utils.joinpath(tmp, file.name .. '.tex')))
+      make = string.format('cd %s && lualatex --file-line-error --output-directory=%s --shell-escape --interaction=nonstopmode %s', tex_tmp, tex_folder, Utils.shellescape(Utils.joinpath(tex_tmp, tex_name .. '.tex')))
     },
     fluidsynth = {
       efm = " ",
-      make = string.format('fluidsynth -T raw -F - %s -s | ffmpeg -f s32le -i - %s', file.midi, file.mp3)
+      make = string.format('fluidsynth -T raw -F - %s -s | ffmpeg -f s32le -i - %s', ly.midi, ly.mp3)
     },
     tmpplayer = {
       efm = "%-G%.%#",
-      make = string.format('fluidsynth -T raw -F - %s -s | ffmpeg -f s32le -i - %s', Utils.joinpath(tmp, "tmp.midi"), Utils.joinpath(tmp, "tmp.mp3"))
+      make = string.format('fluidsynth -T raw -F - %s -s | ffmpeg -f s32le -i - %s', Utils.joinpath(ly_tmp, "tmp.midi"), Utils.joinpath(ly_tmp, "tmp.mp3"))
     },
   }
 
