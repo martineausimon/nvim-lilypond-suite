@@ -2,42 +2,26 @@ local texMap      = vim.api.nvim_buf_set_keymap
 local texHi       = vim.api.nvim_set_hl
 local texCmd      = vim.api.nvim_create_user_command
 local texAutoCmd  = vim.api.nvim_create_autocmd
-local shellescape = require('nvls').shellescape
 local g, fn       = vim.g, vim.fn
-
-if not nvls_options then
-  require('nvls').setup()
-end
-
-require('nvls.tex').DefineTexVars()
+local Config = require('nvls.config')
+local Utils = require('nvls.utils')
+local Viewer = require('nvls.viewer')
+local nvls_options = require('nvls').get_nvls_options()
 
 texCmd('Viewer', function()
-  require('nvls.tex').DefineTexVars()
-  print('Opening ' .. nvls_file_name .. '.pdf')
-  require('nvls').viewer(texPdf)
+  local tex = Config.fileInfos("tex")
+  Viewer.open(tex.pdf, tex.name .. ".pdf")
 end, {})
 
 texCmd('LaTexCmp',  function()
-    fn.execute('write')
-    require('nvls.tex').DefineTexVars()
-    print('Compiling ' .. nvls_file_name .. '.tex...')
-    require('nvls.tex').SelectMakePrgType()
-  end,
-{})
+  fn.execute('write')
+  local tex = Config.fileInfos("tex")
+  Utils.message(string.format('Compiling %s.tex...', tex.name))
+  require('nvls.tex').SelectMakePrgType()
+end, {})
 
 texCmd('ToggleSyn', function()
   require('nvls.tex').ToggleLilypondSyntax()
-end, {})
-
-texCmd('Cleaner', function()
-    require('nvls.tex').DefineTexVars()
-    fn.execute('!rm -rf ' ..
-      shellescape(nvls_main_name .. '.log') .. ' ' ..
-      shellescape(nvls_main_name .. '.aux') .. ' ' ..
-      shellescape(nvls_main_name .. '.out') .. ' ' ..
-      shellescape(main_folder .. '/tmp-ly/') .. ' ' ..
-      shellescape(tmpOutDir))
-    vim.cmd('sleep 10m')
 end, {})
 
 local acmd = nvls_options.latex.options.lilypond_syntax_au
@@ -62,7 +46,7 @@ texMap(0, 'n', cmp,   "<cmd>LaTexCmp<cr>",  {noremap = true})
 texMap(0, 'n', view,  "<cmd>Viewer<cr>",    {noremap = true})
 if clean or g.nvls_clean_tex_files == 1 then
   vim.api.nvim_create_autocmd( 'VimLeave', {
-    command = 'Cleaner',
+    callback = function() Utils.clear_tmp_files() end,
     group = vim.api.nvim_create_augroup(
       "RemoveOutFiles",
       { clear = true }

@@ -1,3 +1,5 @@
+local nvls_options
+
 local default = {
   lilypond = {
     mappings = {
@@ -104,66 +106,6 @@ M.setup = function(opts)
   M.syntax()
 end
 
-function M.make(makeprg,errorfm,ctrl)
-  ctrl = ctrl or nil
-  local lines = {""}
-  local cmd = vim.fn.expandcmd(makeprg)
-  local function on_event(job_id, data, event)
-    if event == "stdout" or event == "stderr" then
-      if data then
-        vim.list_extend(lines, data)
-      end
-    end
-
-    if event == "exit" then
-      vim.fn.setqflist({}, " ", {
-        title = cmd,
-        lines = lines,
-        efm = errorfm,
-      })
-      if ctrl == "lilypond-book" then
-        require('nvls.tex').lytexCmp()
-      elseif ctrl == "fluidsynth" then
-        vim.fn.execute('stopinsert')
-        print(' ')
-        require('nvls.lilypond').player(lilyAudioFile, nvls_file_name .. ".mp3")
-      elseif ctrl == "tmpplayer" then
-        vim.fn.execute('stopinsert')
-        print(' ')
-        require('nvls.lilypond').player(tmpOutDir .. '/tmp.mp3', "QuickPlayer")
-      elseif ctrl == "lilypond" then
-        if nvls_options.lilypond.options.diagnostics then
-          M.showDiagnostics(lines,errorfm,ctrl)
-        else
-          vim.api.nvim_exec_autocmds("QuickFixCmdPost", {})
-        end
-        print(' ')
-      else
-          vim.api.nvim_exec_autocmds("QuickFixCmdPost", {})
-        print(' ')
-      end
-    end
-  end
-  local job_id =
-    vim.fn.jobstart(
-      cmd,
-      {
-        on_stderr = on_event,
-        on_stdout = on_event,
-        on_exit = on_event,
-        stdout_buffered = true,
-        stderr_buffered = true,
-      }
-    )
-end
-
-function M.shellescape(file)
-  file = file:gsub(" ","\\ ")
-  file = file:gsub("%(","\\%(")
-  file = file:gsub("%)","\\%)")
-  return file
-end
-
 function M.syntax()
   local hi = default_hi
   if nvls_options and nvls_options.lilypond and nvls_options.lilypond.highlights then
@@ -174,64 +116,8 @@ function M.syntax()
   end
 end
 
-function M.viewer(file)
-  local uname = io.popen("uname")
-  local kernel = uname:read("*a")
-  uname:close()
-  if kernel ~= "Linux\n" and kernel ~= "Darwin" then
-    print("[NVLS] Function not supported on your system")
-  do return end
-  end
-
-
-  if nvls_options.lilypond.options.pdf_viewer ~= nil then
-    vim.fn.jobstart(nvls_options.lilypond.options.pdf_viewer .. " " .. file)
-  else
-    if kernel == "Darwin\n" then
-      vim.fn.jobstart("open " .. file)
-    else
-      vim.fn.jobstart("xdg-open " .. file)
-    end
-  end
-end
-
-function M.showDiagnostics(lines, errorfm, ctrl)
-  vim.diagnostic.reset()
-  local file_diagnostics = {}
-  local filtered_lines = {}
-
-  for _, line in pairs(lines) do
-    local filename, row, col, message = string.match(line,'^([^%s].+):(%d+):(%d+): (.+)$')
-    if filename then
-      message = string.gsub(message, '^error: ', '')
-      if not file_diagnostics[filename] then
-        file_diagnostics[filename] = {}
-      end
-      table.insert(file_diagnostics[filename], {
-        severity = vim.diagnostic.severity.ERROR,
-        message = message,
-        lnum = tonumber(row) - 1,
-        col = tonumber(col) -1,
-      })
-      if filename ~= vim.fn.expand("%:p") then
-        table.insert(filtered_lines, line)
-      end
-    end
-  end
-
-  local ns = vim.api.nvim_create_namespace("lilypond-diagnostics")
-  for filename, diagnostics in pairs(file_diagnostics) do
-    local bfnr = vim.fn.bufnr(vim.fn.expand(filename))
-    vim.diagnostic.set(ns, bfnr, diagnostics, {})
-  end
-
-  vim.fn.setqflist({}, " ", {
-    title = ctrl,
-    lines = filtered_lines,
-    efm = errorfm,
-  })
-
-  vim.api.nvim_exec_autocmds("QuickFixCmdPost", {})
+M.get_nvls_options = function()
+  return nvls_options
 end
 
 return M

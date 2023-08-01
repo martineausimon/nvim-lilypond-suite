@@ -4,12 +4,13 @@ local lilyMap     = vim.api.nvim_buf_set_keymap
 local lilyHi      = vim.api.nvim_set_hl
 local lilyCmd     = vim.api.nvim_create_user_command
 local lilyWords   = expand('<sfile>:p:h') .. '/../lilywords'
+local Config = require('nvls.config')
+local Utils = require('nvls.utils')
+local Viewer = require('nvls.viewer')
+local Make = require('nvls.make')
+local Player = require('nvls.player')
+local nvls_options = require('nvls').get_nvls_options()
 
-if not nvls_options then
-  require('nvls').setup()
-end
-
-require('nvls.lilypond').DefineLilyVars()
 vim.g.lilywords   = lilyWords
 vim.cmd[[let $LILYDICTPATH = g:lilywords]]
 
@@ -22,45 +23,24 @@ vim.opt_local.iskeyword:append([[\]])
 vim.opt_local.complete:append('k')
 
 lilyCmd('LilyPlayer', function()
-  require('nvls.lilypond').DefineLilyVars()
-  require('nvls.lilypond').lilyPlayer()
+  Player.convert()
 end, {})
 
 lilyCmd('Viewer', function()
-  require('nvls.lilypond').DefineLilyVars()
+  local ly = Config.fileInfos("lilypond")
   local output = nvls_options.lilypond.options.output
-  print('Opening ' .. nvls_file_name .. '.' .. output .. '...')
-  require('nvls').viewer(nvls_main_name .. '.' .. output)
+  Viewer.open(Utils.change_extension(ly.main, output), string.format('%s.%s', ly.name, output))
 end, {})
 
 lilyCmd('LilyCmp', function()
-  require('nvls.lilypond').DefineLilyVars()
-  local output = nvls_options.lilypond.options.output
-
-  local include_dir = nvls_options.lilypond.options.include_dir or nil
-  if type(include_dir) == "table" then
-    include_dir = table.concat(include_dir, " -I ")
-  end
-
-  local backend = nvls_options.lilypond.options.backend or nil
-  if backend then
-    backend = "-dbackend=" .. backend .. " "
-  end
-
+  local ly = Config.fileInfos("lilypond")
   fn.execute('write')
-  print('Compiling ' .. nvls_file_name .. '.ly...')
-  makeprg = 'lilypond ' ..
-    (backend or '') ..
-    (include_dir and '-I ' .. include_dir or '') ..
-    ' -f ' .. output ..
-    ' -o "' .. nvls_main_name .. '" "' .. nvls_main .. '"'
-  errorfm = "%f:%l:%c:%m,%f:%l:%m%[^;],%f:%l:%m,%-G%.%#"
-  require('nvls').make(makeprg,errorfm,"lilypond")
+  Utils.message(string.format('Compiling %s.ly...', ly.name))
+  Make.async("lilypond")
 end, {})
 
-lilyCmd('HyphChLang', function() 
-  require('nvls.lilypond').DefineLilyVars()
-  require('nvls.lilypond').quickLangInput()
+lilyCmd('HyphChLang', function()
+  require('nvls.hyphenate').quickLangInput()
 end, {})
 
 lilyHi(0, 'QuickFixLine', {bold = true})
@@ -112,11 +92,11 @@ lilyMap(0, 'n', deln,   "/<space>--<space><cr>:nohl<cr>4x",  nrm)
 lilyMap(0, 'n', delp,   "/<space>--<space><cr>N:nohl<cr>4x", nrm)
 
 lilyMap(0, 'v', play,
-  ":lua<space>require('nvls.lilypond').quickplayer()<cr>",
+  ":lua<space>require('nvls.player').quickplayer()<cr>",
   { noremap = true, silent = true })
 
 lilyMap(0, 'v', hyphenation,
-  ":lua<space>require('nvls.lilypond').getHyphType()<cr>",
+  ":lua<space>require('nvls.hyphenate').getHyphType()<cr>",
   { noremap = true, silent = true })
 
 function insertLilypondVersion()
