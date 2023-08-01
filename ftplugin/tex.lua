@@ -6,16 +6,17 @@ local g, fn       = vim.g, vim.fn
 local Config = require('nvls.config')
 local Utils = require('nvls.utils')
 local Viewer = require('nvls.viewer')
+
 local nvls_options = require('nvls').get_nvls_options()
 
 texCmd('Viewer', function()
-  local tex = Config.fileInfos("tex")
+  tex = Config.fileInfos("tex")
   Viewer.open(tex.pdf, tex.name .. ".pdf")
 end, {})
 
 texCmd('LaTexCmp',  function()
   fn.execute('write')
-  local tex = Config.fileInfos("tex")
+  tex = Config.fileInfos("tex")
   Utils.message(string.format('Compiling %s.tex...', tex.name))
   require('nvls.tex').SelectMakePrgType()
 end, {})

@@ -11,6 +11,8 @@ local Make = require('nvls.make')
 local Player = require('nvls.player')
 local nvls_options = require('nvls').get_nvls_options()
 
+local ly = Config.fileInfos("lilypond")
+
 vim.g.lilywords   = lilyWords
 vim.cmd[[let $LILYDICTPATH = g:lilywords]]
 
@@ -27,13 +29,13 @@ lilyCmd('LilyPlayer', function()
 end, {})
 
 lilyCmd('Viewer', function()
-  local ly = Config.fileInfos("lilypond")
+  ly = Config.fileInfos("lilypond")
   local output = nvls_options.lilypond.options.output
   Viewer.open(Utils.change_extension(ly.main, output), string.format('%s.%s', ly.name, output))
 end, {})
 
 lilyCmd('LilyCmp', function()
-  local ly = Config.fileInfos("lilypond")
+  ly = Config.fileInfos("lilypond")
   fn.execute('write')
   Utils.message(string.format('Compiling %s.ly...', ly.name))
   Make.async("lilypond")
