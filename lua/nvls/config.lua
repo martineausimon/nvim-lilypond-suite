@@ -20,10 +20,7 @@ function M.fileInfos(ft)
   local main = Utils.shellescape(vim.fn.expand('%:p'))
   local main_path = Utils.joinpath(vim.fn.expand(main_folder), main_file)
 
-  if Utils.exists(Utils.joinpath(vim.fn.expand(main_folder), '.lilyrc')) then
-    dofile(Utils.joinpath(vim.fn.expand(main_folder), '.lilyrc'))
-    main = Utils.exists(main_path) and Utils.shellescape(main_path) or main
-  elseif Utils.exists(main_path) then
+  if Utils.exists(main_path) then
     main = Utils.shellescape(main_path)
   end
 
