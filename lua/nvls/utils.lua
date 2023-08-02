@@ -50,8 +50,12 @@ function M.extract_from_sel(_start, _end)
   local nlines = math.abs(_end[2] - _start[2]) + 1
   local sel = vim.api.nvim_buf_get_lines(0, _start[2] - 1, _end[2], false)
 
-  sel[1] = string.sub(sel[1], _start[3], -1)
-  sel[nlines] = sel[nlines]:sub(1, _end[3])
+  if nlines == 1 then
+    sel[1] = sel[1]:sub(_start[3], _end[3])
+  else
+    sel[1] = sel[1]:sub(_start[3], -1)
+    sel[nlines] = sel[nlines]:sub(1, _end[3])
+  end
 
   return table.concat(sel, '\n')
 end
