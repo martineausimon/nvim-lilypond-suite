@@ -14,13 +14,13 @@ function M.convert()
     do return end
   end
 
-  if io.open(midi, "r") then
+  if Utils.exists(midi) then
 
     local midi_last = Utils.last_mod(midi)
     local mp3_last = Utils.last_mod(mp3)
 
     if (mp3_last > midi_last) then
-      M.open(ly.mp3, ly.name .. ".mp3")
+      M.open(mp3, ly.name .. ".mp3")
 
     else
       Utils.message(string.format('Converting %s.midi to mp3...', ly.name))
@@ -28,7 +28,7 @@ function M.convert()
       require('nvls.make').async("fluidsynth")
     end
 
-  elseif io.open(mp3, "r") then
+  elseif Utils.exists(mp3) then
     M.open(mp3, ly.name .. ".mp3")
 
   else
@@ -181,7 +181,7 @@ function M.quickplayerCheckErr(str)
 end
 
 function M.quickplayer()
-  Utils.clear_tmp_files()
+  Utils.clear_tmp_files("lilypond")
   local sel = Utils.extract_from_sel(vim.fn.getpos("'<"), vim.fn.getpos("'>"))
 
   local err_msg = M.quickplayerCheckErr(sel)
