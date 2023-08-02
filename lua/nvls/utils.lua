@@ -1,3 +1,4 @@
+
 local M = {}
 
 function M.message(str, hl)
@@ -90,25 +91,31 @@ function M.last_mod(file)
   end
 end
 
-function M.clear_tmp_files()
-  local ly = require('nvls.config').fileInfos("lilypond")
-  local to_delete = {
-    ly.name .. '.log',
-    ly.name .. '.aux',
-    ly.name .. '.out',
-    ly.folder .. '/tmp-ly/',
-  }
-  for _, file in ipairs(to_delete) do
-    if M.exists(file) then
-      os.remove(file)
+function M.clear_tmp_files(type)
+  local _file = require('nvls.config').fileInfos(type)
+  local to_delete = {}
+  if type == "tex" then
+    to_delete = {
+      M.change_extension(_file.main, 'log'),
+      M.change_extension(_file.main, 'aux'),
+      M.change_extension(_file.main, 'out'),
+      M.joinpath(_file.folder, 'tmp-ly'),
+    }
+    for _, file in ipairs(to_delete) do
+      if M.exists(file) then
+        os.remove(file)
+      end
     end
   end
-  files = M.joinpath(ly.tmp, "*")
-  local os_name = M.os_type()
-  if os_name == "Windows" then
-    os.execute('rmdir /s /q ' .. files)
-  else
-    os.execute("rm -rf " .. files)
+  local tmp_contents = vim.fn.readdir(_file.tmp)
+  for _, item in ipairs(tmp_contents) do
+    local item_path = M.joinpath(_file.tmp, item)
+    table.insert(to_delete, item_path)
+  end
+  for _, file in ipairs(to_delete) do
+    if M.exists(file) then
+      vim.fn.delete(file, "rf")
+    end
   end
 end
 
