@@ -47,7 +47,7 @@ texMap(0, 'n', cmp,   "<cmd>LaTexCmp<cr>",  {noremap = true})
 texMap(0, 'n', view,  "<cmd>Viewer<cr>",    {noremap = true})
 if clean or g.nvls_clean_tex_files == 1 then
   vim.api.nvim_create_autocmd( 'VimLeave', {
-    callback = function() Utils.clear_tmp_files() end,
+    callback = function() Utils.clear_tmp_files("tex") end,
     group = vim.api.nvim_create_augroup(
       "RemoveOutFiles",
       { clear = true }

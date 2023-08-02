@@ -101,7 +101,7 @@ local M = {}
 
 M.setup = function(opts)
   opts = opts or {}
-  nvls_options = vim.tbl_deep_extend('keep', opts, nvls_options or default)
+  nvls_options = vim.tbl_deep_extend('keep', opts, default)
   vim.g.nvls_language = nvls_options.lilypond.options.pitches_language
   M.syntax()
 end
