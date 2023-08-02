@@ -5,6 +5,7 @@ local Player = require('nvls.player')
 local nvls_options = require('nvls').get_nvls_options()
 
 local output = nvls_options.lilypond.options.output
+local audio_format = nvls_options.player.options.audio_format
 
 local include_dir = nvls_options.lilypond.options.include_dir or nil
 if type(include_dir) == "table" then
@@ -48,13 +49,31 @@ function M.commands()
     },
     fluidsynth = {
       efm = " ",
-      make = string.format('fluidsynth -T raw -F - %s -s | ffmpeg -f s32le -i - %s', ly.midi, ly.mp3)
+      make = string.format('fluidsynth -T raw -F - %s -s | ffmpeg -f s32le -i - %s', ly.midi, ly.audio)
     },
     tmpplayer = {
       efm = "%-G%.%#",
-      make = string.format('fluidsynth -T raw -F - %s -s | ffmpeg -f s32le -i - %s', Utils.joinpath(ly_tmp, "tmp.midi"), Utils.joinpath(ly_tmp, "tmp.mp3"))
+      --make = string.format('timidity %s -Ow -o %s', Utils.joinpath(ly_tmp, "tmp.midi"), Utils.joinpath(ly_tmp, "tmp.wav"))
+      make = string.format('fluidsynth -T raw -F - %s -s | ffmpeg -f s32le -i - %s', Utils.joinpath(ly_tmp, "tmp.midi"), Utils.joinpath(ly_tmp, "tmp." .. audio_format))
     },
   }
+
+  local win_commands = {
+    lytex = {
+      make = string.format('cd /d %s & lualatex --file-line-error --output-directory=%s --shell-escape --interaction=nonstopmode %s', tex_tmp, tex_folder, Utils.shellescape(Utils.joinpath(tex_tmp, tex_name .. '.tex')))
+    },
+    fluidsynth = {
+      make = string.format('timidity %s -Ow -o %s', Utils.joinpath(ly_tmp, "tmp.midi"), Utils.joinpath(ly_tmp, "tmp." .. audio_format))
+    },
+    tmpplayer = {
+      make = string.format('timidity %s -Ow -o %s', Utils.joinpath(ly_tmp, "tmp.midi"), Utils.joinpath(ly_tmp, "tmp." .. audio_format))
+    }
+  }
+
+  local os_type = Utils.os_type()
+  if os_type == "Windows" then
+    commands = vim.tbl_deep_extend('keep', win_commands, commands)
+  end
 
   return commands
 end
@@ -117,13 +136,13 @@ function M.post(type, lines, errorfm)
       local file = Config.fileInfos("lilypond")
       vim.fn.execute('stopinsert')
       print(' ')
-      Player.open(file.mp3, file.name .. ".mp3")
+      Player.open(file.audio, file.name .. "." .. audio_format)
     end,
     ["tmpplayer"] = function()
       local file = Config.fileInfos("lilypond")
       vim.fn.execute('stopinsert')
       print(' ')
-      Player.open(Utils.joinpath(file.tmp, 'tmp.mp3'), "QuickPlayer")
+      Player.open(Utils.joinpath(file.tmp, 'tmp.' .. audio_format), "QuickPlayer")
     end,
     ["lilypond"] = function()
       if nvls_options.lilypond.options.diagnostics then
