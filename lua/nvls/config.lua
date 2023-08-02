@@ -1,5 +1,7 @@
 local Utils = require('nvls.utils')
 local nvls_options = require('nvls').get_nvls_options()
+local audio_format = nvls_options.player.options.audio_format
+local midi_synth = nvls_options.player.options.midi_synth
 
 local main_folder
 local main_file
@@ -24,15 +26,17 @@ function M.fileInfos(ft)
     main = Utils.shellescape(main_path)
   end
 
-  local os_type = Utils.os_type()
-
   local name = main:gsub("%.(i?ly)$", ""):gsub("%.tex$", "")
-  if os_type == "Windows" then
+  if package.config:sub(1, 1) == '\\' then
     file.name = name:match('.*\\([^\\]+)$')
   else
     file.name = name:match('.*/([^/]+)$'):gsub([[\]], "")
   end
-  local audio_format = nvls_options.player.options.audio_format
+
+  if package.config:sub(1, 1) == '\\' or midi_synth == "timidity" then
+    audio_format = "wav"
+  end
+
   file.pdf    = Utils.change_extension(main, "pdf")
   file.audio  = Utils.change_extension(main, audio_format)
   file.midi   = Utils.change_extension(main, "midi")

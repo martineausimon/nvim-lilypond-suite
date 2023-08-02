@@ -6,6 +6,11 @@ local nvls_options = require('nvls').get_nvls_options()
 
 local output = nvls_options.lilypond.options.output
 local audio_format = nvls_options.player.options.audio_format
+local midi_synth = nvls_options.player.options.midi_synth
+
+if midi_synth == "timidity" then
+  audio_format = "wav"
+end
 
 local include_dir = nvls_options.lilypond.options.include_dir or nil
 if type(include_dir) == "table" then
@@ -49,12 +54,23 @@ function M.commands()
     },
     fluidsynth = {
       efm = " ",
-      make = string.format('fluidsynth -T raw -F - %s -s | ffmpeg -f s32le -i - %s', ly.midi, ly.audio)
+      make = (function()
+        if midi_synth == "timidity" then
+          return string.format('timidity %s -Ow -o %s', ly.midi, ly.audio)
+        else
+          return string.format('fluidsynth -T raw -F - %s -s | ffmpeg -f s32le -i - %s', ly.midi, ly.audio)
+        end
+      end)()
     },
     tmpplayer = {
       efm = "%-G%.%#",
-      --make = string.format('timidity %s -Ow -o %s', Utils.joinpath(ly_tmp, "tmp.midi"), Utils.joinpath(ly_tmp, "tmp.wav"))
-      make = string.format('fluidsynth -T raw -F - %s -s | ffmpeg -f s32le -i - %s', Utils.joinpath(ly_tmp, "tmp.midi"), Utils.joinpath(ly_tmp, "tmp." .. audio_format))
+      make = (function()
+        if midi_synth == "timidity" then
+          return string.format('timidity %s -Ow -o %s', Utils.joinpath(ly_tmp, "tmp.midi"), Utils.joinpath(ly_tmp, "tmp.wav"))
+        else
+          return string.format('fluidsynth -T raw -F - %s -s | ffmpeg -f s32le -i - %s', Utils.joinpath(ly_tmp, "tmp.midi"), Utils.joinpath(ly_tmp, "tmp." .. audio_format))
+        end
+      end)()
     },
   }
 

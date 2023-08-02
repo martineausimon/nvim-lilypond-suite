@@ -2,6 +2,11 @@ local Config = require('nvls.config')
 local Utils = require('nvls.utils')
 local nvls_options = require('nvls').get_nvls_options()
 local audio_format = nvls_options.player.options.audio_format
+local midi_synth = nvls_options.player.options.midi_synth
+
+if midi_synth == "timidity" then
+  audio_format = "wav"
+end
 
 local M = {}
 
@@ -9,10 +14,8 @@ function M.convert()
   local ly = Config.fileInfos("lilypond")
   local audio = Utils.shellescape(ly.audio)
   local midi = Utils.shellescape(ly.midi)
-  local os_type = Utils.os_type()
-  if os_type ~= "Linux" and os_type ~= "Darwin" and audio_format ~= "wav" then
-    Utils.message("In Windows, audio_format must be set to \"wav\"", "ErrorMsg")
-    do return end
+  if package.config:sub(1, 1) == '\\' then
+    audio_format = "wav"
   end
 
   if Utils.exists(midi) then
