@@ -32,13 +32,13 @@ function M.fileInfos(ft)
   else
     file.name = name:match('.*/([^/]+)$'):gsub([[\]], "")
   end
-
-  file.pdf = Utils.change_extension(main, "pdf")
-  file.mp3 = Utils.change_extension(main, "mp3")
-  file.midi = Utils.change_extension(main, "midi")
-  file.main = main
+  local audio_format = nvls_options.player.options.audio_format
+  file.pdf    = Utils.change_extension(main, "pdf")
+  file.audio  = Utils.change_extension(main, audio_format)
+  file.midi   = Utils.change_extension(main, "midi")
+  file.main   = main
   file.folder = Utils.shellescape(vim.fn.expand(main_folder))
-  file.tmp = Utils.joinpath(vim.fn.stdpath('cache'), 'nvls')
+  file.tmp    = Utils.joinpath(vim.fn.stdpath('cache'), 'nvls')
   vim.fn.mkdir(file.tmp, 'p')
 
   return file

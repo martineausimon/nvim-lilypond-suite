@@ -63,6 +63,7 @@ local default = {
       height = "1",
       border_style = "single",
       winhighlight = "Normal:Normal,FloatBorder:Normal",
+      audio_format = "mp3",
       mpv_flags = {
         "--msg-level=cplayer=no,ffmpeg=no,alsa=no",
         "--loop",

@@ -1,38 +1,39 @@
 local Config = require('nvls.config')
 local Utils = require('nvls.utils')
 local nvls_options = require('nvls').get_nvls_options()
+local audio_format = nvls_options.player.options.audio_format
 
 local M = {}
 
 function M.convert()
   local ly = Config.fileInfos("lilypond")
-  local mp3 = Utils.shellescape(ly.mp3)
+  local audio = Utils.shellescape(ly.audio)
   local midi = Utils.shellescape(ly.midi)
   local os_type = Utils.os_type()
-  if os_type ~= "Linux" and os_type ~= "Darwin" then
-    Utils.message("Function not supported on your system", "ErrorMsg")
+  if os_type ~= "Linux" and os_type ~= "Darwin" and audio_format ~= "wav" then
+    Utils.message("In Windows, audio_format must be set to \"wav\"", "ErrorMsg")
     do return end
   end
 
   if Utils.exists(midi) then
 
     local midi_last = Utils.last_mod(midi)
-    local mp3_last = Utils.last_mod(mp3)
+    local audio_last = Utils.last_mod(audio)
 
-    if (mp3_last > midi_last) then
-      M.open(mp3, ly.name .. ".mp3")
+    if (audio_last > midi_last) then
+      M.open(audio, ly.name .. "." .. audio_format)
 
     else
-      Utils.message(string.format('Converting %s.midi to mp3...', ly.name))
-      os.remove(mp3)
+      Utils.message(string.format('Converting %s.midi to %s...', ly.name, audio_format))
+      os.remove(audio)
       require('nvls.make').async("fluidsynth")
     end
 
-  elseif Utils.exists(mp3) then
-    M.open(mp3, ly.name .. ".mp3")
+  elseif Utils.exists(audio) then
+    M.open(audio, ly.name .. "." .. audio_format)
 
   else
-    Utils.message(string.format("Can't find %s.mp3 or %s.midi in working directory", ly.name, ly.name), "ErrorMsg")
+    Utils.message(string.format("Can't find %s.%s or %s.midi in working directory", ly.name, audio_format, ly.name), "ErrorMsg")
     do return end
   end
 end
@@ -189,7 +190,7 @@ function M.quickplayer()
     Utils.message(err_msg, "ErrorMsg")
     return
   else
-    Utils.message('Converting to mp3...')
+    Utils.message('Converting to ' .. audio_format)
   end
 
   local input_type = M.quickplayerInputType(sel)
