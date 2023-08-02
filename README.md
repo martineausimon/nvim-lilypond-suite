@@ -12,7 +12,7 @@ This is a plugin ([Neovim](https://github.com/neovim/neovim) only) for writing [
 
 * **Fast syntax file for LilyPond**
 * **Asynchronous :make** - compile in background without freezing Neovim
-* **mp3 player in floating window** (LilyPond only) - convert and play midi file while writing score (using `mpv`, `fluidsynth` & `ffmpeg`)
+* **Audio player in floating window** (LilyPond only) - convert (mp3 or wav) and play midi file while writing score (using `mpv`, `timidity` or `fluidsynth` & `ffmpeg`) 
 * **QuickPlayer** (LilyPond only) - convert and play only visual selection
 * **Hyphenation** : automatically place hyphens ' **--** ' inside texts to make those texts usable as lyrics (LilyPond only)
 * **Simple ftplugin for LilyPond** with `makeprg`, correct `errorformat`, `diagnostics` (experimental)
