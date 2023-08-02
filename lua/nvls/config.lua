@@ -37,8 +37,9 @@ function M.fileInfos(ft)
   file.mp3 = Utils.change_extension(main, "mp3")
   file.midi = Utils.change_extension(main, "midi")
   file.main = main
-  file.folder = main_folder
-  file.tmp = Utils.joinpath(vim.fn.stdpath('cache'), 'nvls/')
+  file.folder = Utils.shellescape(vim.fn.expand(main_folder))
+  file.tmp = Utils.joinpath(vim.fn.stdpath('cache'), 'nvls')
+  vim.fn.mkdir(file.tmp, 'p')
 
   return file
 end
