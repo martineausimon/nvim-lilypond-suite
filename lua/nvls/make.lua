@@ -86,8 +86,7 @@ function M.commands()
     }
   }
 
-  local os_type = Utils.os_type()
-  if os_type == "Windows" then
+  if package.config:sub(1, 1) == '\\' then
     commands = vim.tbl_deep_extend('keep', win_commands, commands)
   end
 
