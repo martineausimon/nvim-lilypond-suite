@@ -91,7 +91,7 @@ lilyMap(0, 'n', chlang, "<cmd>HyphChLang<cr>",               nrm)
 lilyMap(0, 'n', ins,    "i<space>--<space><esc>",            nrm)
 lilyMap(0, 'n', add,    "a<space>--<space><esc>",            nrm)
 lilyMap(0, 'n', deln,   "/<space>--<space><cr>:nohl<cr>4x",  nrm)
-lilyMap(0, 'n', delp,   "/<space>--<space><cr>N:nohl<cr>4x", nrm)
+lilyMap(0, 'n', delp,   "?<space>--<space><cr>:nohl<cr>4x",  nrm)
 
 lilyMap(0, 'v', play,
   ":lua<space>require('nvls.player').quickplayer()<cr>",
@@ -101,15 +101,27 @@ lilyMap(0, 'v', hyphenation,
   ":lua<space>require('nvls.hyphenate').getHyphType()<cr>",
   { noremap = true, silent = true })
 
-function insertLilypondVersion()
-  local v = "lilypond -v | grep LilyPond | awk {'print $3'}"
-  v = io.popen(v):read("*line")
-  v = [[\version "]] .. v .. [["]]
-  local c = vim.api.nvim_win_get_cursor(0)
-  vim.api.nvim_buf_set_lines(0, c[1] - 1, c[1] - 1, true, { v })
-end
+vim.keymap.set('n', version,
+  function()
+    local cmd = 'lilypond -v'
+    local handle = io.popen(cmd)
+    local result
+    if handle then
+      result = handle:read("*a")
+      handle:close()
+    else
+      Utils.message("LilyPond version not found.", "ErrorMsg")
+      do return end
+    end
 
-lilyMap(0, 'n', version,
-  "<cmd>lua insertLilypondVersion()<cr>",
-  {noremap = true, silent = true}
+    local v = string.match(result, "LilyPond%s+(%d+.%d+.%d+)")
+    if v then
+      v = "\\version \"" .. v .. "\""
+      local c = vim.api.nvim_win_get_cursor(0)
+      vim.api.nvim_buf_set_lines(0, c[1] - 1, c[1] - 1, true, { v })
+    else
+      Utils.message("LilyPond version not found.", "ErrorMsg")
+    end
+  end,
+  { noremap = true, silent = true, buffer = true }
 )
