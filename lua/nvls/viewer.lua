@@ -11,7 +11,7 @@ function M.open(file, name)
     do return end
   end
 
-  local os = Utils.os_type()
+  local os = vim.loop.os_uname().sysname
 
   local os_commands = {
       ["Darwin"] = "open",
