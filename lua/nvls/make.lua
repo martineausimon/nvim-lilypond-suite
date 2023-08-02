@@ -110,16 +110,17 @@ function M.async(type)
 end
 
 function M.post(type, lines, errorfm)
-  local file = Config.fileInfos()
 
   post_commands = {
     ["lilypond-book"] = function() M.async("lytex") end,
     ["fluidsynth"] = function()
+      local file = Config.fileInfos("lilypond")
       vim.fn.execute('stopinsert')
       print(' ')
       Player.open(file.mp3, file.name .. ".mp3")
     end,
     ["tmpplayer"] = function()
+      local file = Config.fileInfos("lilypond")
       vim.fn.execute('stopinsert')
       print(' ')
       Player.open(Utils.joinpath(file.tmp, 'tmp.mp3'), "QuickPlayer")
