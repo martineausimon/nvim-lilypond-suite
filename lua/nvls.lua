@@ -57,7 +57,7 @@ local default = {
       double_speed = "<S-k>"
     },
     options = {
-      row = "2%",
+      row = 1,
       col = "99%",
       width = "37",
       height = "1",

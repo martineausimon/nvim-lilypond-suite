@@ -3,6 +3,7 @@ local Utils = require('nvls.utils')
 local nvls_options = require('nvls').get_nvls_options()
 local audio_format = nvls_options.player.options.audio_format
 local midi_synth = nvls_options.player.options.midi_synth
+local win_height = vim.fn.winheight(0)
 
 if midi_synth == "timidity" then
   audio_format = "wav"
@@ -41,10 +42,54 @@ function M.convert()
   end
 end
 
+local plopts = nvls_options.player.options
+local row_status
+
+local function init_row()
+  local row
+    if type(plopts.row) == "string" and plopts.row:match("(%d+)%%") then
+      local percentage = tonumber(plopts.row:match("(%d+)%%"))
+      if percentage then
+        row = math.floor(percentage * win_height / 100)
+      else
+        Utils.message('Invalid player row option, fallback to 1', 'ErrorMsg')
+        row = 1
+      end
+    elseif type(plopts.row) == "number" then
+      row = plopts.row
+    else
+      row = 1
+    end
+  return row
+end
+
+local function player_add(row)
+  local decay
+  local init = init_row()
+  if init > win_height / 2 then
+    decay = - 4 + plopts.height
+  else
+    decay = 2 + plopts.height
+  end
+  return row + decay
+end
+
+local function player_del(row)
+  local decay
+  local init = init_row()
+  if init > win_height / 2 then
+    decay = 2 + plopts.height
+  else
+    decay = -4 + plopts.height
+  end
+  return row + decay
+end
+
 function M.open(file,name)
   local lilyPopup = require("nui.popup")
-  local plopts = nvls_options.player.options
   local event = require("nui.utils.autocmd").event
+  if not row_status then row_status = init_row() end
+
   local lilyPlayer = lilyPopup({
     enter = true,
     focusable = true,
@@ -52,8 +97,8 @@ function M.open(file,name)
       text = { top = "[" .. name .. "]" },
       style = plopts.border_style,
     },
-      position = {
-      row = plopts.row,
+    position = {
+      row = row_status,
       col = plopts.col,
     },
     size = {
@@ -70,6 +115,7 @@ function M.open(file,name)
   })
 
   lilyPlayer:mount()
+  row_status = player_add(row_status)
 
   vim.api.nvim_buf_call(lilyPlayer.bufnr, function()
     vim.fn.execute("term mpv " .. table.concat(plopts.mpv_flags, " ") .. " " .. file)
@@ -102,6 +148,7 @@ function M.open(file,name)
   lilyPlayer:on({ event.TermClose }, function()
     vim.schedule(function()
       lilyPlayer:unmount()
+      row_status = player_del(row_status)
     end)
   end, { once = true })
 
