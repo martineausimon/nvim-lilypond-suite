@@ -163,10 +163,10 @@ function M.quickplayerInputType(sel)
     local chords = source:match(".*%pchords%s+%{")
 
     if relative then
-      local ref_pitch = relative:match(".*%prelative(%s+%a%p*)")
+      local ref_pitch = relative:match(".*%prelative(%s+%a%p*)") or " "
       return "\\relative" .. ref_pitch
     elseif fixed then
-      local ref_pitch = fixed:match(".*%pfixed(%s+%a%p*)")
+      local ref_pitch = fixed:match(".*%pfixed(%s+%a%p*)") or " "
       return "\\fixed" .. ref_pitch
     elseif chords then
       return "\\chords"
