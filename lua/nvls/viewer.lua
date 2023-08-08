@@ -5,8 +5,7 @@ local M = {}
 
 function M.open(file, name)
   name = name or nil
-  local file_exists = io.open(file, "r")
-  if not file_exists then
+  if not Utils.exists(file) then
     Utils.message(string.format("File %s doesn't exists", name or file), "ErrorMsg")
     do return end
   end
