@@ -24,18 +24,18 @@ end
 
 local M = {}
 
-function M.commands()
-  local ly = Config.fileInfos("lilypond")
-  local ly_main = Utils.shellescape(ly.main)
-  local ly_tmp = Utils.shellescape(ly.tmp)
-  local ly_name = Utils.shellescape(ly.name)
-  local tex = Config.fileInfos("tex")
-  local tex_folder = Utils.shellescape(vim.fn.expand(tex.folder))
-  local tex_main = Utils.shellescape(tex.main)
-  local tex_tmp = Utils.shellescape(tex.tmp)
-  local tex_name = Utils.shellescape(tex.name)
+local function commands()
+  local ly         = Config.fileInfos("lilypond")
+  local ly_main    = ly.main
+  local ly_tmp     = ly.tmp
+  local ly_name    = Utils.shellescape(ly.name)
+  local tex        = Config.fileInfos("tex")
+  local tex_folder = vim.fn.expand(tex.folder)
+  local tex_main   = tex.main
+  local tex_tmp    = tex.tmp
+  local tex_name   = Utils.shellescape(tex.name)
 
-  local commands = {
+  local cmds = {
     lilypond = {
       efm = "%f:%l:%c:%m,%f:%l:%m%[^;],%f:%l:%m,%-G%.%#",
       make = string.format('lilypond %s %s -f %s -o %s %s', backend or '', include_dir and ('-I ' .. include_dir) or '', output, ly_name, ly_main)
@@ -74,7 +74,7 @@ function M.commands()
     },
   }
 
-  local win_commands = {
+  local win_cmds = {
     lytex = {
       make = string.format('cd /d %s & lualatex --file-line-error --output-directory=%s --shell-escape --interaction=nonstopmode %s', tex_tmp, tex_folder, Utils.shellescape(Utils.joinpath(tex_tmp, tex_name .. '.tex')))
     },
@@ -87,63 +87,16 @@ function M.commands()
   }
 
   if package.config:sub(1, 1) == '\\' then
-    commands = vim.tbl_deep_extend('keep', win_commands, commands)
+    cmds = vim.tbl_deep_extend('keep', win_cmds, cmds)
   end
 
-  return commands
+  return cmds
 end
 
 local type_commands = {}
 local post_commands = {}
 
-function M.async(type)
-
-  local lines = {""}
-
-  type_commands = {
-    ["lilypond"] = { M.commands().lilypond.make, M.commands().lilypond.efm },
-    ["lualatex"] = { M.commands().lualatex.make, M.commands().lualatex.efm },
-    ["lilypond-book"] = { M.commands().lilypondBook.make, M.commands().lilypondBook.efm },
-    ["lytex"] = { M.commands().lytex.make, M.commands().lytex.efm },
-    ["fluidsynth"] = { M.commands().fluidsynth.make, M.commands().fluidsynth.efm },
-    ["tmpplayer"] = { M.commands().tmpplayer.make, M.commands().tmpplayer.efm },
-  }
-
-  local cmd, errorfm = unpack(type_commands[type] or {})
-
-  if not cmd or not errorfm then
-    do return end
-  end
-
-  local function on_event(job_id, data, event)
-    if event == "stdout" or event == "stderr" then
-      if data then
-        vim.list_extend(lines, data)
-      end
-    end
-
-    if event == "exit" then
-      vim.fn.setqflist({}, " ", {
-        title = type,
-        lines = lines,
-        efm = errorfm,
-      })
-      M.post(type, lines, errorfm)
-    end
-  end
-  local job_id = vim.fn.jobstart(
-    cmd,
-    {
-      on_stderr = on_event,
-      on_stdout = on_event,
-      on_exit = on_event,
-      stdout_buffered = true,
-      stderr_buffered = true,
-    }
-  )
-end
-
-function M.post(type, lines, errorfm)
+local function post(type, lines, errorfm)
 
   post_commands = {
     ["lilypond-book"] = function() M.async("lytex") end,
@@ -178,6 +131,53 @@ function M.post(type, lines, errorfm)
     print(' ')
   end
 
+end
+
+function M.async(type)
+
+  local lines = {""}
+
+  type_commands = {
+    ["lilypond"] = { commands().lilypond.make, commands().lilypond.efm },
+    ["lualatex"] = { commands().lualatex.make, commands().lualatex.efm },
+    ["lilypond-book"] = { commands().lilypondBook.make, commands().lilypondBook.efm },
+    ["lytex"] = { commands().lytex.make, commands().lytex.efm },
+    ["fluidsynth"] = { commands().fluidsynth.make, commands().fluidsynth.efm },
+    ["tmpplayer"] = { commands().tmpplayer.make, commands().tmpplayer.efm },
+  }
+
+  local cmd, errorfm = unpack(type_commands[type] or {})
+
+  if not cmd or not errorfm then
+    do return end
+  end
+
+  local function on_event(job_id, data, event)
+    if event == "stdout" or event == "stderr" then
+      if data then
+        vim.list_extend(lines, data)
+      end
+    end
+
+    if event == "exit" then
+      vim.fn.setqflist({}, " ", {
+        title = type,
+        lines = lines,
+        efm = errorfm,
+      })
+      post(type, lines, errorfm)
+    end
+  end
+  local job_id = vim.fn.jobstart(
+    cmd,
+    {
+      on_stderr = on_event,
+      on_stdout = on_event,
+      on_exit = on_event,
+      stdout_buffered = true,
+      stderr_buffered = true,
+    }
+  )
 end
 
 return M
