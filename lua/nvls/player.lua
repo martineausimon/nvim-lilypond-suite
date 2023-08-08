@@ -13,8 +13,8 @@ local M = {}
 
 function M.convert()
   local ly = Config.fileInfos("lilypond")
-  local audio = Utils.shellescape(ly.audio)
-  local midi = Utils.shellescape(ly.midi)
+  local audio = ly.audio
+  local midi  = ly.midi
   if package.config:sub(1, 1) == '\\' then
     audio_format = "wav"
   end
@@ -154,7 +154,7 @@ function M.open(file,name)
 
 end
 
-function M.quickplayerInputType(sel)
+local function quickplayerInputType(sel)
   local from_top = Utils.extract_from_sel({0, 1, 1, 0}, vim.fn.getpos("'<"))
 
   local function getInputTypeFromSource(source)
@@ -184,7 +184,7 @@ function M.quickplayerInputType(sel)
   end
 end
 
-function M.quickplayerGetTempo(sel)
+local function quickplayerGetTempo(sel)
   local from_top = Utils.extract_from_sel({0, 1, 1, 0}, vim.fn.getpos("'<"))
 
   local function extractTempo(source)
@@ -202,7 +202,7 @@ function M.quickplayerGetTempo(sel)
   end
 end
 
-function M.quickplayerCheckErr(str)
+local function quickplayerCheckErr(str)
   local function countChar(str, char)
     local count = 0
     for _ in str:gmatch(char) do
@@ -235,7 +235,7 @@ function M.quickplayer()
   Utils.clear_tmp_files("lilypond")
   local sel = Utils.extract_from_sel(vim.fn.getpos("'<"), vim.fn.getpos("'>"))
 
-  local err_msg = M.quickplayerCheckErr(sel)
+  local err_msg = quickplayerCheckErr(sel)
   if err_msg then
     Utils.message(err_msg, "ErrorMsg")
     return
@@ -243,9 +243,9 @@ function M.quickplayer()
     Utils.message('Converting to ' .. audio_format)
   end
 
-  local input_type = M.quickplayerInputType(sel)
+  local input_type = quickplayerInputType(sel)
 
-  local tempo = M.quickplayerGetTempo(sel)
+  local tempo = quickplayerGetTempo(sel)
 
   local codeParts = {}
   table.insert(codeParts, "\\score { ")
