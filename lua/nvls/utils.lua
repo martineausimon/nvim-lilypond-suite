@@ -4,18 +4,7 @@ local M = {}
 
 function M.message(str, level)
   level = level or "INFO"
-
-  local levels = {
-    DEBUG = vim.log.levels.DEBUG,
-    ERROR = vim.log.levels.ERROR,
-    INFO = vim.log.levels.INFO,
-    TRACE = vim.log.levels.TRACE,
-    WARN = vim.log.levels.WARN,
-    OFF = vim.log.levels.OFF,
-  }
-
-  local _level = levels[level] or vim.log.levels.INFO
-  vim.notify("[NVLS] " .. str, _level, {})
+  vim.notify("[NVLS] " .. str, vim.log.levels[level], {})
 end
 
 function M.joinpath(parent, filename)
