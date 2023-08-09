@@ -110,7 +110,7 @@ vim.keymap.set('n', version,
       result = handle:read("*a")
       handle:close()
     else
-      Utils.message("LilyPond version not found.", "ErrorMsg")
+      Utils.message("LilyPond version not found.", "ERROR")
       do return end
     end
 
@@ -120,7 +120,7 @@ vim.keymap.set('n', version,
       local c = vim.api.nvim_win_get_cursor(0)
       vim.api.nvim_buf_set_lines(0, c[1] - 1, c[1] - 1, true, { v })
     else
-      Utils.message("LilyPond version not found.", "ErrorMsg")
+      Utils.message("LilyPond version not found.", "ERROR")
     end
   end,
   { noremap = true, silent = true, buffer = true }

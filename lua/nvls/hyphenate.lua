@@ -69,7 +69,7 @@ end
 
 function M.pyphen(input)
   if fn.has('python3') == 0 then
-    Utils.message('python3 is not available', 'ErrorMsg')
+    Utils.message('python3 is not available', 'ERROR')
     do return end
   end
   input = input:gsub("[\n\r]", " ")

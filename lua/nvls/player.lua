@@ -37,7 +37,7 @@ function M.convert()
     M.open(audio, ly.name .. "." .. audio_format)
 
   else
-    Utils.message(string.format("Can't find %s.%s or %s.midi in working directory", ly.name, audio_format, ly.name), "ErrorMsg")
+    Utils.message(string.format("Can't find %s.%s or %s.midi in working directory", ly.name, audio_format, ly.name), "ERROR")
     do return end
   end
 end
@@ -52,7 +52,7 @@ local function init_row()
       if percentage then
         row = math.floor(percentage * win_height / 100)
       else
-        Utils.message('Invalid player row option, fallback to 1', 'ErrorMsg')
+        Utils.message('Invalid player row option, fallback to 1', 'ERROR')
         row = 1
       end
     elseif type(plopts.row) == "number" then
@@ -237,7 +237,7 @@ function M.quickplayer()
 
   local err_msg = quickplayerCheckErr(sel)
   if err_msg then
-    Utils.message(err_msg, "ErrorMsg")
+    Utils.message(err_msg, "ERROR")
     return
   else
     Utils.message('Converting to ' .. audio_format)

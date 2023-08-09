@@ -6,7 +6,7 @@ local M = {}
 function M.open(file, name)
   name = name or nil
   if not Utils.exists(file) then
-    Utils.message(string.format("File %s doesn't exists", name or file), "ErrorMsg")
+    Utils.message(string.format("File %s doesn't exists", name or file), "ERROR")
     do return end
   end
 
@@ -26,7 +26,7 @@ function M.open(file, name)
   elseif cmd then
     vim.fn.jobstart(string.format('%s %s', cmd, file))
   else
-    Utils.message(string.format("Unsupported operating system : %s", os), "ErrorMsg")
+    Utils.message(string.format("Unsupported operating system : %s", os), "ERROR")
   end
 end
 
