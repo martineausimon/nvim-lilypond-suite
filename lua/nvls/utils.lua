@@ -32,13 +32,7 @@ function M.shellescape(file)
     ["%)"] = "\\%)"
   }
 
-  local specialChars
-
-  if os_type == "Windows" then
-    specialChars = windows
-  else
-    specialChars = unix
-  end
+  local specialChars = (os_type == "Windows") and windows or unix
 
   for i, j in pairs(specialChars) do
     file = file:gsub(i, j)
@@ -66,23 +60,13 @@ function M.exists(path)
 end
 
 function M.last_mod(file)
-  local var
-  if io.open(vim.fn.glob(file), "r") == nil then
-    return 0
-  else
-    if os_type == "Darwin" then
-      var = io.popen("stat -f %m " .. file)
-    elseif os_type == "Linux" then
-      var = io.popen("stat -c %Y " .. file)
-    elseif os_type == "Windows" then
-      var = io.popen(string.format("for %%F in (%s) do @echo %%~tF", file))
-    end
-    if var then
-      var = var:read()
-      var = tonumber(var)
-      return var
-    end
-  end
+  if not M.exists(file) then return 0 end
+  local var = (
+    os_type == "Darwin" and io.popen("stat -f %m " .. file) or
+    os_type == "Linux" and io.popen("stat -c %Y " .. file) or
+    os_type == "Windows" and io.popen(string.format("for %%F in (%s) do @echo %%~tF", file))
+  )
+  return var and tonumber(var:read()) or 0
 end
 
 function M.clear_tmp_files(type)
