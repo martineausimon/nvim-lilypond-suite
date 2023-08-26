@@ -44,7 +44,7 @@ function M.SelectMakePrgType()
     file:close()
 
     local useLyLuaTex = string.find(content, "\\usepackage{lyluatex}")
-    local useLilypond = string.find(content, "\\begin{lilypond}")
+    local useLilypond = string.find(content, "\\begin{lilypond}") or string.find(content, "\\lilypond")
 
     if useLyLuaTex then
       Make.async("lualatex")
