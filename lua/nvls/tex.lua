@@ -8,28 +8,29 @@ function M.ToggleLilypondSyntax()
   if g.lytexSyn == 1 then
     g.lytexSyn = 0
     cmd[[set syntax=tex]]
-    return
   else
   M.DetectLilypondSyntax()
   end
 end
 
 function M.DetectLilypondSyntax()
-  if fn.search("\\\\begin{lilypond}[^%]*$", "nw") ~= 0 then
-    b.current_syntax = nil
-    cmd('syntax include @TEX syntax/tex.vim')
+  if fn.search("\\\\begin\\|\\\\lilypond[^%]*$", "nw") ~= 0 then
     b.current_syntax = nil
     cmd('syntax include @lilypond syntax/lilypond.vim')
-    cmd [[ 
-    syntax region litex 
-      \ matchgroup=Snip 
-      \ start="\(%.\{}\)\@<!\\begin{lilypond}" 
+    cmd([[ 
+      syntax region litex 
+      \ start="\\begin{lilypond}" 
       \ end="\\end{lilypond}" 
-      \ containedin=@TEX 
+      \ keepend
       \ contains=@lilypond
-    ]]
-    cmd('filetype plugin on')
-    b.current_syntax = "litex"
+    ]])
+    cmd([[
+      syntax region litex 
+      \ matchgroup=texStatement
+      \ start="\\lilypond{"
+      \ end="}" 
+      \ contains=@lilypond
+    ]])
     g.lytexSyn = 1
   end
 end
