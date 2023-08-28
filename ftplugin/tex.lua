@@ -36,8 +36,6 @@ texAutoCmd(acmd, {
   pattern = "*.tex"
 })
 
-texHi(0, 'Snip', { ctermfg = "white", fg = "white", bold = true })
-
 local cmp = nvls_options.latex.mappings.compile
 local view = nvls_options.latex.mappings.open_pdf
 local lysyn = nvls_options.latex.mappings.lilypond_syntax
