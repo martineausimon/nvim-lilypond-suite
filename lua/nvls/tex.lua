@@ -36,6 +36,7 @@ function M.DetectLilypondSyntax()
       \ end="}" 
       \ contains=@lilypond
     ]])
+    --How to keep [options] with tex syntax ?
     vim.g.lytexSyn = 1
   end
 end
