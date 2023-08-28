@@ -1,5 +1,4 @@
 local texMap      = vim.api.nvim_buf_set_keymap
-local texHi       = vim.api.nvim_set_hl
 local texCmd      = vim.api.nvim_create_user_command
 local texAutoCmd  = vim.api.nvim_create_autocmd
 local g, fn       = vim.g, vim.fn
