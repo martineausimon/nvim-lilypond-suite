@@ -1,61 +1,51 @@
-local b, g, fn, cmd = vim.b, vim.g, vim.fn, vim.cmd
 local Config = require('nvls.config')
 local Make = require('nvls.make')
+local tex = Config.fileInfos("tex").main
 
 local M = {}
 
 function M.ToggleLilypondSyntax()
-  if g.lytexSyn == 1 then
-    g.lytexSyn = 0
-    cmd[[set syntax=tex]]
+  if vim.g.lytexSyn == 1 then
+    vim.g.lytexSyn = 0
+    vim.cmd('set syntax=tex')
   else
   M.DetectLilypondSyntax()
   end
 end
 
+local function has(file, string)
+  local content = io.open(file, "r"):read("*all")
+  return content:find(string, 1, true) ~= nil
+end
+
 function M.DetectLilypondSyntax()
-  if fn.search("\\\\begin\\|\\\\lilypond[^%]*$", "nw") ~= 0 then
-    b.current_syntax = nil
-    cmd('syntax include @lilypond syntax/lilypond.vim')
-    cmd([[ 
+  if has(tex, "\\begin{lilypond}") or has(tex, "\\lilypond") then
+    vim.b.current_syntax = nil
+    vim.cmd('syntax include @lilypond syntax/lilypond.vim')
+    vim.cmd([[ 
       syntax region litex 
       \ start="\\begin{lilypond}" 
       \ end="\\end{lilypond}" 
       \ keepend
       \ contains=@lilypond
     ]])
-    cmd([[
+    vim.cmd([[
       syntax region litex 
       \ matchgroup=texStatement
-      \ start="\\lilypond{"
+      \ start="\\lilypond\s\{}\(\[.\+\]\)\{}{"
       \ end="}" 
       \ contains=@lilypond
     ]])
-    g.lytexSyn = 1
+    vim.g.lytexSyn = 1
   end
 end
 
 function M.SelectMakePrgType()
-  tex = Config.fileInfos("tex")
-
-  local file = io.open(tex.main, "r")
-
-  if file then
-    local content = file:read("*all")
-    file:close()
-
-    local useLyLuaTex = string.find(content, "\\usepackage{lyluatex}")
-    local useLilypond = string.find(content, "\\begin{lilypond}") or string.find(content, "\\lilypond")
-
-    if useLyLuaTex then
-      Make.async("lualatex")
-    elseif useLilypond then
-      Make.async("lilypond-book")
-    else
-      Make.async("lualatex")
-    end
-  end
-
+  local cmd = "lualatex"
+  if (has(tex, "\\begin{lilypond}") or has(tex, "\\lilypond"))
+    and not has(tex, "\\usepackage{lyluatex}")
+  then cmd = "lilypond-book" end
+  Make.async(cmd)
 end
 
 return M
