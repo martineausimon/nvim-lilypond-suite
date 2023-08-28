@@ -22,21 +22,36 @@ function M.DetectLilypondSyntax()
   if has(tex, "\\begin{lilypond}") or has(tex, "\\lilypond") then
     vim.b.current_syntax = nil
     vim.cmd('syntax include @lilypond syntax/lilypond.vim')
-    vim.cmd([[ 
-      syntax region litex 
-      \ start="\\begin{lilypond}" 
-      \ end="\\end{lilypond}" 
-      \ keepend
-      \ contains=@lilypond
+    vim.cmd([[
+      syn match litexCmd "\\lilypond\s\{}"
+      \ nextgroup=litexOpts,litexReg
+      hi def link litexCmd texStatement
     ]])
     vim.cmd([[
-      syntax region litex 
-      \ matchgroup=texStatement
-      \ start="\\lilypond\s\{}\(\[.\+\]\)\{}{"
+      syn region litexOpts
+      \ matchgroup=texDelimiter
+      \ start="\["
+      \ end="\]"
+      \ containedin=litexCmd,lilypond
+      \ contained
+      \ contains=texComment,@texMathZones,@NoSpell
+      \ nextgroup=litexReg
+      ]])
+    vim.cmd([[
+      syntax region litexReg
+      \ matchgroup=Delimiter
+      \ start="{"
       \ end="}" 
+      \ contained
       \ contains=@lilypond
     ]])
-    --How to keep [options] with tex syntax ?
+    vim.cmd([[ 
+      syntax region litexReg
+      \ start="\\begin{lilypond}" 
+      \ end="\\end{lilypond}" 
+      \ contains=@lilypond,litexOpts
+      \ keepend
+    ]])
     vim.g.lytexSyn = 1
   end
 end
