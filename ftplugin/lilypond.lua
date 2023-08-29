@@ -1,9 +1,4 @@
-local fn          = vim.fn
-local expand      = fn.expand
-local lilyMap     = vim.api.nvim_buf_set_keymap
-local lilyHi      = vim.api.nvim_set_hl
-local lilyCmd     = vim.api.nvim_create_user_command
-local lilyWords   = expand('<sfile>:p:h') .. '/../lilywords'
+local lilyWords   = vim.fn.expand('<sfile>:p:h') .. '/../lilywords'
 local Config = require('nvls.config')
 local Utils = require('nvls.utils')
 local Viewer = require('nvls.viewer')
@@ -24,28 +19,28 @@ vim.opt_local.iskeyword:append([[-]])
 vim.opt_local.iskeyword:append([[\]])
 vim.opt_local.complete:append('k')
 
-lilyCmd('LilyPlayer', function()
+vim.api.nvim_create_user_command('LilyPlayer', function()
   Player.convert()
 end, {})
 
-lilyCmd('Viewer', function()
+vim.api.nvim_create_user_command('Viewer', function()
   ly = Config.fileInfos("lilypond")
   local output = nvls_options.lilypond.options.output
   Viewer.open(Utils.change_extension(ly.main, output), string.format('%s.%s', ly.name, output))
 end, {})
 
-lilyCmd('LilyCmp', function()
+vim.api.nvim_create_user_command('LilyCmp', function()
   ly = Config.fileInfos("lilypond")
-  fn.execute('write')
+  vim.fn.execute('write')
   Utils.message(string.format('Compiling %s.ly...', ly.name))
   Make.async("lilypond")
 end, {})
 
-lilyCmd('HyphChLang', function()
+vim.api.nvim_create_user_command('HyphChLang', function()
   require('nvls.hyphenate').quickLangInput()
 end, {})
 
-lilyHi(0, 'QuickFixLine', {bold = true})
+vim.api.nvim_set_hl(0, 'QuickFixLine', {bold = true})
 
 vim.opt.dictionary:append({
   lilyWords .. '/grobs',
@@ -81,47 +76,34 @@ local ins         = nvlsMap.insert_hyphen
 local add         = nvlsMap.add_hyphen
 local deln        = nvlsMap.del_next_hyphen
 local delp        = nvlsMap.del_prev_hyphen
-local nrm         = { noremap = true }
-lilyMap(0, 'n', cmp,    "<cmd>LilyCmp<cr>",                  nrm)
-lilyMap(0, 'n', view,   "<cmd>Viewer<cr>",                   nrm)
-lilyMap(0, 'n', switch, "<C-w>w",                            nrm)
-lilyMap(0, 'i', switch, "<esc><C-w>w",                       nrm)
-lilyMap(0, 'n', play,   "<cmd>LilyPlayer<cr>",               nrm)
-lilyMap(0, 'n', chlang, "<cmd>HyphChLang<cr>",               nrm)
-lilyMap(0, 'n', ins,    "i<space>--<space><esc>",            nrm)
-lilyMap(0, 'n', add,    "a<space>--<space><esc>",            nrm)
-lilyMap(0, 'n', deln,   "/<space>--<space><cr>:nohl<cr>4x",  nrm)
-lilyMap(0, 'n', delp,   "?<space>--<space><cr>:nohl<cr>4x",  nrm)
 
-lilyMap(0, 'v', play,
-  ":lua<space>require('nvls.player').quickplayer()<cr>",
-  { noremap = true, silent = true })
+local write_version = function()
+  local v = io.popen('lilypond -v'):read("*a")
+  if not v then
+    Utils.message("LilyPond version not found.", "ERROR")
+    return
+  end
+  v = string.match(v, "LilyPond%s+(%d+.%d+.%d+)")
+  v = string.format('\\version "%s"', v)
+  local c = vim.api.nvim_win_get_cursor(0)
+  vim.api.nvim_buf_set_lines(0, c[1] - 1, c[1] - 1, true, { v })
+end
 
-lilyMap(0, 'v', hyphenation,
-  ":lua<space>require('nvls.hyphenate').getHyphType()<cr>",
-  { noremap = true, silent = true })
+local map = function(key, cmd, mode)
+  mode = mode or 'n'
+  vim.keymap.set(mode, key, cmd, { noremap = true, silent = true, buffer = true })
+end
 
-vim.keymap.set('n', version,
-  function()
-    local cmd = 'lilypond -v'
-    local handle = io.popen(cmd)
-    local result
-    if handle then
-      result = handle:read("*a")
-      handle:close()
-    else
-      Utils.message("LilyPond version not found.", "ERROR")
-      do return end
-    end
-
-    local v = string.match(result, "LilyPond%s+(%d+.%d+.%d+)")
-    if v then
-      v = "\\version \"" .. v .. "\""
-      local c = vim.api.nvim_win_get_cursor(0)
-      vim.api.nvim_buf_set_lines(0, c[1] - 1, c[1] - 1, true, { v })
-    else
-      Utils.message("LilyPond version not found.", "ERROR")
-    end
-  end,
-  { noremap = true, silent = true, buffer = true }
-)
+map(cmp,    "<cmd>LilyCmp<cr>")
+map(view,   "<cmd>Viewer<cr>")
+map(switch, "<C-w>w")
+map(switch, "<esc><C-w>w", 'i')
+map(play,   "<cmd>LilyPlayer<cr>")
+map(chlang, "<cmd>HyphChLang<cr>")
+map(ins,    "i<space>--<space><esc>")
+map(add,    "a<space>--<space><esc>")
+map(deln,   "/<space>--<space><cr>:nohl<cr>4x")
+map(delp,   "?<space>--<space><cr>:nohl<cr>4x")
+map(play, ":lua<space>require('nvls.player').quickplayer()<cr>", 'v')
+map(hyphenation, ":lua<space>require('nvls.hyphenate').getHyphType()<cr>", 'v')
+map(version, write_version)
