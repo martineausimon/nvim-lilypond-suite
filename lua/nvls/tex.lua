@@ -23,7 +23,7 @@ function M.DetectLilypondSyntax()
     vim.b.current_syntax = nil
     vim.cmd('syntax include @lilypond syntax/lilypond.vim')
     vim.cmd([[
-      syn match litexCmd "\\lilypond\s\{}"
+      syn match litexCmd "\\lilypond\(\s\|\n\)\{}"
       \ nextgroup=litexOpts,litexReg
       hi def link litexCmd texStatement
     ]])
@@ -31,7 +31,7 @@ function M.DetectLilypondSyntax()
       syn region litexOpts
       \ matchgroup=texDelimiter
       \ start="\["
-      \ end="\]"
+      \ end="\]\(\n\|\s\)\{}"
       \ containedin=litexCmd,lilypond
       \ contained
       \ contains=texComment,@texMathZones,@NoSpell
