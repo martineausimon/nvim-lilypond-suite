@@ -11,13 +11,9 @@ function M.joinpath(parent, filename)
   return parent .. package.config:sub(1, 1) .. filename
 end
 
-function M.change_extension(filename, newExtension)
-  local baseName, currentExtension = filename:match("^(.+)(%.%w+)$")
-  if baseName and currentExtension then
-    return baseName .. "." .. newExtension
-  else
-    return nil
-  end
+function M.change_extension(file, new)
+  local base, current = file:match("^(.+)(%.%w+)$")
+  return base and current and base .. "." .. new or nil
 end
 
 function M.shellescape(file)
@@ -80,9 +76,7 @@ function M.clear_tmp_files(type)
       M.joinpath(_file.folder, 'tmp-ly'),
     }
     for _, file in ipairs(to_delete) do
-      if M.exists(file) then
-        os.remove(file)
-      end
+      os.remove(file)
     end
   end
   local tmp_contents = vim.fn.readdir(_file.tmp)
@@ -91,10 +85,13 @@ function M.clear_tmp_files(type)
     table.insert(to_delete, item_path)
   end
   for _, file in ipairs(to_delete) do
-    if M.exists(file) then
-      vim.fn.delete(file, "rf")
-    end
+    vim.fn.delete(file, "rf")
   end
+end
+
+function M.map(key, cmd, mode)
+  mode = mode or 'n'
+  vim.keymap.set(mode, key, cmd, { noremap = true, silent = true, buffer = true })
 end
 
 return M

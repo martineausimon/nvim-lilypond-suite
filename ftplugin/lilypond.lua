@@ -5,6 +5,7 @@ local Viewer = require('nvls.viewer')
 local Make = require('nvls.make')
 local Player = require('nvls.player')
 local nvls_options = require('nvls').get_nvls_options()
+local map = Utils.map
 
 local ly = Config.fileInfos("lilypond")
 
@@ -87,11 +88,6 @@ local write_version = function()
   v = string.format('\\version "%s"', v)
   local c = vim.api.nvim_win_get_cursor(0)
   vim.api.nvim_buf_set_lines(0, c[1] - 1, c[1] - 1, true, { v })
-end
-
-local map = function(key, cmd, mode)
-  mode = mode or 'n'
-  vim.keymap.set(mode, key, cmd, { noremap = true, silent = true, buffer = true })
 end
 
 map(cmp,    "<cmd>LilyCmp<cr>")
