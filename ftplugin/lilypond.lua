@@ -5,7 +5,7 @@ local Viewer = require('nvls.viewer')
 local Make = require('nvls.make')
 local Player = require('nvls.player')
 local nvls_options = require('nvls').get_nvls_options()
-local map = Utils.map
+local map, imap, vmap = Utils.map, Utils.imap, Utils.vmap
 
 local ly = Config.fileInfos("lilypond")
 
@@ -93,13 +93,13 @@ end
 map(cmp,    "<cmd>LilyCmp<cr>")
 map(view,   "<cmd>Viewer<cr>")
 map(switch, "<C-w>w")
-map(switch, "<esc><C-w>w", 'i')
+imap(switch, "<esc><C-w>w")
 map(play,   "<cmd>LilyPlayer<cr>")
 map(chlang, "<cmd>HyphChLang<cr>")
 map(ins,    "i<space>--<space><esc>")
 map(add,    "a<space>--<space><esc>")
 map(deln,   "/<space>--<space><cr>:nohl<cr>4x")
 map(delp,   "?<space>--<space><cr>:nohl<cr>4x")
-map(play, ":lua<space>require('nvls.player').quickplayer()<cr>", 'v')
-map(hyphenation, ":lua<space>require('nvls.hyphenate').getHyphType()<cr>", 'v')
+vmap(play, ":lua<space>require('nvls.player').quickplayer()<cr>")
+vmap(hyphenation, ":lua<space>require('nvls.hyphenate').getHyphType()<cr>")
 map(version, write_version)

@@ -89,9 +89,16 @@ function M.clear_tmp_files(type)
   end
 end
 
-function M.map(key, cmd, mode)
-  mode = mode or 'n'
-  vim.keymap.set(mode, key, cmd, { noremap = true, silent = true, buffer = true })
+function M.map(key, cmd)
+  vim.keymap.set('n', key, cmd, { noremap = true, silent = true, buffer = true })
+end
+
+function M.imap(key, cmd)
+  vim.keymap.set('i', key, cmd, { noremap = true, silent = true, buffer = true })
+end
+
+function M.vmap(key, cmd)
+  vim.keymap.set('v', key, cmd, { noremap = true, silent = true, buffer = true })
 end
 
 return M
