@@ -119,7 +119,7 @@ function M.syntax()
 end
 
 M.get_nvls_options = function()
-  return nvls_options
+  return nvls_options or default
 end
 
 return M
