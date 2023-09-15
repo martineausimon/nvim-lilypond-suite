@@ -14,7 +14,9 @@ function M.ToggleLilypondSyntax()
 end
 
 local function has(file, string)
-  local content = io.open(file, "r"):read("*all")
+  local content = io.open(file, "r")
+  if not content then return end
+  content = content:read("*all")
   return content:find(string, 1, true) ~= nil
 end
 
