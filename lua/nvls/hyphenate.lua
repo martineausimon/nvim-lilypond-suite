@@ -1,19 +1,14 @@
 local Utils = require('nvls.utils')
-local nvls_options = require('nvls').get_nvls_options()
-
-local fn = vim.fn
+local opts = require('nvls').get_nvls_options()
+local plopts, lyopts = opts.player.options, opts.lilypond.options
+local nvls_hyphlang, lang
 
 local M = {}
 
 function M.quickLangInput()
   local Input = require("nui.input")
-  local plopts = nvls_options.player.options
 
-  if nvls_hyphlang then
-    value = nvls_hyphlang
-  else
-    value = nvls_options.lilypond.options.hyphenation_language
-  end
+  local value = nvls_hyphlang or lyopts.hyphenation_language
 
   local input = Input({
     position = "50%",
@@ -33,8 +28,8 @@ function M.quickLangInput()
   }, {
     prompt = "> ",
     default_value = value,
-    on_submit = function(value)
-      nvls_hyphlang = value
+    on_submit = function(v)
+      nvls_hyphlang = v
     end,
   })
 
@@ -46,13 +41,12 @@ function M.quickLangInput()
 end
 
 function M.getHyphType()
-  if nvls_hyphlang then lang = nvls_hyphlang
-  else lang = nvls_options.lilypond.options.hyphenation_language
-  end
-
-  local input = Utils.extract_from_sel(fn.getpos("'<"), fn.getpos("'>"))
-  if lang == "en_DEFAULT" then M.hyphenator(input)
-  else M.pyphen(input)
+  lang = nvls_hyphlang or lyopts.hyphenation_language
+  local input = Utils.extract_from_sel(vim.fn.getpos("'<"), vim.fn.getpos("'>"))
+  if lang == "en_DEFAULT" then
+    M.hyphenator(input)
+  else
+    M.pyphen(input)
   end
 end
 
@@ -61,29 +55,28 @@ function M.hyphenator(input)
   for i, j in pairs(hyphs) do
     input = input:gsub("%f[%w_]" .. i .. "s?%f[^%w_]", j)
   end
-  fn.execute("set paste")
-  fn.execute("normal gvc" .. input)
-  fn.execute("normal g`<")
-  fn.execute("set nopaste")
+  vim.fn.execute("set paste")
+  vim.fn.execute("normal gvc" .. input)
+  vim.fn.execute("normal g`<")
+  vim.fn.execute("set nopaste")
 end
 
 function M.pyphen(input)
-  if fn.has('python3') == 0 then
+  if vim.fn.has('python3') == 0 then
     Utils.message('python3 is not available', 'ERROR')
     do return end
   end
   input = input:gsub("[\n\r]", " ")
-  fn.execute('py3 import pyphen')
-  fn.execute('py3 import vim')
-  fn.execute('py3 import re')
-  fn.execute([[py3 def py_vim_string_replace(str):]] ..
-  [[return str.replace("]] .. input .. [[", b, 1)]])
-  fn.execute([[py3 dic = pyphen.Pyphen(lang=']] .. lang .. [[')]])
-  fn.execute([[py3 a = "]] .. input .. [["]])
-  fn.execute([[py3 b = dic.inserted(a, hyphen = ' -- ')]])
-  fn.execute([[py3 b = re.sub('  -- ', ' ', b)]])
-  fn.execute([[py3 b = re.sub('" -- ', '"', b)]])
-  fn.execute("'<,'>py3do return py_vim_string_replace(line)")
+  vim.fn.execute('py3 import pyphen')
+  vim.fn.execute('py3 import vim')
+  vim.fn.execute('py3 import re')
+  vim.fn.execute(string.format('py3 def py_vim_string_replace(str):return str.replace("%s", b, 1)', input))
+  vim.fn.execute(string.format('py3 dic = pyphen.Pyphen(lang="%s")', lang))
+  vim.fn.execute(string.format('py3 a = "%s"', input))
+  vim.fn.execute([[py3 b = dic.inserted(a, hyphen = ' -- ')]])
+  vim.fn.execute([[py3 b = re.sub('  -- ', ' ', b)]])
+  vim.fn.execute([[py3 b = re.sub('" -- ', '"', b)]])
+  vim.fn.execute("'<,'>py3do return py_vim_string_replace(line)")
 end
 
 return M
