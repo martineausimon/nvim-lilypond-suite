@@ -4,12 +4,10 @@ local Utils = require('nvls.utils')
 local Viewer = require('nvls.viewer')
 local Make = require('nvls.make')
 local Player = require('nvls.player')
-local nvls_options = require('nvls').get_nvls_options()
+local opts = require('nvls').get_nvls_options().lilypond
 local map, imap, vmap = Utils.map, Utils.imap, Utils.vmap
 
-local ly = Config.fileInfos("lilypond")
-
-vim.g.lilywords   = lilyWords
+vim.g.lilywords = lilyWords
 vim.cmd[[let $LILYDICTPATH = g:lilywords]]
 
 vim.bo.autoindent = true
@@ -25,13 +23,13 @@ vim.api.nvim_create_user_command('LilyPlayer', function()
 end, {})
 
 vim.api.nvim_create_user_command('Viewer', function()
-  ly = Config.fileInfos("lilypond")
-  local output = nvls_options.lilypond.options.output
+  local ly = Config.fileInfos("lilypond")
+  local output = opts.options.output
   Viewer.open(Utils.change_extension(ly.main, output), string.format('%s.%s', ly.name, output))
 end, {})
 
 vim.api.nvim_create_user_command('LilyCmp', function()
-  ly = Config.fileInfos("lilypond")
+  local ly = Config.fileInfos("lilypond")
   vim.fn.execute('write')
   Utils.message(string.format('Compiling %s.ly...', ly.name))
   Make.async("lilypond")
@@ -65,18 +63,17 @@ vim.opt.dictionary:append({
   lilyWords .. '/translators'
 })
 
-local nvlsMap     = nvls_options.lilypond.mappings
-local cmp         = nvlsMap.compile
-local view        = nvlsMap.open_pdf
-local switch      = nvlsMap.switch_buffers
-local version     = nvlsMap.insert_version
-local play        = nvlsMap.player
-local hyphenation = nvlsMap.hyphenation
-local chlang      = nvlsMap.hyphenation_change_lang
-local ins         = nvlsMap.insert_hyphen
-local add         = nvlsMap.add_hyphen
-local deln        = nvlsMap.del_next_hyphen
-local delp        = nvlsMap.del_prev_hyphen
+local cmp         = opts.mappings.compile
+local view        = opts.mappings.open_pdf
+local switch      = opts.mappings.switch_buffers
+local version     = opts.mappings.insert_version
+local play        = opts.mappings.player
+local hyphenation = opts.mappings.hyphenation
+local chlang      = opts.mappings.hyphenation_change_lang
+local ins         = opts.mappings.insert_hyphen
+local add         = opts.mappings.add_hyphen
+local deln        = opts.mappings.del_next_hyphen
+local delp        = opts.mappings.del_prev_hyphen
 
 local write_version = function()
   local v = io.popen('lilypond -v'):read("*a")
