@@ -3,7 +3,6 @@ local Utils = require('nvls.utils')
 local nvls_options = require('nvls').get_nvls_options()
 local audio_format = nvls_options.player.options.audio_format
 local midi_synth = nvls_options.player.options.midi_synth
-local win_height = vim.fn.winheight(0)
 
 if midi_synth == "timidity" then
   audio_format = "wav"
@@ -45,113 +44,93 @@ end
 local plopts = nvls_options.player.options
 local row_status
 
-local function init_row()
-  local row
-    if type(plopts.row) == "string" and plopts.row:match("(%d+)%%") then
-      local percentage = tonumber(plopts.row:match("(%d+)%%"))
-      if percentage then
-        row = math.floor(percentage * win_height / 100)
-      else
-        Utils.message('Invalid player row option, fallback to 1', 'ERROR')
-        row = 1
+local function num(value, axis)
+  local factor = axis == "y" and vim.fn.winheight(0) or vim.fn.winwidth(0)
+  local n = tonumber(value)
+  if n then
+    return math.floor(n + 0.5)
+  elseif type(value) == "string" then
+    local percentage = tonumber(value:match("(%d+%.?%d*)%%"))
+    if percentage then
+      local v = percentage / 100
+      if v >= 0 and v <= 1 then
+        return math.floor((v * factor) + 0.5)
       end
-    elseif type(plopts.row) == "number" then
-      row = plopts.row
-    else
-      row = 1
     end
-  return row
-end
-
-local function player_add(row)
-  local decay
-  local init = init_row()
-  if init > win_height / 2 then
-    decay = - 4 + plopts.height
-  else
-    decay = 2 + plopts.height
   end
-  return row + decay
 end
 
-local function player_del(row)
+local function player_adjust(row, add)
   local decay
-  local init = init_row()
-  if init > win_height / 2 then
-    decay = 2 + plopts.height
+  local init = num(plopts.row, 'y')
+  if init > vim.fn.winheight(0) / 2 then
+    decay = add and -4 or 2
   else
-    decay = -4 + plopts.height
+    decay = add and 2 or -4
   end
-  return row + decay
+  return row + decay + num(plopts.height, 'y')
 end
 
-function M.open(file,name)
-  local lilyPopup = require("nui.popup")
-  local event = require("nui.utils.autocmd").event
-  if not row_status then row_status = init_row() end
+function M.open(file, name)
+  if not row_status then row_status = num(plopts.row, 'y') end
 
-  local lilyPlayer = lilyPopup({
-    enter = true,
+  local opts = {
+    style = "minimal",
+    relative = "editor",
+    row = row_status - num(plopts.height, 'y'),
+    col = num(plopts.col, 'x') - num(plopts.width, 'x'),
+    width = num(plopts.width, 'x'),
+    height = num(plopts.height, 'y'),
+    border = plopts.border_style,
     focusable = true,
-    border = {
-      text = { top = "[" .. name .. "]" },
-      style = plopts.border_style,
-    },
-    position = {
-      row = row_status,
-      col = plopts.col,
-    },
-    size = {
-      width = plopts.width,
-      height = plopts.height,
-    },
-    buf_options = {
-      modifiable = false,
-      readonly = true,
-    },
-    win_options = {
-      winhighlight = plopts.winhighlight,
-    },
-  })
+    title = '['.. name .. ']',
+    title_pos = 'center'
+  }
 
-  lilyPlayer:mount()
-  row_status = player_add(row_status)
+  local buf = vim.api.nvim_create_buf(false, true)
+  local win = vim.api.nvim_open_win(buf, false, opts)
 
-  vim.api.nvim_buf_call(lilyPlayer.bufnr, function()
+  row_status = player_adjust(row_status, true)
+
+  vim.api.nvim_buf_set_option(buf, 'modifiable', false)
+  vim.api.nvim_win_set_option(win, 'winhighlight', plopts.winhighlight)
+  vim.api.nvim_set_current_win(win)
+
+  vim.api.nvim_buf_call(buf, function()
     vim.fn.execute("term mpv " .. table.concat(plopts.mpv_flags, " ") .. " " .. file)
     vim.fn.execute('stopinsert')
   end)
 
-  local nrm = { noremap = true }
-  local opt = nvls_options.player.mappings
-  local lyopt = nvls_options.lilypond.mappings
-
-  local function map(key,cmd)
-    lilyPlayer:map('n', key, cmd, nrm)
+  local function map(key, cmd)
+    vim.keymap.set('n', key, cmd, { buffer = buf })
   end
 
-  map(opt.quit, function() lilyPlayer:unmount() end)
+  local opt, lyopt = nvls_options.player.mappings, nvls_options.lilypond.mappings
+
+  map('<esc>', "<cmd>q<cr>")
+  map("p", "ip<cmd>stopinsert<cr>")
+  map(opt.quit, '<cmd>q<cr>')
   map(lyopt.switch_buffers, "<cmd>stopinsert<cr><C-w>w")
-  map(opt.backward,         "i<Left><cmd>stopinsert<cr>")
-  map(opt.forward,          "i<Right><cmd>stopinsert<cr>")
-  map(opt.small_forward,    "i<S-Right><cmd>stopinsert<cr>")
-  map(opt.small_backward,   "i<S-Left><cmd>stopinsert<cr>")
-  map(opt.play_pause,       "ip<cmd>stopinsert<cr>")
-  map(opt.halve_speed,      "i{<cmd>stopinsert<cr>")
-  map(opt.double_speed,     "i}<cmd>stopinsert<cr>")
-  map(opt.decrease_speed,   "i[<cmd>stopinsert<cr>")
-  map(opt.increase_speed,   "i]<cmd>stopinsert<cr>")
-  map(opt.loop,             "il<cmd>stopinsert<cr>")
-  map(':',                  "")
-  map('i',                  "")
+  map(opt.backward, "i<Left><cmd>stopinsert<cr>")
+  map(opt.forward, "i<Right><cmd>stopinsert<cr>")
+  map(opt.small_forward, "i<S-Right><cmd>stopinsert<cr>")
+  map(opt.small_backward, "i<S-Left><cmd>stopinsert<cr>")
+  map(opt.play_pause, "ip<cmd>stopinsert<cr>")
+  map(opt.halve_speed, "i{<cmd>stopinsert<cr>")
+  map(opt.double_speed, "i}<cmd>stopinsert<cr>")
+  map(opt.decrease_speed, "i[<cmd>stopinsert<cr>")
+  map(opt.increase_speed, "i]<cmd>stopinsert<cr>")
+  map(opt.loop, "il<cmd>stopinsert<cr>")
+  map(':', "")
+  map('i', "")
 
-  lilyPlayer:on({ event.TermClose }, function()
-    vim.schedule(function()
-      lilyPlayer:unmount()
-      row_status = player_del(row_status)
-    end)
-  end, { once = true })
-
+  vim.api.nvim_create_autocmd({"WinClosed"}, {
+    buffer = buf,
+    callback = function()
+      vim.api.nvim_buf_delete(buf, { force = true })
+      row_status = player_adjust(row_status, false)
+    end
+  })
 end
 
 local function quickplayerInputType(sel)
@@ -203,9 +182,9 @@ local function quickplayerGetTempo(sel)
 end
 
 local function quickplayerCheckErr(str)
-  local function countChar(str, char)
+  local function countChar(s, char)
     local count = 0
-    for _ in str:gmatch(char) do
+    for _ in s:gmatch(char) do
       count = count + 1
     end
     return count

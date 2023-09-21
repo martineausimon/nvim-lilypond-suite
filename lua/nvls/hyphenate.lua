@@ -1,43 +1,18 @@
 local Utils = require('nvls.utils')
 local opts = require('nvls').get_nvls_options()
-local plopts, lyopts = opts.player.options, opts.lilypond.options
+local lyopts = opts.lilypond.options
 local nvls_hyphlang, lang
 
 local M = {}
 
 function M.quickLangInput()
-  local Input = require("nui.input")
-
   local value = nvls_hyphlang or lyopts.hyphenation_language
-
-  local input = Input({
-    position = "50%",
-    size = {
-      width = 15,
-    },
-    border = {
-      style = plopts.border_style,
-      text = {
-        top = "[Language?]",
-        top_align = "center",
-      },
-    },
-    win_options = {
-      winhighlight = plopts.winhighlight,
-    },
-  }, {
-    prompt = "> ",
-    default_value = value,
-    on_submit = function(v)
-      nvls_hyphlang = v
-    end,
-  })
-
-  input:mount()
-
-  input:map("n", "<Esc>", function()
-    input:unmount()
-  end, { noremap = true })
+  vim.ui.input({
+    prompt = "[NVLS] Hyphen language ? ",
+    default = value
+  }, function(input)
+      nvls_hyphlang = input
+  end)
 end
 
 function M.getHyphType()
