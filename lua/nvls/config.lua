@@ -2,7 +2,6 @@ local Utils = require('nvls.utils')
 local nvls_options = require('nvls').get_nvls_options()
 local audio_format = nvls_options.player.options.audio_format
 local midi_synth = nvls_options.player.options.midi_synth
-local os = vim.loop.os_uname().sysname
 
 local main_folder
 local main_file
@@ -28,6 +27,8 @@ function M.fileInfos(ft)
   end
 
   local name = main:gsub("%.(i?ly)$", ""):gsub("%.tex$", "")
+
+  local os = vim.loop.os_uname().sysname
   if os == "Windows" then
     file.name = name:match('.*\\([^\\]+)$')
   else
