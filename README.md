@@ -198,3 +198,4 @@ If you want to use all the functions (player, hyphenation for various languages.
   * [Others](https://github.com/martineausimon/nvim-lilypond-suite/wiki/4.-Tips-and-tricks#others)
     * [Compile automatically on save](https://github.com/martineausimon/nvim-lilypond-suite/wiki/4.-Tips-and-tricks#compile-automatically-on-save)
     * [Display error messages in a floating window](https://github.com/martineausimon/nvim-lilypond-suite/wiki/4.-Tips-and-tricks#display-error-messages-in-a-floating-window)
+    * [Play any file on your system with the nvls player](https://github.com/martineausimon/nvim-lilypond-suite/wiki/4.-Tips-and-tricks#play-any-file-on-your-system-with-the-nvls-player)
