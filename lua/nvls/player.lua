@@ -72,6 +72,10 @@ local function player_adjust(row, add)
 end
 
 function M.open(file, name)
+  name = name or file
+  local shortname = name:sub(9 - num(plopts.width, 'x'))
+  name = shortname:len() < file:len() and "..." .. shortname or shortname
+
   if not row_status then row_status = num(plopts.row, 'y') end
 
   local opts = {
