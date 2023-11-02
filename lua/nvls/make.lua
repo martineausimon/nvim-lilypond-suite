@@ -26,6 +26,7 @@ local M = {}
 
 local function commands()
   local ly         = Config.fileInfos("lilypond")
+  local ly_folder  = vim.fn.expand(ly.folder)
   local ly_main    = ly.main
   local ly_tmp     = ly.tmp
   local ly_name    = Utils.shellescape(ly.name)
@@ -38,7 +39,7 @@ local function commands()
   local cmds = {
     lilypond = {
       efm = "%f:%l:%c:%m,%f:%l:%m%[^;],%f:%l:%m,%-G%.%#",
-      make = string.format('lilypond %s %s -f %s -o %s %s', backend or '', include_dir and ('-I ' .. include_dir) or '', output, ly_name, ly_main)
+      make = string.format('lilypond %s %s -f %s -o %s %s', backend or '', include_dir and ('-I ' .. include_dir) or '', output, Utils.joinpath(ly_folder, ly_name), ly_main)
     },
     lualatex = {
       efm = "%f:%l:%m,%-G%.%#",
