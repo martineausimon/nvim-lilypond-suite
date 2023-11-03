@@ -25,9 +25,14 @@ function M.DetectLilypondSyntax()
     vim.b.current_syntax = nil
     vim.cmd('syntax include @lilypond syntax/lilypond.vim')
     vim.cmd([[
-      syn match litexCmd "\\lilypond\(\s\|\n\)\{}"
+      syn match litexCmd "\\lilypond\>\(\s\|\n\)\{}"
       \ nextgroup=litexOpts,litexReg
+      \ transparent
       hi def link litexCmd texStatement
+    ]])
+    vim.cmd([[
+      syn match texInputFile "\\lilypondfile\=\(\[.\{-}\]\)\=\s*{.\{-}}"
+      \ contains=texStatement,texInputCurlies,texInputFileOpt
     ]])
     vim.cmd([[
       syn region litexOpts
@@ -45,13 +50,13 @@ function M.DetectLilypondSyntax()
       \ start="{"
       \ end="}" 
       \ contained
-      \ contains=@lilypond
+      \ contains=@lilypond,lilyPitch
     ]])
     vim.cmd([[ 
       syntax region litexReg
       \ start="\\begin{lilypond}" 
       \ end="\\end{lilypond}" 
-      \ contains=@lilypond,litexOpts
+      \ contains=@lilypond,litexOpts,lilyPitch
       \ keepend
     ]])
     vim.g.lytexSyn = 1
