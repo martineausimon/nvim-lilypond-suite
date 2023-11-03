@@ -39,7 +39,6 @@ function M.DetectLilypondSyntax()
       \ matchgroup=texDelimiter
       \ start="\["
       \ end="\]\(\n\|\s\)\{}"
-      \ containedin=litexCmd,lilypond
       \ contained
       \ contains=texComment,@texMathZones,@NoSpell
       \ nextgroup=litexReg
@@ -50,13 +49,13 @@ function M.DetectLilypondSyntax()
       \ start="{"
       \ end="}" 
       \ contained
-      \ contains=@lilypond,lilyPitch
+      \ contains=@lilypond,@lilyMatchGroup
     ]])
     vim.cmd([[ 
       syntax region litexReg
       \ start="\\begin{lilypond}" 
       \ end="\\end{lilypond}" 
-      \ contains=@lilypond,litexOpts,lilyPitch
+      \ contains=litexOpts,@lilypond,@lilyMatchGroup
       \ keepend
     ]])
     vim.g.lytexSyn = 1
