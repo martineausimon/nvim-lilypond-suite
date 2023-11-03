@@ -72,7 +72,7 @@ syn region lilyMatcher
   \ fold
 
 if g:nvls_language != "nohl"
-  syn match  lilyFing "\s\{}[-_^\\]\d\+" contained nextgroup=lilyFing
+  syn match lilyFing "\s\{}[-_^\\]\d\+" contained nextgroup=lilyFing
 endif
 
 syn match lilyChordBass "\/" contained containedin=@lilyPitchGroup nextgroup=lilyPitch
@@ -110,10 +110,10 @@ if g:nvls_language != "nohl"
         \ nextgroup=lilyChordExt,lilyChordBass
         \ contains=lilyChordStart
 
-  syn match lilyChordExt "\.\v([2-9]|1[0-3])(\+|-)=(\A|\n)"me=e-1 contained 
+  syn match lilyChordExt "\v(\.|\^)([2-9]|1[0-3])(\+|-)=(\A|\n)"me=e-1 contained 
         \ containedin=lilyChordNat,lilyChordExt
         \ nextgroup=lilyChordExt,lilyChordBass
-        \ contains=lilyDots
+        \ contains=lilyChordLink
 end
 
 syn match lilyClef "\<\v(C|F|G|G2|GG|alto(varC)?|baritone(var(C|F))?|bass|blackmensural-c[1-5]|french|hufnagel-do-fa|hufnagel-do[1-3]|hufnagel-fa[1-2]|kievan-do|medicaea-do[1-3]|medicaea-fa[1-2]|mensural-(f|g|c[1-5])|mezzosoprano|moderntab|neomensural-c[1-5]|percussion|petrucci-c[1-5]|petrucci-f[2-5]?|petrucci-g(1|2)?|soprano|subbass|tab|tenor(G|varC)?|treble|var(C|baritone|percussion)|vaticana-do[1-3]|vaticana-fa[1-2]|violin)(\A|\n)"me=e-1
@@ -124,35 +124,36 @@ syn match lilyPitchLanguageNames "\<\v(arabic|catal(an|à)|deutsch|english|espa(
 
 syn match lilyAccidentalsStyle "\v<(choral(-cautionary)?|default|dodecaphonic(-first|-no-repeat)?|forget|(neo-)?modern(-voice)?(-cautionary)?|modern|no-reset|piano(-cautionary)?|teaching|voice)(\A|\n)"me=e-1
 
-syn match lilyGrob     "\<\u\a\+"
+syn match lilyGrob "\<\u\a\+"
 
 syn match lilyDefineVar "\a\(\(\a\|\-\|_\)\{}\a\)\{}\s\{}="he=e-1 contains=lilySpecial
 syn match lilyVar "\(\s\|\.\)\=\s\{}\(\l\|\u\|\-\|X\|Y\)\{}\(X\|Y\|\l\)\+" contained nextgroup=lilyVar,lilyDefineVar contains=lilyDots
 syn match lilyDefineVar "\l\(\l\|\-\)\+\l\+\." contains=lilyDots nextgroup=lilyVar,lilyContext
 syn match lilyDots "\." contained
+syn match lilyChordLink "\(\.\|\^\)" contained
 
-syn match lilyGrob     "\<\u\a\+\n\{}\s\{}\." nextgroup=lilyVar contains=lilyDots
+syn match lilyGrob "\<\u\a\+\n\{}\s\{}\." nextgroup=lilyVar contains=lilyDots
 
 syn match lilyContext "\v<\\?(Choir|Drum|Grand|Mensural|One|Petrucci|Piano|Rhythmic|Tab|Vaticana|GregorianTranscription|Kievan)?Staff(Group)?>" nextgroup=lilyDots
 syn match lilyContext "\v<\\?((Chord|Note)?Names|(Devnull|Dynamics|FiguredBass|FretBoards|Global|Lyrics|Score)|(Cue|Drum|Gregorian|Kievan|Mensural|Null|Tab|Vaticana)?Voice)|((Ancient)?(RemoveEmpty))?(Drums|Rythmic|Tab)?(StaffContext)?>" nextgroup=lilyDots
 
 syn match lilyTranslator "\u\l\+\(_\a\+\)\{}\v(_engraver|_performer|_translator)"
 
-syn match  lilyScheme  "\(#['`]\?\|\$\)[^'\"(0-9 ]*[\n ]"ms=s+1
-syn match  lilyBoolean "\v(##f|##t|#f|#t)(\A|\n)"
+syn match lilyScheme "\(#['`]\?\|\$\)[^'\"(0-9 ]*[\n ]"ms=s+1
+syn match lilyBoolean "\v(##f|##t|#f|#t)(\A|\n)"
 syn region lilyString  start=/[_^-]\?"/  end=/"/   skip=/\\"/
 syn region lilyComment start="%{" skip="%$" end="%}"
 syn region lilyComment start="%\([^{]\|$\)" end="$"
-syn match  lilyDynamic "\\[<!>\\]"
+syn match lilyDynamic "\\[<!>\\]"
 
 if g:nvls_language == "nohl"
-  syn match  lilyNumber       "[-_^.]\?\(\-\.\|\)\d\+[.]\{,3}" nextgroup=lilyChordNat,lilyArticulation,lilyFing
+  syn match lilyNumber "[-_^.]\?\(\-\.\|\)\d\+[.]\{,3}" nextgroup=lilyChordNat,lilyArticulation,lilyFing
 else 
-  syn match  lilyNumber       "[-_^.]\?\(\-\.\|\)\d\+[.]\?" nextgroup=@lilyMatchGroup,lilyChordNat,lilyArticulation,lilyFing
+  syn match lilyNumber "[-_^.]\?\(\-\.\|\)\d\+[.]\?" nextgroup=@lilyMatchGroup,lilyChordNat,lilyArticulation,lilyFing
 end
 
-syn match  lilySpecial "[-_^]\?[(~)]\|[(*)]\|[(=)]"
-syn match  lilyArticulation "\s\{}[-_^][-_^+|>|.]"
+syn match lilySpecial "[-_^]\?[(~)]\|[(*)]\|[(=)]"
+syn match lilyArticulation "\s\{}[-_^][-_^+|>|.]"
 
 syn match Error " "
 syn match Error ">>"
@@ -220,6 +221,7 @@ hi link lilyFing              lilySpecial
 hi link lilyChordBass         lilySpecial
 hi link lilyChordStart        lilySpecial
 hi link lilyDots              lilySpecial
+hi link lilyChordLink         lilySpecial
 hi link lilyChordNat          lilyChord
 hi link lilyChordExt          lilyChord
 
