@@ -7,8 +7,38 @@ function M.message(str, level)
   vim.notify("[NVLS] " .. str, vim.log.levels[level], {})
 end
 
+function M.has(file, string)
+  local content = io.open(file, "r")
+  if not content then return end
+  content = content:read("*all")
+  return content:find(string, 1, true) ~= nil
+end
+
+
 function M.joinpath(parent, filename)
   return parent .. package.config:sub(1, 1) .. filename
+end
+
+function M.remove_path(file)
+  local out
+  if os_type == "Windows" then
+    out = file:match('.*\\([^\\]+)$')
+  else
+    out = file:match('.*/([^/]+)$')
+  end
+  return out
+end
+
+function M.remove_extension(file)
+  local parts = {}
+  for part in file:gmatch("([^%.]+)") do
+    table.insert(parts, part)
+  end
+  if #parts > 1 then
+    table.remove(parts)
+  end
+  local out = table.concat(parts, ".")
+  return out
 end
 
 function M.change_extension(file, new)
@@ -16,7 +46,7 @@ function M.change_extension(file, new)
   return base and current and base .. "." .. new or nil
 end
 
-function M.shellescape(file)
+function M.shellescape(file, escape)
   local windows = {
     [" "] = "^ ",
     ["%("] = "^%(",
@@ -30,8 +60,14 @@ function M.shellescape(file)
 
   local specialChars = (os_type == "Windows") and windows or unix
 
-  for i, j in pairs(specialChars) do
-    file = file:gsub(i, j)
+  if escape then
+    for i, j in pairs(specialChars) do
+      file = file:gsub(i, j)
+    end
+  else
+    for i, j in pairs(specialChars) do
+      file = file:gsub(j, i)
+    end
   end
 
   return file
@@ -65,10 +101,10 @@ function M.last_mod(file)
   return var and tonumber(var:read()) or 0
 end
 
-function M.clear_tmp_files(type)
-  local _file = require('nvls.config').fileInfos(type)
+function M.clear_tmp_files()
+  local _file = require('nvls.config').fileInfos()
   local to_delete = {}
-  if type == "tex" then
+  if vim.bo.filetype == "tex" or vim.bo.filetype == "texinfo" then
     to_delete = {
       M.change_extension(_file.main, 'log'),
       M.change_extension(_file.main, 'aux'),
