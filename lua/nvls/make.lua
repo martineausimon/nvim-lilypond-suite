@@ -18,8 +18,11 @@ if type(include_dir) == "table" then
 end
 
 local backend = nvls_options.lilypond.options.backend or nil
+local lb_backend
+
 if backend then
   backend = "-dbackend=" .. backend .. " "
+  lb_backend = [[--process "lilypond ]] .. backend .. [["]]
 end
 
 local M = {}
@@ -47,7 +50,7 @@ local function commands()
     },
     lilypondBook = {
       efm = '%+G%f:%l:%c:, %f:%l:%c: %m,%-G%.%#',
-      make = string.format('lilypond-book %s --output=%s %s', include_dir and ('-I ' .. include_dir) or '', tex_tmp, vim.fn.expand(tex_main))
+      make = string.format('lilypond-book %s %s --output=%s %s', lb_backend or '', include_dir and ('-I ' .. include_dir) or '', tex_tmp, vim.fn.expand(tex_main))
     },
     lytex = {
       efm = "%f:%l:%m,%-G%.%#",
