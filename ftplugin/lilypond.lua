@@ -1,7 +1,6 @@
 local lilyWords   = vim.fn.expand('<sfile>:p:h') .. '/../lilywords'
 local Config = require('nvls.config')
 local Utils = require('nvls.utils')
-local Viewer = require('nvls.viewer')
 local Make = require('nvls.make')
 local Player = require('nvls.player')
 local opts = require('nvls').get_nvls_options().lilypond
@@ -22,16 +21,10 @@ vim.api.nvim_create_user_command('LilyPlayer', function()
   Player.convert()
 end, {})
 
-vim.api.nvim_create_user_command('Viewer', function()
-  local ly = Config.fileInfos("lilypond")
-  local output = opts.options.output
-  Viewer.open(Utils.change_extension(ly.main, output), string.format('%s.%s', ly.name, output))
-end, {})
-
 vim.api.nvim_create_user_command('LilyCmp', function()
-  local ly = Config.fileInfos("lilypond")
+  local file = Config.fileInfos()
   vim.fn.execute('write')
-  Utils.message(string.format('Compiling %s.ly...', ly.name))
+  Utils.message(string.format('Compiling %s...', Utils.shellescape(Utils.remove_path(file.main)), false))
   Make.async("lilypond")
 end, {})
 
