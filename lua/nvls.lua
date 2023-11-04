@@ -34,10 +34,27 @@ local default = {
       lilypond_syntax = "<F3>"
     },
     options = {
+      lilypond_book_flags = nil,
       clean_logs = false,
       main_file = "main.tex",
       main_folder = "%:p:h",
       include_dir = nil,
+      lilypond_syntax_au = "BufEnter",
+      pdf_viewer = nil,
+    },
+  },
+  texinfo = {
+    mappings = {
+      compile = "<F5>",
+      open_pdf = "<F6>",
+      lilypond_syntax = "<F3>"
+    },
+    options = {
+      lilypond_book_flags = "--pdf",
+      clean_logs = false,
+      main_file = "main.texi",
+      main_folder = "%:p:h",
+      --include_dir = nil,
       lilypond_syntax_au = "BufEnter",
       pdf_viewer = nil,
     },
@@ -121,5 +138,10 @@ end
 M.get_nvls_options = function()
   return nvls_options or default
 end
+
+vim.api.nvim_create_user_command('Viewer', function()
+  local file = require('nvls.config').fileInfos()
+  require('nvls.viewer').open(file.pdf, file.name .. ".pdf")
+end, {})
 
 return M
