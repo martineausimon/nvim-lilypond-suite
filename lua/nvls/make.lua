@@ -12,57 +12,57 @@ if midi_synth == "timidity" then
   audio_format = "wav"
 end
 
-local include_dir = nvls_options.lilypond.options.include_dir or nil
+local include_dir = nvls_options.lilypond.options.include_dir or ''
+
 if type(include_dir) == "table" then
-  include_dir = table.concat(include_dir, " -I ")
-end
-
-local backend = nvls_options.lilypond.options.backend or nil
-local lb_backend
-
-if backend then
-  backend = "-dbackend=" .. backend .. " "
-  lb_backend = [[--process "lilypond ]] .. backend .. [["]]
+  include_dir = "-I " .. table.concat(include_dir, " -I ")
+elseif include_dir ~= '' then
+  include_dir = "-I " .. include_dir
 end
 
 local M = {}
 
 local function commands()
-  local ly         = Config.fileInfos("lilypond")
-  local ly_folder  = vim.fn.expand(ly.folder)
-  local ly_main    = ly.main
-  local ly_tmp     = ly.tmp
-  local ly_name    = Utils.shellescape(ly.name)
-  local tex        = Config.fileInfos("tex")
-  local tex_folder = vim.fn.expand(tex.folder)
-  local tex_main   = tex.main
-  local tex_tmp    = tex.tmp
-  local tex_name   = Utils.shellescape(tex.name)
+  local file    = Config.fileInfos()
+  local folder  = vim.fn.expand(file.folder)
+  local main    = file.main
+  local tmp     = file.tmp
+  local name    = Utils.shellescape(file.name, true)
+  local backend = file.backend
+  local lb_flags   = file.lb_flags
 
   local cmds = {
     lilypond = {
       efm = "%f:%l:%c:%m,%f:%l:%m%[^;],%f:%l:%m,%-G%.%#",
-      make = string.format('lilypond %s %s -f %s -o %s %s', backend or '', include_dir and ('-I ' .. include_dir) or '', output, Utils.joinpath(ly_folder, ly_name), ly_main)
+      make = string.format('lilypond %s %s -f %s -o %s %s', backend, include_dir, output, Utils.joinpath(folder, name), main)
     },
     lualatex = {
       efm = "%f:%l:%m,%-G%.%#",
-      make = string.format('lualatex --file-line-error --output-directory=%s --shell-escape --interaction=nonstopmode %s', tex_folder, tex_main)
+      make = string.format('lualatex --file-line-error --output-directory=%s --shell-escape --interaction=nonstopmode %s', folder, main)
+    },
+    texinfo = {
+      efm = "%f:%l:%m,%-G%.%#",
+      make = string.format('texi2pdf --output=%s %s', Utils.change_extension(main, "pdf"), main)
     },
     lilypondBook = {
       efm = '%+G%f:%l:%c:, %f:%l:%c: %m,%-G%.%#',
-      make = string.format('lilypond-book %s %s --output=%s %s', lb_backend or '', include_dir and ('-I ' .. include_dir) or '', tex_tmp, vim.fn.expand(tex_main))
+      make = string.format('lilypond-book %s %s %s --output=%s %s', lb_flags, backend, include_dir, tmp, vim.fn.expand(main))
     },
     lytex = {
       efm = "%f:%l:%m,%-G%.%#",
-      make = string.format('cd %s && lualatex --file-line-error --output-directory=%s --shell-escape --interaction=nonstopmode %s', tex_tmp, tex_folder, Utils.shellescape(Utils.joinpath(tex_tmp, tex_name .. '.tex')))
+      make = string.format('cd %s && lualatex --file-line-error --output-directory=%s --shell-escape --interaction=nonstopmode %s', tmp, folder, Utils.shellescape(Utils.joinpath(tmp, name .. '.tex'), true))
+    },
+    lytexi = {
+      efm = "%f:%l:%m,%-G%.%#",
+      make = string.format('cd %s && texi2pdf --output=%s %s', tmp, Utils.change_extension(main, "pdf"), Utils.shellescape(Utils.joinpath(tmp, name .. '.texi'), true))
     },
     fluidsynth = {
       efm = " ",
       make = (function()
         if midi_synth == "timidity" then
-          return string.format('timidity %s -Ow -o %s', ly.midi, ly.audio)
+          return string.format('timidity %s -Ow -o %s', file.midi, file.audio)
         else
-          return string.format('fluidsynth -T raw -F - %s -s | ffmpeg -f s32le -i - %s', ly.midi, ly.audio)
+          return string.format('fluidsynth -T raw -F - %s -s | ffmpeg -f s32le -i - %s', file.midi, file.audio)
         end
       end)()
     },
@@ -70,9 +70,9 @@ local function commands()
       efm = "%-G%.%#",
       make = (function()
         if midi_synth == "timidity" then
-          return string.format('timidity %s -Ow -o %s', Utils.joinpath(ly_tmp, "tmp.midi"), Utils.joinpath(ly_tmp, "tmp.wav"))
+          return string.format('timidity %s -Ow -o %s', Utils.joinpath(tmp, "tmp.midi"), Utils.joinpath(tmp, "tmp.wav"))
         else
-          return string.format('fluidsynth -T raw -F - %s -s | ffmpeg -f s32le -i - %s', Utils.joinpath(ly_tmp, "tmp.midi"), Utils.joinpath(ly_tmp, "tmp." .. audio_format))
+          return string.format('fluidsynth -T raw -F - %s -s | ffmpeg -f s32le -i - %s', Utils.joinpath(tmp, "tmp.midi"), Utils.joinpath(tmp, "tmp." .. audio_format))
         end
       end)()
     },
@@ -80,13 +80,13 @@ local function commands()
 
   local win_cmds = {
     lytex = {
-      make = string.format('cd /d %s & lualatex --file-line-error --output-directory=%s --shell-escape --interaction=nonstopmode %s', tex_tmp, tex_folder, Utils.shellescape(Utils.joinpath(tex_tmp, tex_name .. '.tex')))
+      make = string.format('cd /d %s & lualatex --file-line-error --output-directory=%s --shell-escape --interaction=nonstopmode %s', tmp, folder, Utils.shellescape(Utils.joinpath(tmp, name .. '.tex'), true))
     },
     fluidsynth = {
-      make = string.format('timidity %s -Ow -o %s', Utils.joinpath(ly_tmp, "tmp.midi"), Utils.joinpath(ly_tmp, "tmp." .. audio_format))
+      make = string.format('timidity %s -Ow -o %s', Utils.joinpath(tmp, "tmp.midi"), Utils.joinpath(tmp, "tmp." .. audio_format))
     },
     tmpplayer = {
-      make = string.format('timidity %s -Ow -o %s', Utils.joinpath(ly_tmp, "tmp.midi"), Utils.joinpath(ly_tmp, "tmp." .. audio_format))
+      make = string.format('timidity %s -Ow -o %s', Utils.joinpath(tmp, "tmp.midi"), Utils.joinpath(tmp, "tmp." .. audio_format))
     }
   }
 
@@ -103,15 +103,21 @@ local post_commands = {}
 local function post(type, lines, errorfm)
 
   post_commands = {
-    ["lilypond-book"] = function() M.async("lytex") end,
+    ["lilypond-book"] = function()
+      if vim.bo.filetype == "tex" then
+        M.async("lytex")
+      elseif vim.bo.filetype == "texinfo" then
+        M.async("lytexi")
+      end
+    end,
     ["fluidsynth"] = function()
-      local file = Config.fileInfos("lilypond")
+      local file = Config.fileInfos()
       vim.fn.execute('stopinsert')
       print(' ')
       Player.open(file.audio, file.name .. "." .. audio_format)
     end,
     ["tmpplayer"] = function()
-      local file = Config.fileInfos("lilypond")
+      local file = Config.fileInfos()
       vim.fn.execute('stopinsert')
       print(' ')
       Player.open(Utils.joinpath(file.tmp, 'tmp.' .. audio_format), "QuickPlayer")
@@ -144,8 +150,10 @@ function M.async(type)
   type_commands = {
     ["lilypond"] = { commands().lilypond.make, commands().lilypond.efm },
     ["lualatex"] = { commands().lualatex.make, commands().lualatex.efm },
+    ["texinfo"] = { commands().texinfo.make, commands().texinfo.efm },
     ["lilypond-book"] = { commands().lilypondBook.make, commands().lilypondBook.efm },
     ["lytex"] = { commands().lytex.make, commands().lytex.efm },
+    ["lytexi"] = { commands().lytexi.make, commands().lytexi.efm },
     ["fluidsynth"] = { commands().fluidsynth.make, commands().fluidsynth.efm },
     ["tmpplayer"] = { commands().tmpplayer.make, commands().tmpplayer.efm },
   }
