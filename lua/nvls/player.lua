@@ -11,9 +11,9 @@ end
 local M = {}
 
 function M.convert()
-  local ly = Config.fileInfos("lilypond")
-  local audio = ly.audio
-  local midi  = ly.midi
+  local file = Config.fileInfos()
+  local audio = file.audio
+  local midi  = file.midi
   if package.config:sub(1, 1) == '\\' then
     audio_format = "wav"
   end
@@ -24,19 +24,19 @@ function M.convert()
     local audio_last = Utils.last_mod(audio)
 
     if (audio_last > midi_last) then
-      M.open(audio, ly.name .. "." .. audio_format)
+      M.open(audio, file.name .. "." .. audio_format)
 
     else
-      Utils.message(string.format('Converting %s.midi to %s...', ly.name, audio_format))
+      Utils.message(string.format('Converting %s.midi to %s...', file.name, audio_format))
       os.remove(audio)
       require('nvls.make').async("fluidsynth")
     end
 
   elseif Utils.exists(audio) then
-    M.open(audio, ly.name .. "." .. audio_format)
+    M.open(audio, file.name .. "." .. audio_format)
 
   else
-    Utils.message(string.format("Can't find %s.%s or %s.midi in working directory", ly.name, audio_format, ly.name), "ERROR")
+    Utils.message(string.format("Can't find %s.%s or %s.midi in working directory", file.name, audio_format, file.name), "ERROR")
     do return end
   end
 end
@@ -215,7 +215,7 @@ local function quickplayerCheckErr(str)
 end
 
 function M.quickplayer()
-  Utils.clear_tmp_files("lilypond")
+  Utils.clear_tmp_files()
   local sel = Utils.extract_from_sel(vim.fn.getpos("'<"), vim.fn.getpos("'>"))
 
   local err_msg = quickplayerCheckErr(sel)
@@ -237,7 +237,7 @@ function M.quickplayer()
   table.insert(codeParts, "}")
   local code = table.concat(codeParts)
 
-  local ly = Config.fileInfos("lilypond")
+  local ly = Config.fileInfos()
   local ly_file = Utils.joinpath(ly.tmp, 'tmp.ly')
   local tmpfile = io.open(ly_file, 'w')
   if tmpfile then
