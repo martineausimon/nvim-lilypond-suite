@@ -1,18 +1,12 @@
 local Config = require('nvls.config')
 local Utils = require('nvls.utils')
-local Viewer = require('nvls.viewer')
 
 local opts = require('nvls').get_nvls_options().latex
 
-vim.api.nvim_create_user_command('Viewer', function()
-  local tex = Config.fileInfos("tex")
-  Viewer.open(tex.pdf, tex.name .. ".pdf")
-end, {})
-
 vim.api.nvim_create_user_command('LaTexCmp',  function()
   vim.fn.execute('write')
-  local tex = Config.fileInfos("tex")
-  Utils.message(string.format('Compiling %s.tex...', tex.name))
+  local file = Config.fileInfos()
+  Utils.message(string.format('Compiling %s...', Utils.remove_path(file.main)))
   require('nvls.tex').SelectMakePrgType()
 end, {})
 
@@ -35,7 +29,7 @@ Utils.map(opts.mappings.open_pdf, "<cmd>Viewer<cr>")
 
 if opts.options.clean_logs or vim.g.nvls_clean_tex_files == 1 then
   vim.api.nvim_create_autocmd( 'VimLeave', {
-    callback = function() Utils.clear_tmp_files("tex") end,
+    callback = function() Utils.clear_tmp_files() end,
     group = vim.api.nvim_create_augroup(
       "RemoveOutFiles",
       { clear = true }
