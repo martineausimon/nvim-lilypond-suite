@@ -1,6 +1,7 @@
 local Config = require('nvls.config')
 local Make = require('nvls.make')
-local tex = Config.fileInfos("tex").main
+local Utils = require('nvls.utils')
+local main = Config.fileInfos().main
 
 local M = {}
 
@@ -13,15 +14,8 @@ function M.ToggleLilypondSyntax()
   end
 end
 
-local function has(file, string)
-  local content = io.open(file, "r")
-  if not content then return end
-  content = content:read("*all")
-  return content:find(string, 1, true) ~= nil
-end
-
 function M.DetectLilypondSyntax()
-  if has(tex, "\\begin{lilypond}") or has(tex, "\\lilypond") then
+  if Utils.has(main, "\\begin{lilypond}") or Utils.has(main, "\\lilypond") then
     vim.b.current_syntax = nil
     vim.cmd('syntax include @lilypond syntax/lilypond.vim')
     vim.cmd([[
@@ -64,8 +58,8 @@ end
 
 function M.SelectMakePrgType()
   local cmd = "lualatex"
-  if (has(tex, "\\begin{lilypond}") or has(tex, "\\lilypond"))
-    and not has(tex, "\\usepackage{lyluatex}")
+  if (Utils.has(main, "\\begin{lilypond}") or Utils.has(main, "\\lilypond"))
+    and not Utils.has(main, "\\usepackage{lyluatex}")
   then cmd = "lilypond-book" end
   Make.async(cmd)
 end
