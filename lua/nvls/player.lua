@@ -135,6 +135,13 @@ function M.open(file, name)
       row_status = player_adjust(row_status, false)
     end
   })
+  vim.api.nvim_create_autocmd({"TermClose"}, {
+    buffer = buf,
+    callback = function()
+      vim.api.nvim_buf_delete(buf, { force = true })
+      row_status = player_adjust(row_status, false)
+    end
+  })
 end
 
 local function quickplayerInputType(sel)
