@@ -166,6 +166,7 @@
 \with-dimensions
 \with-link
 \with-outline
+\with-string-transformer
 \with-url
 \woodwind-diagram
 \wordwrap-field
