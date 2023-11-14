@@ -116,8 +116,6 @@ if g:nvls_language != "nohl"
         \ contains=lilyChordLink
 end
 
-syn match lilyClef "\<\v(C|F|G|G2|GG|alto(varC)?|baritone(var(C|F))?|bass|blackmensural-c[1-5]|french|hufnagel-do-fa|hufnagel-do[1-3]|hufnagel-fa[1-2]|kievan-do|medicaea-do[1-3]|medicaea-fa[1-2]|mensural-(f|g|c[1-5])|mezzosoprano|moderntab|neomensural-c[1-5]|percussion|petrucci-c[1-5]|petrucci-f[2-5]?|petrucci-g(1|2)?|soprano|subbass|tab|tenor(G|varC)?|treble|var(C|baritone|percussion)|vaticana-do[1-3]|vaticana-fa[1-2]|violin)(\A|\n)"me=e-1
-
 syn match lilyRepeatType "\<\v(percent|segno|tremolo|unfold|volta)(\A|\n)"me=e-1
 
 syn match lilyPitchLanguageNames "\<\v(arabic|catal(an|à)|deutsch|english|espa(n|ñ)ol|français|italiano|nederlands|norsk|portugu(e|ê)s|suomi|svenska|vlaams)(\A|\n)"
@@ -133,6 +131,8 @@ syn match lilyDots "\." contained
 syn match lilyChordLink "\(\.\|\^\)" contained
 
 syn match lilyGrob "\<\u\a\+\n\{}\s\{}\." nextgroup=lilyVar contains=lilyDots
+
+syn match lilyClef "\<\v(C|F|G|GG|alto(varC)?|baritone(var(C|F))?|bass|french|hufnagel-do-fa|kievan-do|mezzosoprano|moderntab|percussion|petrucci-(f|g)|soprano|subbass|tab|tenor(G|varC)?|treble|var(C|baritone|percussion)|violin)(\A|\n)"me=e-1
 
 syn match lilyContext "\v<\\?(Choir|Drum|Grand|Mensural|One|Petrucci|Piano|Rhythmic|Tab|Vaticana|GregorianTranscription|Kievan)?Staff(Group)?>" nextgroup=lilyDots
 syn match lilyContext "\v<\\?((Chord|Note)?Names|(Devnull|Dynamics|FiguredBass|FretBoards|Global|Lyrics|Score)|(Cue|Drum|Gregorian|Kievan|Mensural|Null|Tab|Vaticana)?Voice)|((Ancient)?(RemoveEmpty))?(Drums|Rythmic|Tab)?(StaffContext)?>" nextgroup=lilyDots
