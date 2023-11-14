@@ -1,6 +1,6 @@
 # nvim-lilypond-suite
 
-This is a plugin ([Neovim](https://github.com/neovim/neovim) only) for writing [LilyPond](https://lilypond.org/index.html) scores, with asynchronous make, midi/MP3 player, "hyphenation" function for lyrics, fast syntax highlighting... This repository also contains an ftplugin for **LaTeX** files which allows embedded LilyPond syntax highlighting, and makeprg which support `lilypond-book` or `lyluatex` package out of the box.
+This is a plugin ([Neovim](https://github.com/neovim/neovim) only) for writing [LilyPond](https://lilypond.org/index.html) scores, with asynchronous make, midi/MP3 player, "hyphenation" function for lyrics, fast syntax highlighting... This repository also contains ftplugin files for **LaTeX** and **Texinfo** files which allows embedded LilyPond syntax highlighting, and makeprg which support `lilypond-book` or `lyluatex` package out of the box.
 
 <p align=center>
    <a href="https://github.com/martineausimon/nvim-lilypond-suite/wiki/1.-Installation">Installation</a> • <a href="https://github.com/martineausimon/nvim-lilypond-suite/wiki/2.-Configuration">Configuration</a> • <a href="https://github.com/martineausimon/nvim-lilypond-suite/wiki/3.-Usage">Usage</a> • <a href="https://github.com/martineausimon/nvim-lilypond-suite/wiki/4.-Tips-and-tricks">Tips & tricks</a>
@@ -44,7 +44,7 @@ If you want to use all the functions (player, hyphenation for various languages.
 ```
 
 <details>
-<summary>With config</summary>
+<summary>With config (click to expand)</summary>
 
 ```lua
 { 
@@ -192,3 +192,4 @@ If you want to use all the functions (player, hyphenation for various languages.
     * [Display error messages in a floating window](https://github.com/martineausimon/nvim-lilypond-suite/wiki/4.-Tips-and-tricks#display-error-messages-in-a-floating-window)
     * [Play any file on your system with the nvls player](https://github.com/martineausimon/nvim-lilypond-suite/wiki/4.-Tips-and-tricks#play-any-file-on-your-system-with-the-nvls-player)
     * [Use the QuickPlayer for every filetype](https://github.com/martineausimon/nvim-lilypond-suite/wiki/4.-Tips-and-tricks#use-the-quickplayer-for-every-filetype)
+    * [Midi input in Neovim](https://github.com/martineausimon/nvim-lilypond-suite/wiki/4.-Tips-and-tricks#midi-input-in-neovim)
