@@ -81,6 +81,7 @@ local default = {
       border_style = "single",
       winhighlight = "Normal:Normal,FloatBorder:Normal",
       midi_synth = "fluidsynth",
+      soundfont_path = nil,
       audio_format = "mp3",
       mpv_flags = {
         "--msg-level=cplayer=no,ffmpeg=no,alsa=no",
