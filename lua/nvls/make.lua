@@ -6,6 +6,7 @@ local nvls_options = require('nvls').get_nvls_options()
 
 local output = nvls_options.lilypond.options.output
 local audio_format = nvls_options.player.options.audio_format
+local sf_path = nvls_options.player.options.soundfont_path or nil
 local midi_synth = nvls_options.player.options.midi_synth
 
 if midi_synth == "timidity" then
@@ -62,7 +63,7 @@ local function commands()
         if midi_synth == "timidity" then
           return string.format('timidity %s -Ow -o %s', file.midi, file.audio)
         else
-          return string.format('fluidsynth -T raw -F - %s -s | ffmpeg -f s32le -i - %s', file.midi, file.audio)
+          return string.format('fluidsynth %s -T raw -F - %s -s | ffmpeg -f s32le -i - %s', sf_path, file.midi, file.audio)
         end
       end)()
     },
