@@ -101,7 +101,7 @@ function M.open(file, name)
   vim.api.nvim_set_current_win(win)
 
   vim.api.nvim_buf_call(buf, function()
-    vim.fn.execute("term mpv " .. table.concat(plopts.mpv_flags, " ") .. " " .. file)
+    vim.fn.execute(string.format("term mpv %s %s", Utils.concat_flags(plopts.mpv_flags), file))
     vim.fn.execute('stopinsert')
   end)
 
