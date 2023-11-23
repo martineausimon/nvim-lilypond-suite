@@ -28,7 +28,10 @@ function M.convert()
 
     else
       Utils.message(string.format('Converting %s.midi to %s...', file.name, audio_format))
-      os.remove(audio)
+      local old_audio = Utils.shellescape(audio, false)
+      if type(old_audio) == "string" then
+        os.remove(old_audio)
+      end
       require('nvls.make').async("fluidsynth")
     end
 
