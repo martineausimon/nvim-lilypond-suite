@@ -165,6 +165,7 @@ If you want to use all the functions (player, hyphenation for various languages.
     * [Highlight pitches for others languages](https://github.com/martineausimon/nvim-lilypond-suite/wiki/2.-Configuration#highlight-pitches-for-others-languages)
     * [Lighter syntax highlighting](https://github.com/martineausimon/nvim-lilypond-suite/wiki/2.-Configuration#lighter-syntax-highlighting)
   * [Error messages](https://github.com/martineausimon/nvim-lilypond-suite/wiki/2.-Configuration#error-messages)
+  * [Midi](https://github.com/martineausimon/nvim-lilypond-suite/wiki/2.-Configuration#midi)
   * [Auto-completion](https://github.com/martineausimon/nvim-lilypond-suite/wiki/2.-Configuration#auto-completion)
     * [Recommended settings](https://github.com/martineausimon/nvim-lilypond-suite/wiki/2.-Configuration#recommended-settings)
     * [Dictionary files](https://github.com/martineausimon/nvim-lilypond-suite/wiki/2.-Configuration#dictionary-files)
