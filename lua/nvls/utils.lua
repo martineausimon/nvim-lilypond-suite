@@ -73,6 +73,13 @@ function M.shellescape(file, escape)
   return file
 end
 
+function M.concat_flags(flags)
+  if type(flags) == "table" then
+    flags = table.concat(flags, " ")
+  end
+  return flags
+end
+
 function M.extract_from_sel(_start, _end)
   local nlines = math.abs(_end[2] - _start[2]) + 1
   local sel = vim.api.nvim_buf_get_lines(0, _start[2] - 1, _end[2], false)
