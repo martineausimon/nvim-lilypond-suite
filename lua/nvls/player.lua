@@ -1,45 +1,34 @@
 local Config = require('nvls.config')
 local Utils = require('nvls.utils')
 local nvls_options = require('nvls').get_nvls_options()
-local audio_format = nvls_options.player.options.audio_format
-local midi_synth = nvls_options.player.options.midi_synth
-
-if midi_synth == "timidity" then
-  audio_format = "wav"
-end
 
 local M = {}
 
 function M.convert()
-  local file = Config.fileInfos()
-  local audio = file.audio
-  local midi  = file.midi
-  if package.config:sub(1, 1) == '\\' then
-    audio_format = "wav"
-  end
+  local C = Config.fileInfos()
 
-  if Utils.exists(midi) then
+  if Utils.exists(C.midi) then
 
-    local midi_last = Utils.last_mod(midi)
-    local audio_last = Utils.last_mod(audio)
+    local midi_last = Utils.last_mod(C.midi)
+    local audio_last = Utils.last_mod(C.audio)
 
     if (audio_last > midi_last) then
-      M.open(audio, file.name .. "." .. audio_format)
+      M.open(C.audio, C.name .. "." .. C.audio_format)
 
     else
-      Utils.message(string.format('Converting %s.midi to %s...', file.name, audio_format))
-      local old_audio = Utils.shellescape(audio, false)
+      Utils.message(string.format('Converting %s.midi to %s...', C.name, C.audio_format))
+      local old_audio = Utils.shellescape(C.audio, false)
       if type(old_audio) == "string" then
         os.remove(old_audio)
       end
       require('nvls.make').async("fluidsynth")
     end
 
-  elseif Utils.exists(audio) then
-    M.open(audio, file.name .. "." .. audio_format)
+  elseif Utils.exists(C.audio) then
+    M.open(C.audio, C.name .. "." .. C.audio_format)
 
   else
-    Utils.message(string.format("Can't find %s.%s or %s.midi in working directory", file.name, audio_format, file.name), "ERROR")
+    Utils.message(string.format("Can't find %s.%s or %s.midi in working directory", C.name, C.audio_format, C.name), "ERROR")
     do return end
   end
 end
@@ -233,7 +222,7 @@ function M.quickplayer()
     Utils.message(err_msg, "ERROR")
     return
   else
-    Utils.message('Converting to ' .. audio_format)
+    Utils.message('Converting to ' .. require('nvls.config').fileInfos().audio_format)
   end
 
   local input_type = quickplayerInputType(sel)
@@ -247,14 +236,14 @@ function M.quickplayer()
   table.insert(codeParts, "}")
   local code = table.concat(codeParts)
 
-  local ly = Config.fileInfos()
-  local ly_file = Utils.joinpath(ly.tmp, 'tmp.ly')
+  local C = Config.fileInfos()
+  local ly_file = Utils.joinpath(C.tmp, 'tmp.ly')
   local tmpfile = io.open(ly_file, 'w')
   if tmpfile then
     tmpfile:write(code)
     tmpfile:close()
   end
-  os.execute(string.format('lilypond --loglevel=NONE -o %s %s', ly.tmp, ly_file))
+  os.execute(string.format('lilypond --loglevel=NONE -o %s %s', C.tmp, ly_file))
 
   require('nvls.make').async("tmpplayer")
 end
