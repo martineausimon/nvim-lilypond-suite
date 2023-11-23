@@ -130,6 +130,8 @@ If you want to use all the functions (player, hyphenation for various languages.
           border_style = "single",
           winhighlight = "Normal:Normal,FloatBorder:Normal",
           midi_synth = "fluidsynth",
+          fluidsynth_flags = nil,
+          timidity_flags = nil,
           soundfont_path = nil,
           audio_format = "mp3",
           mpv_flags = {
