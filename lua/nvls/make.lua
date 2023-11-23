@@ -6,7 +6,7 @@ local nvls_options = require('nvls').get_nvls_options()
 
 local output = nvls_options.lilypond.options.output
 local audio_format = nvls_options.player.options.audio_format
-local sf_path = nvls_options.player.options.soundfont_path or nil
+local sf_path = Utils.shellescape(nvls_options.player.options.soundfont_path)
 local midi_synth = nvls_options.player.options.midi_synth
 
 if midi_synth == "timidity" then
