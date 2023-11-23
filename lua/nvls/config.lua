@@ -3,7 +3,6 @@ local nvls_options = require('nvls').get_nvls_options()
 
 local M = {}
 
-
 function M.fileInfos()
   local C = {}
   local audio_format = nvls_options.player.options.audio_format
@@ -54,20 +53,21 @@ function M.fileInfos()
     audio_format = "wav"
   end
 
-  C.name         = Utils.remove_path(name)
-  C.pdf          = Utils.change_extension(main, "pdf")
-  C.audio        = Utils.change_extension(main, audio_format)
-  C.audio_format = audio_format
-  C.midi         = Utils.change_extension(main, "midi")
-  C.midi_synth   = midi_synth
-  C.main         = main
-  C.folder       = Utils.shellescape(vim.fn.expand(main_folder), true)
-  C.tmp          = Utils.joinpath(vim.fn.stdpath('cache'), 'nvls')
-  C.backend      = backend or ''
-  C.output_fm    = nvls_options.lilypond.options.output
-  C.lb_flags     = lb_flags
-  C.sf_path      = Utils.shellescape(nvls_options.player.options.soundfont_path, true)
-  C.include      = include_dir
+  C.name             = Utils.remove_path(name)
+  C.pdf              = Utils.change_extension(main, "pdf")
+  C.audio            = Utils.change_extension(main, audio_format)
+  C.audio_format     = audio_format
+  C.midi             = Utils.change_extension(main, "midi")
+  C.midi_synth       = midi_synth
+  C.fluidsynth_flags = Utils.concat_flags(nvls_options.player.options.fluidsynth_flags)
+  C.timidity_flags   = Utils.concat_flags(nvls_options.player.options.timidity_flags)
+  C.main             = main
+  C.folder           = Utils.shellescape(vim.fn.expand(main_folder), true)
+  C.tmp              = Utils.joinpath(vim.fn.stdpath('cache'), 'nvls')
+  C.backend          = backend or ''
+  C.output_fm        = nvls_options.lilypond.options.output
+  C.lb_flags         = lb_flags
+  C.include          = include_dir
   vim.fn.mkdir(C.tmp, 'p')
 
   return C

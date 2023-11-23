@@ -6,9 +6,9 @@ local Player = require('nvls.player')
 local M = {}
 
 local function commands()
-  local C    = Config.fileInfos()
-  local folder  = vim.fn.expand(C.folder)
-  local name    = Utils.shellescape(C.name, true)
+  local C = Config.fileInfos()
+  local folder = vim.fn.expand(C.folder)
+  local name = Utils.shellescape(C.name, true)
 
   local cmds = {
     lilypond = {
@@ -39,9 +39,9 @@ local function commands()
       efm = " ",
       make = (function()
         if C.midi_synth == "timidity" then
-          return string.format('timidity %s -Ow -o %s', C.midi, C.audio)
+          return string.format('timidity %s %s -Ow -o %s', C.midi, C.timidity_flags, C.audio)
         else
-          return string.format('fluidsynth %s -T raw -F - %s -s | ffmpeg -f s32le -i - %s', C.sf_path, C.midi, C.audio)
+          return string.format('fluidsynth %s -T raw -F - %s -s | ffmpeg -f s32le -i - %s', C.fluidsynth_flags, C.midi, C.audio)
         end
       end)()
     },
@@ -49,9 +49,9 @@ local function commands()
       efm = "%-G%.%#",
       make = (function()
         if C.midi_synth == "timidity" then
-          return string.format('timidity %s -Ow -o %s', Utils.joinpath(C.tmp, "tmp.midi"), Utils.joinpath(C.tmp, "tmp.wav"))
+          return string.format('timidity %s %s -Ow -o %s', Utils.joinpath(C.tmp, "tmp.midi"), C.timidity_flags, Utils.joinpath(C.tmp, "tmp.wav"))
         else
-          return string.format('fluidsynth -T raw -F - %s -s | ffmpeg -f s32le -i - %s', Utils.joinpath(C.tmp, "tmp.midi"), Utils.joinpath(C.tmp, "tmp." .. C.audio_format))
+          return string.format('fluidsynth %s -T raw -F - %s -s | ffmpeg -f s32le -i - %s', C.fluidsynth_flags, Utils.joinpath(C.tmp, "tmp.midi"), Utils.joinpath(C.tmp, "tmp." .. C.audio_format))
         end
       end)()
     },
@@ -62,10 +62,10 @@ local function commands()
       make = string.format('cd /d %s & lualatex --file-line-error --output-directory=%s --shell-escape --interaction=nonstopmode %s', C.tmp, folder, Utils.shellescape(Utils.joinpath(C.tmp, name .. '.tex'), true))
     },
     fluidsynth = {
-      make = string.format('timidity %s -Ow -o %s', Utils.joinpath(C.tmp, "tmp.midi"), Utils.joinpath(C.tmp, "tmp." .. C.audio_format))
+      make = string.format('timidity %s %s -Ow -o %s', Utils.joinpath(C.tmp, "tmp.midi"), C.timidity_flags, Utils.joinpath(C.tmp, "tmp." .. C.audio_format))
     },
     tmpplayer = {
-      make = string.format('timidity %s -Ow -o %s', Utils.joinpath(C.tmp, "tmp.midi"), Utils.joinpath(C.tmp, "tmp." .. C.audio_format))
+      make = string.format('timidity %s %s -Ow -o %s', Utils.joinpath(C.tmp, "tmp.midi"), C.timidity_flags, Utils.joinpath(C.tmp, "tmp." .. C.audio_format))
     }
   }
 
