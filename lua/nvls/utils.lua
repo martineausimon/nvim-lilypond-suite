@@ -47,7 +47,7 @@ function M.change_extension(file, new)
 end
 
 function M.shellescape(file, escape)
-  if not file then return end
+  if not file then return '' end
   local windows = {
     [" "] = "^ ",
     ["%("] = "^%(",
