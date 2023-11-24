@@ -16,6 +16,7 @@ end
 
 
 function M.joinpath(parent, filename)
+  if not filename then return '' end
   return parent .. package.config:sub(1, 1) .. filename
 end
 
