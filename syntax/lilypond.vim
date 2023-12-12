@@ -124,7 +124,6 @@ syn match lilyAccidentalsStyle "\v<(choral(-cautionary)?|default|dodecaphonic(-f
 
 syn match lilyGrob "\<\u\a\+"
 
-syn match lilyDefineVar "\a\(\(\a\|\-\|_\)\{}\a\)\{}\s\{}="he=e-1 contains=lilySpecial
 syn match lilyVar "\(\s\|\.\)\=\s\{}\(\l\|\u\|\-\|X\|Y\)\{}\(X\|Y\|\l\)\+" contained nextgroup=lilyVar,lilyDefineVar contains=lilyDots
 syn match lilyDefineVar "\l\(\l\|\-\)\+\l\+\." contains=lilyDots nextgroup=lilyVar,lilyContext
 syn match lilyDots "\." contained
@@ -133,6 +132,8 @@ syn match lilyChordLink "\(\.\|\^\)" contained
 syn match lilyGrob "\<\u\a\+\n\{}\s\{}\." nextgroup=lilyVar contains=lilyDots
 
 syn match lilyClef "\<\v(C|F|G|GG|alto(varC)?|baritone(var(C|F))?|bass|french|hufnagel-do-fa|kievan-do|mezzosoprano|moderntab|percussion|petrucci-(f|g)|soprano|subbass|tab|tenor(G|varC)?|treble|var(C|baritone|percussion)|violin)(\A|\n)"me=e-1
+
+syn match lilyDefineVar "\a\(\(\a\|\-\|_\)\{}\a\)\{}\s\{}="he=e-1 contains=lilySpecial
 
 syn match lilyContext "\v<\\?(Choir|Drum|Grand|Mensural|One|Petrucci|Piano|Rhythmic|Tab|Vaticana|GregorianTranscription|Kievan)?Staff(Group)?>" nextgroup=lilyDots
 syn match lilyContext "\v<\\?((Chord|Note)?Names|(Devnull|Dynamics|FiguredBass|FretBoards|Global|Lyrics|Score)|(Cue|Drum|Gregorian|Kievan|Mensural|Null|Tab|Vaticana)?Voice)|((Ancient)?(RemoveEmpty))?(Drums|Rythmic|Tab)?(StaffContext)?>" nextgroup=lilyDots
