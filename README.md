@@ -132,7 +132,6 @@ If you want to use all the functions (player, hyphenation for various languages.
           midi_synth = "fluidsynth",
           fluidsynth_flags = nil,
           timidity_flags = nil,
-          soundfont_path = nil,
           audio_format = "mp3",
           mpv_flags = {
             "--msg-level=cplayer=no,ffmpeg=no,alsa=no",
