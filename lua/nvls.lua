@@ -79,7 +79,7 @@ local default = {
       width = "37",
       height = "1",
       border_style = "single",
-      winhighlight = "Normal:Normal,FloatBorder:Normal",
+      winhighlight = "Normal:Normal,FloatBorder:Normal,FloatTitle:Normal",
       midi_synth = "fluidsynth",
       fluidsynth_flags = nil,
       timidity_flags = nil,
@@ -87,7 +87,8 @@ local default = {
       mpv_flags = {
         "--msg-level=cplayer=no,ffmpeg=no,alsa=no",
         "--loop",
-        "--config-dir=/dev/null"
+        "--config-dir=/dev/null",
+        "--no-video"
       }
     },
   },
