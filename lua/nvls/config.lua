@@ -20,14 +20,14 @@ function M.fileInfos()
   if vim.bo.filetype == "tex" then
     main_folder = nvls_options.latex.options.main_folder
     main_file = nvls_options.latex.options.main_file
-    lb_flags = Utils.concat_flags(nvls_options.latex.options.lilypond_book_flags)
+    lb_flags = Utils.concat_flags(nvls_options.latex.options.lilypond_book_flags) or ''
     if backend then
       backend = '--process "lilypond -dbackend=' .. backend .. '"'
     end
   elseif vim.bo.filetype == "texinfo" then
     main_folder = nvls_options.texinfo.options.main_folder
     main_file = nvls_options.texinfo.options.main_file
-    lb_flags = Utils.concat_flags(nvls_options.texinfo.options.lilypond_book_flags)
+    lb_flags = Utils.concat_flags(nvls_options.texinfo.options.lilypond_book_flags) or ''
     if backend then
       backend = '--process "lilypond -dbackend=' .. backend .. '"'
     end
