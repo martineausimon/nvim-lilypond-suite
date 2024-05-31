@@ -90,6 +90,11 @@ if g:nvls_language == "français"
 elseif g:nvls_language == "english"
   syn match lilyPitch "^\?\v<([a-g]|s|R|r)(ss|ff|x|qs|qf|tqs|tqf|s|f|-flatflat|-sharpsharp|-flat|-sharp){}('+|,+){}(\?|\!)=(\A|\n)"me=e-1
     \ nextgroup=lilyRythm contained
+elseif g:nvls_language == "deutsch"
+  syn match lilyPitch "^\?\v<([a-h]|s|R|r)(isis|eses|eh|ih|eseh|isih|is|es){}('+|,+){}(\?|\!)=(\A|\n)"me=e-1
+    \ nextgroup=lilyRythm contained
+  syn match lilyPitch "^\?\v<(a|e)(ses|s)('+|,+){}(\?|\!)=(\A|\n)"me=e-1
+    \ nextgroup=lilyRythm contained
 elseif g:nvls_language == "nohl"
 else
   syn match lilyPitch "^\?\v<([a-g]|s|R|r)(isis|eses|eh|ih|eseh|isih|is|es){}('+|,+){}(\?|\!)=(\A|\n)"me=e-1
