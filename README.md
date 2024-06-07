@@ -196,3 +196,4 @@ If you want to use all the functions (player, hyphenation for various languages.
     * [Play any file on your system with the nvls player](https://github.com/martineausimon/nvim-lilypond-suite/wiki/4.-Tips-and-tricks#play-any-file-on-your-system-with-the-nvls-player)
     * [Use the QuickPlayer for every filetype](https://github.com/martineausimon/nvim-lilypond-suite/wiki/4.-Tips-and-tricks#use-the-quickplayer-for-every-filetype)
     * [Midi input in Neovim](https://github.com/martineausimon/nvim-lilypond-suite/wiki/4.-Tips-and-tricks#midi-input-in-neovim)
+    * [Termux keyboard for lilypond](https://github.com/martineausimon/nvim-lilypond-suite/wiki/4.-Tips-and-tricks#termux-keyboard-for-lilypond)
