@@ -13,7 +13,7 @@ local function commands()
   local cmds = {
     lilypond = {
       efm = "%f:%l:%c:%m,%f:%l:%m%[^;],%f:%l:%m,%-G%.%#",
-      make = string.format('lilypond %s %s -f %s -o %s %s', C.backend, C.include, C.output_fm, Utils.joinpath(folder, name), C.main)
+      make = string.format('lilypond %s %s -f %s -o %s %s', C.backend, C.include, C.output_fm, Utils.shellescape(Utils.joinpath(folder, name), true), C.main)
     },
     lualatex = {
       efm = "%f:%l:%m,%-G%.%#",
