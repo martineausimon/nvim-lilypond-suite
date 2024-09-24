@@ -7,17 +7,16 @@ local M = {}
 
 local function commands()
   local C = Config.fileInfos()
-  local folder = vim.fn.expand(C.folder)
   local name = Utils.shellescape(C.name, true)
 
   local cmds = {
     lilypond = {
       efm = "%f:%l:%c:%m,%f:%l:%m%[^;],%f:%l:%m,%-G%.%#",
-      make = string.format('lilypond %s %s -f %s -o %s %s', C.backend, C.include, C.output_fm, Utils.shellescape(Utils.joinpath(folder, name), true), C.main)
+      make = string.format('lilypond %s %s -f %s -o %s %s', C.backend, C.include, C.output_fm, Utils.joinpath(C.folder, name), C.main)
     },
     lualatex = {
       efm = "%f:%l:%m,%-G%.%#",
-      make = string.format('lualatex --file-line-error --output-directory=%s --shell-escape --interaction=nonstopmode %s', folder, C.main)
+      make = string.format('lualatex --file-line-error --output-directory=%s --shell-escape --interaction=nonstopmode %s', C.folder, C.main)
     },
     texinfo = {
       efm = "%f:%l:%m,%-G%.%#",
@@ -29,7 +28,7 @@ local function commands()
     },
     lytex = {
       efm = "%f:%l:%m,%-G%.%#",
-      make = string.format('cd %s && lualatex --file-line-error --output-directory=%s --shell-escape --interaction=nonstopmode %s', C.tmp, folder, Utils.shellescape(Utils.joinpath(C.tmp, name .. '.tex'), true))
+      make = string.format('cd %s && lualatex --file-line-error --output-directory=%s --shell-escape --interaction=nonstopmode %s', C.tmp, C.folder, Utils.shellescape(Utils.joinpath(C.tmp, name .. '.tex'), true))
     },
     lytexi = {
       efm = "%f:%l:%m,%-G%.%#",
@@ -59,7 +58,7 @@ local function commands()
 
   local win_cmds = {
     lytex = {
-      make = string.format('cd /d %s & lualatex --file-line-error --output-directory=%s --shell-escape --interaction=nonstopmode %s', C.tmp, folder, Utils.shellescape(Utils.joinpath(C.tmp, name .. '.tex'), true))
+      make = string.format('cd /d %s & lualatex --file-line-error --output-directory=%s --shell-escape --interaction=nonstopmode %s', C.tmp, C.folder, Utils.shellescape(Utils.joinpath(C.tmp, name .. '.tex'), true))
     },
     fluidsynth = {
       make = string.format('timidity %s %s -Ow -o %s', Utils.joinpath(C.tmp, "tmp.midi"), C.timidity_flags, Utils.joinpath(C.tmp, "tmp." .. C.audio_format))
