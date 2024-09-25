@@ -23,6 +23,7 @@
 \PetrucciStaff
 \PetrucciVoice
 \PianoStaff
+\RemoveAllEmptyStaves
 \RemoveEmptyDrumStaffContext
 \RemoveEmptyRhythmicStaffContext
 \RemoveEmptyStaffContext
