@@ -8,7 +8,7 @@ function M.message(str, level)
 end
 
 function M.has(file, string)
-  local content = io.open(file, "r")
+  local content = io.open(M.shellescape(file, false), "r")
   if not content then return end
   content = content:read("*all")
   return content:find(string, 1, true) ~= nil
@@ -112,6 +112,7 @@ end
 
 function M.clear_tmp_files()
   local _file = require('nvls.config').fileInfos()
+  local folder_contents = vim.fn.readdir(_file.folder)
   local to_delete = {}
   if vim.bo.filetype == "tex" or vim.bo.filetype == "texinfo" then
     to_delete = {
@@ -119,7 +120,16 @@ function M.clear_tmp_files()
       M.change_extension(_file.main, 'aux'),
       M.change_extension(_file.main, 'out'),
       M.joinpath(_file.folder, 'tmp-ly'),
+      M.joinpath(_file.folder, 'tmp[%w]+%.dvi'),
     }
+
+
+    for _, item in ipairs(folder_contents) do
+      if item:match("^tmp[%w]+%.dvi$") then
+        table.insert(to_delete, M.joinpath(_file.folder, item))
+      end
+    end
+
     for _, file in ipairs(to_delete) do
       os.remove(file)
     end
