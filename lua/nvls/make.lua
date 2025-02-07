@@ -15,7 +15,8 @@ local function commands()
       make = string.format('lilypond %s %s -f %s -o %s %s', C.backend, C.include, C.output_fm, Utils.joinpath(C.folder, name), C.main)
     },
     lualatex = {
-      efm = "%f:%l:%m,%-G%.%#",
+      --efm = "%f:%l:%m,%-G%.%#",
+      efm = "%f:%l:%c: %m,%f:%l:%m,%-G%.%#",
       make = string.format('lualatex --file-line-error --output-directory=%s --shell-escape --interaction=nonstopmode %s', C.folder, C.main)
     },
     texinfo = {
@@ -24,11 +25,11 @@ local function commands()
     },
     lilypondBook = {
       efm = '%+G%f:%l:%c:, %f:%l:%c: %m,%-G%.%#',
-      make = string.format('lilypond-book %s %s %s --output=%s %s', C.lb_flags, C.backend, C.include, C.tmp, vim.fn.expand(C.main))
+      make = string.format('lilypond-book %s %s %s --output=%s %s', C.lb_flags, C.backend, C.include, C.tmp, C.main)
     },
     lytex = {
       efm = "%f:%l:%m,%-G%.%#",
-      make = string.format('cd %s && lualatex --file-line-error --output-directory=%s --shell-escape --interaction=nonstopmode %s', C.tmp, C.folder, Utils.shellescape(Utils.joinpath(C.tmp, name .. '.tex'), true))
+      make = string.format('cd %s && lualatex --file-line-error --output-directory=%s --shell-escape --interaction=nonstopmode %s', C.tmp, C.folder, Utils.joinpath(C.tmp, name .. '.tex'))
     },
     lytexi = {
       efm = "%f:%l:%m,%-G%.%#",
