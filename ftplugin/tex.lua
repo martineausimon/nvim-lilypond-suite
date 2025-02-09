@@ -6,7 +6,7 @@ local opts = require('nvls').get_nvls_options().latex
 vim.api.nvim_create_user_command('LaTexCmp',  function()
   vim.fn.execute('write')
   local file = Config.fileInfos()
-  Utils.message(string.format('Compiling %s...', Utils.remove_path(file.main)))
+  Utils.message(string.format('Compiling %s...', Utils.shellescape(Utils.remove_path(file.main), false)))
   require('nvls.tex').SelectMakePrgType()
 end, {})
 

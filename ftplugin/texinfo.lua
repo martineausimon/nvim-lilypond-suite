@@ -6,7 +6,7 @@ local opts = require('nvls').get_nvls_options().texinfo
 vim.api.nvim_create_user_command('TexinfoCmp',  function()
   vim.fn.execute('write')
   local file = Config.fileInfos()
-  Utils.message(string.format('Compiling %s...', file.name))
+  Utils.message(string.format('Compiling %s...', Utils.shellescape(Utils.remove_path(file.main), false)))
   require('nvls.texinfo').SelectMakePrgType()
 end, {})
 
