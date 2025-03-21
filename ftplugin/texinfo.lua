@@ -1,12 +1,9 @@
-local Config = require('nvls.config')
 local Utils = require('nvls.utils')
 
 local opts = require('nvls').get_nvls_options().texinfo
 
 vim.api.nvim_create_user_command('TexinfoCmp',  function()
   vim.fn.execute('write')
-  local file = Config.fileInfos()
-  Utils.message(string.format('Compiling %s...', Utils.shellescape(Utils.remove_path(file.main), false)))
   require('nvls.texinfo').SelectMakePrgType()
 end, {})
 
@@ -37,13 +34,3 @@ if opts.options.clean_logs or vim.g.nvls_clean_tex_files == 1 then
     pattern = { "*.texi", "*.texinfo" }
   })
 end
-
---local tex_include_dir = opts.options.include_dir or nil
---
---if tex_include_dir ~= "" and tex_include_dir ~= nil then
---  if type(tex_include_dir) == "table" then
---    tex_include_dir = table.concat(tex_include_dir, ":")
---  end
---  vim.cmd([[let $TEXINPUTS = $TEXINPUTS . ":]] .. tex_include_dir .. [["]])
---end
-

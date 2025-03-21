@@ -8,6 +8,44 @@ This is a plugin ([Neovim](https://github.com/neovim/neovim) only) for writing [
 
 ---
 
+> [!Important]
+>I just uploaded the most important update since the creation of this plugin. I hope it won't cause any issues for you!
+
+<details>
+<summary><b>MAIN CHANGES MARCH 2025</b> (click to expand)</summary>
+
+* Compilation is now performed with `vim.uv`, which has many advantages, particularly regarding error management. For tasks that require multiple compilations, a job queue is created, and if a job fails, the queue is canceled, providing more information about what went wrong.
+
+* I've maximized the use of native nvim functions for file and path management to avoid issues with weird characters in file names.
+
+* I’ve significantly improved error handling with quickfix and diagnostics. Each error message is sorted according to a rule like this (some rules certainly needs improvements !):
+
+```lua
+{
+    pattern = "([^:]+):(%d+):(%d+): (%w+): (.+): (.*)",
+    rule = function(file, lnum, col, loglevel, msg, pattern)
+      return {
+        filename = file,
+        lnum = tonumber(lnum),
+        col = tonumber(col),
+        type = Utils.qf_type(loglevel),
+        text = string.format("%s: %s", msg, pattern),
+        pattern = Utils.format_pattern(pattern),
+        end_col = tonumber(col) + #pattern - 1
+      }
+    end
+  },
+```
+
+* I write a new debug function `:LilyDebug` which displays information:
+    * `:LilyDebug commands`: shows the latest commands executed by the plugin
+    * `:LilyDebug errors`: displays the errors sorted by the plugin
+    * `:LilyDebug stdout`: shows the raw output of the last used commands
+    * `:LilyDebug lines`: shows the lines as they are sent to be processed by the "rules". Useful for creating/improving the rules. In multi-line errors, line breaks are represented by "|"
+
+Please report any issues!
+</details>
+
 ## FEATURES
 
 * **Fast syntax file for LilyPond**
@@ -15,10 +53,11 @@ This is a plugin ([Neovim](https://github.com/neovim/neovim) only) for writing [
 * **Audio player in floating window** (LilyPond only) - convert (mp3 or wav) and play midi file while writing score (using `mpv`, `timidity` or `fluidsynth` & `ffmpeg`) 
 * **QuickPlayer** (LilyPond only) - convert and play only visual selection
 * **Hyphenation** : automatically place hyphens ' **--** ' inside texts to make those texts usable as lyrics (LilyPond only)
-* **Simple ftplugin for LilyPond** with `makeprg`, correct `errorformat`, `diagnostics` (experimental)
+* **Simple ftplugin for LilyPond** with `makeprg`
 * **Multiple files support** - Compile only main file when working on multiple files project
-* **ftplugin for LaTex and Texinfo files** which detects and allows embedded LilyPond syntax, adaptive `makeprg` function for `lyluatex` or `lilypond-book`, correct `errorformat`
+* **ftplugin for LaTex and Texinfo files** which detects and allows embedded LilyPond syntax, adaptive compilation function for `lyluatex` or `lilypond-book`
 * **Easy auto-completion and Point & Click configuration**
+* **Error managment** with correct quickfix and diagnostics
 
 <p align="center">
 <img src="https://user-images.githubusercontent.com/89019438/191845626-4ba6224c-46c3-484f-a355-5cf10a66889f.png">
@@ -52,30 +91,37 @@ If you want to use all the functions (player, hyphenation for various languages.
   config = function()
     require('nvls').setup({
       lilypond = {
-        mappings = {
-          player = "<F3>",
-          compile = "<F5>",
-          open_pdf = "<F6>",
-          switch_buffers = "<A-Space>",
-          insert_version = "<F4>",
-          hyphenation = "<F12>",
-          hyphenation_change_lang = "<F11>",
-          insert_hyphen = "<leader>ih",
-          add_hyphen = "<leader>ah",
-          del_next_hyphen = "<leader>dh",
-          del_prev_hyphen = "<leader>dH",
+      mappings = {
+      player = "<F3>",
+      compile = "<F5>",
+      open_pdf = "<F6>",
+      switch_buffers = "<A-Space>",
+      insert_version = "<F4>",
+      hyphenation = "<F12>",
+      hyphenation_change_lang = "<F11>",
+      insert_hyphen = "<leader>ih",
+      add_hyphen = "<leader>ah",
+      del_next_hyphen = "<leader>dh",
+      del_prev_hyphen = "<leader>dH",
+      },
+      options = {
+        pitches_language = "default",
+        hyphenation_language = "en_DEFAULT",
+        output = "pdf",
+        backend = nil,
+        main_file = "main.ly",
+        main_folder = "%:p:h",
+        include_dir = nil,
+        pdf_viewer = nil,
+        errors = {
+          diagnostics = true,
+          quickfix = "external",
+          filtered_lines = {
+            "compilation successfully completed",
+            "search path"
+          }
         },
-        options = {
-          pitches_language = "default",
-          hyphenation_language = "en_DEFAULT",
-          output = "pdf",
-          backend = nil,
-          main_file = "main.ly",
-          main_folder = "%:p:h",
-          include_dir = nil,
-          diagnostics = false,
-          pdf_viewer = nil,
-        },
+      },
       },
       latex = {
         mappings = {
@@ -91,6 +137,18 @@ If you want to use all the functions (player, hyphenation for various languages.
           include_dir = nil,
           lilypond_syntax_au = "BufEnter",
           pdf_viewer = nil,
+          errors = {
+            diagnostics = true,
+            quickfix = "external",
+            filtered_lines = {
+              "Missing character",
+              "LaTeX manual or LaTeX Companion",
+              "for immediate help.",
+              "Overfull \\hbox",
+              "^%s%.%.%.",
+              "%s+%(.*%)"
+            }
+          },
         },
       },
       texinfo = {
@@ -106,6 +164,18 @@ If you want to use all the functions (player, hyphenation for various languages.
           main_folder = "%:p:h",
           lilypond_syntax_au = "BufEnter",
           pdf_viewer = nil,
+          errors = {
+            diagnostics = true,
+            quickfix = "external",
+            filtered_lines = {
+              "Missing character",
+              "LaTeX manual or LaTeX Companion",
+              "for immediate help.",
+              "Overfull \\hbox",
+              "^%s%.%.%.",
+              "%s+%(.*%)"
+            }
+          },
         },
       },
       player = {
@@ -128,7 +198,7 @@ If you want to use all the functions (player, hyphenation for various languages.
           width = "37",
           height = "1",
           border_style = "single",
-          winhighlight = "Normal:Normal,FloatBorder:Normal",
+          winhighlight = "Normal:Normal,FloatBorder:Normal,FloatTitle:Normal",
           midi_synth = "fluidsynth",
           fluidsynth_flags = nil,
           timidity_flags = nil,
@@ -136,7 +206,8 @@ If you want to use all the functions (player, hyphenation for various languages.
           mpv_flags = {
             "--msg-level=cplayer=no,ffmpeg=no,alsa=no",
             "--loop",
-            "--config-dir=/dev/null"
+            "--config-dir=/dev/null",
+            "--no-video"
           }
         },
       },

@@ -1,31 +1,72 @@
 local Config = require('nvls.config')
 local Utils = require('nvls.utils')
 local nvls_options = require('nvls').get_nvls_options()
+local Job = require('nvls.job')
+
+local function create_audio(midi_input, format)
+  local audio_out = Utils.change_extension(midi_input, format)
+
+  if nvls_options.player.options.midi_synth == "timidity" then
+    local timidity_args = {
+      midi_input, "-Ow",
+      "-o", audio_out,
+    }
+    Utils.insert_flags(timidity_args, nvls_options.player.options.timidity_flags, false)
+
+    Job:add("timidity", timidity_args, nil, function()
+      vim.fn.execute('stopinsert')
+      require('nvls.player').open(audio_out)
+    end)
+
+  elseif nvls_options.player.options.midi_synth == "fluidsynth" then
+    local raw_file = vim.fs.joinpath(vim.fn.stdpath("cache"), "nvls", "tmp.raw")
+
+    local fluidsynth_args = {
+      midi_input,
+      "-T", "raw", "-F", raw_file, "-s"
+    }
+    Utils.insert_flags(fluidsynth_args, nvls_options.player.options.fluidsynth_flags, true)
+
+    local ffmpeg_args = {
+      "-f", "s32le",
+      "-i", raw_file,
+      audio_out
+    }
+
+    Job:add("fluidsynth", fluidsynth_args)
+    Job:add("ffmpeg", ffmpeg_args, nil, function()
+      vim.fn.delete(raw_file, "rf")
+      vim.fn.execute('stopinsert')
+      require('nvls.player').open(audio_out)
+    end)
+  end
+end
+
 
 local M = {}
 
 function M.convert()
   local C = Config.fileInfos()
 
-  if Utils.exists(C.midi) then
+  if vim.fn.filereadable(C.midi) == 1 then
 
     local midi_last = Utils.last_mod(C.midi)
     local audio_last = Utils.last_mod(C.audio)
 
     if (audio_last > midi_last) then
-      M.open(C.audio, C.name .. "." .. C.audio_format)
+      M.open(C.audio, vim.fn.fnamemodify(C.audio, ":t"))
 
     else
-      Utils.message(string.format('Converting %s.midi to %s...', C.name, C.audio_format))
-      local old_audio = Utils.shellescape(C.audio, false)
+      local old_audio = C.audio
       if type(old_audio) == "string" then
         os.remove(old_audio)
       end
-      require('nvls.make').async("fluidsynth")
+
+      create_audio(C.midi, C.audio_format)
     end
 
-  elseif Utils.exists(C.audio) then
-    M.open(C.audio, C.name .. "." .. C.audio_format)
+  elseif vim.fn.filereadable(C.audio) == 1 then
+    M.open(C.audio, vim.fn.fnamemodify(C.audio, ":t"))
 
   else
     Utils.message(string.format("Can't find %s.%s or %s.midi in working directory", C.name, C.audio_format, C.name), "ERROR")
@@ -64,7 +105,8 @@ local function player_adjust(row, add)
 end
 
 function M.open(file, name)
-  name = name or file
+  name = vim.fn.fnamemodify(file, ":t:r") == "tmp" and "Quickplayer" or (name or file)
+
   local shortname = name:sub(9 - num(plopts.width, 'x'))
   name = shortname:len() < name:len() and "..." .. shortname or name
 
@@ -93,7 +135,7 @@ function M.open(file, name)
   vim.api.nvim_set_current_win(win)
 
   vim.api.nvim_buf_call(buf, function()
-    vim.fn.execute(string.format("term mpv %s %s", Utils.concat_flags(plopts.mpv_flags), file))
+    vim.fn.execute(string.format("term mpv %s %q", Utils.concat_flags(plopts.mpv_flags), file))
     vim.fn.execute('stopinsert')
   end)
 
@@ -215,37 +257,40 @@ end
 
 function M.quickplayer()
   Utils.clear_tmp_files()
+
   local sel = Utils.extract_from_sel(vim.fn.getpos("'<"), vim.fn.getpos("'>"))
 
   local err_msg = quickplayerCheckErr(sel)
   if err_msg then
     Utils.message(err_msg, "ERROR")
     return
-  else
-    Utils.message('Converting to ' .. require('nvls.config').fileInfos().audio_format)
   end
 
   local input_type = quickplayerInputType(sel)
-
   local tempo = quickplayerGetTempo(sel)
 
-  local codeParts = {}
-  table.insert(codeParts, "\\score { ")
-  table.insert(codeParts, input_type .. " { " .. sel .. " } ")
-  table.insert(codeParts, "\\midi { " .. tempo .. " } ")
-  table.insert(codeParts, "}")
-  local code = table.concat(codeParts)
+  local code = table.concat({
+    "\\score { ",
+    input_type .. " { " .. sel .. " } ",
+    "\\midi { " .. tempo .. " } ",
+    "}"
+  })
 
   local C = Config.fileInfos()
-  local ly_file = Utils.joinpath(C.tmp, 'tmp.ly')
+  local ly_file = vim.fs.joinpath(C.tmp, 'tmp.ly')
   local tmpfile = io.open(ly_file, 'w')
   if tmpfile then
     tmpfile:write(code)
     tmpfile:close()
   end
-  os.execute(string.format('lilypond --loglevel=NONE -o %s %s', C.tmp, ly_file))
 
-  require('nvls.make').async("tmpplayer")
+  Job:add('lilypond', {
+    "--loglevel=NONE",
+    "-o", C.tmp,
+    ly_file
+  })
+
+  create_audio(vim.fs.joinpath(C.tmp, "tmp.midi"), C.audio_format)
 end
 
 return M

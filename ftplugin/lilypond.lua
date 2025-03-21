@@ -1,7 +1,7 @@
 local lilyWords   = vim.fn.expand('<sfile>:p:h') .. '/../lilywords'
 local Config = require('nvls.config')
 local Utils = require('nvls.utils')
-local Make = require('nvls.make')
+local Job = require('nvls.job')
 local Player = require('nvls.player')
 local opts = require('nvls').get_nvls_options().lilypond
 local map, imap, vmap = Utils.map, Utils.imap, Utils.vmap
@@ -25,10 +25,26 @@ vim.api.nvim_create_user_command('LilyPlayer', function()
 end, {})
 
 vim.api.nvim_create_user_command('LilyCmp', function()
-  local file = Config.fileInfos()
   vim.fn.execute('write')
-  Utils.message(string.format('Compiling %s...', Utils.shellescape(Utils.remove_path(file.main)), false))
-  Make.async("lilypond")
+  local file = Config.fileInfos()
+
+  local args = {
+    "-f", file.output_fm,
+    "-o", vim.fs.joinpath(file.folder, file.name),
+    file.main
+  }
+
+  local include_args = Utils.format_include_dirs(opts.options.include_dir)
+  for _, arg in ipairs(include_args) do
+    table.insert(args, 1, "-I")
+    table.insert(args, 2, arg)
+  end
+
+  if opts.options.backend then
+    table.insert(args, 1, "-dbackend=" .. opts.options.backend)
+  end
+
+  Job:add('lilypond', args)
 end, {})
 
 vim.api.nvim_create_user_command('HyphChLang', function()

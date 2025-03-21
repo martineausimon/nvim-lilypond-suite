@@ -24,16 +24,15 @@ end
 
 function M.open(file, name)
   name = name or nil
-  if not Utils.exists(file) then
-    Utils.message(string.format("File %s doesn't exists", name or file), "ERROR")
+  if vim.fn.filereadable(file) ~= 1 then
+    Utils.message(string.format("File %q doesn't exists", name or file), "ERROR")
     do return end
   end
 
-
   if viewer_prg() then
-    vim.fn.jobstart(string.format('%s %s', viewer_prg(), file))
+    vim.fn.jobstart(string.format('%s %q', viewer_prg(), file))
   else
-    Utils.message(string.format("Unsupported operating system : %s", os), "ERROR")
+    Utils.message(string.format("Unsupported operating system : %q", os), "ERROR")
   end
 end
 

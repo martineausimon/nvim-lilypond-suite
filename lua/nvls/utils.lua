@@ -3,76 +3,22 @@ local os_type = vim.loop.os_uname().sysname
 local M = {}
 
 function M.message(str, level)
-  level = level or "INFO"
-  vim.notify("[NVLS] " .. str, vim.log.levels[level], {})
+  vim.schedule(function()
+    level = level or "INFO"
+    vim.notify("[NVLS] " .. str, vim.log.levels[level], {})
+  end)
 end
 
 function M.has(file, string)
-  local content = io.open(M.shellescape(file, false), "r")
+  local content = io.open(file, "r")
   if not content then return end
   content = content:read("*all")
   return content:find(string, 1, true) ~= nil
 end
 
-
-function M.joinpath(parent, filename)
-  if not filename then return '' end
-  return parent .. package.config:sub(1, 1) .. filename
-end
-
-function M.remove_path(file)
-  local out
-  if os_type == "Windows" then
-    out = file:match('.*\\([^\\]+)$')
-  else
-    out = file:match('.*/([^/]+)$')
-  end
-  return out
-end
-
-function M.remove_extension(file)
-  local parts = {}
-  for part in file:gmatch("([^%.]+)") do
-    table.insert(parts, part)
-  end
-  if #parts > 1 then
-    table.remove(parts)
-  end
-  local out = table.concat(parts, ".")
-  return out
-end
-
 function M.change_extension(file, new)
-  local base, current = file:match("^(.+)(%.%w+)$")
-  return base and current and base .. "." .. new or nil
-end
-
-function M.shellescape(file, escape)
-  if not file then return '' end
-  local windows = {
-    [" "] = "^ ",
-    ["%("] = "^%(",
-    ["%)"] = "^%)"
-  }
-  local unix = {
-    [" "] = "\\ ",
-    ["%("] = "\\%(",
-    ["%)"] = "\\%)"
-  }
-
-  local specialChars = (os_type == "Windows") and windows or unix
-
-  if escape then
-    for i, j in pairs(specialChars) do
-      file = file:gsub(i, j)
-    end
-  else
-    for i, j in pairs(specialChars) do
-      file = file:gsub(j, i)
-    end
-  end
-
-  return file
+  local base = vim.fn.fnamemodify(file, ":r")
+  return base and base .. "." .. new or nil
 end
 
 function M.concat_flags(flags)
@@ -80,6 +26,40 @@ function M.concat_flags(flags)
     flags = table.concat(flags, " ")
   end
   return flags
+end
+
+function M.format_include_dirs(include_dir)
+  local args = {}
+
+  if type(include_dir) == "table" then
+    for _, dir in ipairs(include_dir) do
+      table.insert(args, vim.fn.expand(dir))
+    end
+  elseif include_dir and include_dir ~= '' then
+    table.insert(args, vim.fn.expand(include_dir))
+  end
+
+  return args
+end
+
+function M.insert_flags(base_args, flags, at_start)
+  if type(flags) == "table" then
+    if at_start then
+      for i = #flags, 1, -1 do
+        table.insert(base_args, 1, flags[i])
+      end
+    else
+      for _, flag in ipairs(flags) do
+        table.insert(base_args, flag)
+      end
+    end
+  elseif flags and flags ~= '' then
+    if at_start then
+      table.insert(base_args, 1, flags)
+    else
+      table.insert(base_args, flags)
+    end
+  end
 end
 
 function M.extract_from_sel(_start, _end)
@@ -96,18 +76,19 @@ function M.extract_from_sel(_start, _end)
   return table.concat(sel, '\n')
 end
 
-function M.exists(path)
-  return io.open(vim.fn.glob(path)) ~= nil
-end
-
 function M.last_mod(file)
-  if not M.exists(file) then return 0 end
+  if vim.fn.filereadable(file) ~= 1 then return 0 end
+
   local var = (
-    os_type == "Darwin" and io.popen("stat -f %m " .. file) or
-    os_type == "Linux" and io.popen("stat -c %Y " .. file) or
-    os_type == "Windows" and io.popen(string.format("for %%F in (%s) do @echo %%~tF", file))
+    os_type == "Darwin" and io.popen(string.format("stat -f %m %q", file)) or
+    os_type == "Linux" and io.popen(string.format("stat -c %%Y %q", file)) or
+    os_type == "Windows" and io.popen(string.format('for %%F in (%q) do @echo %%~tF', file))
   )
-  return var and tonumber(var:read()) or 0
+
+  local result = var and var:read("*a"):match("%d+") or "0"
+  if var then var:close() end
+
+  return tonumber(result)
 end
 
 function M.clear_tmp_files()
@@ -119,14 +100,14 @@ function M.clear_tmp_files()
       M.change_extension(_file.main, 'log'),
       M.change_extension(_file.main, 'aux'),
       M.change_extension(_file.main, 'out'),
-      M.joinpath(_file.folder, 'tmp-ly'),
-      M.joinpath(_file.folder, 'tmp[%w]+%.dvi'),
+      vim.fs.joinpath(_file.folder, 'tmp-ly'),
+      vim.fs.joinpath(_file.folder, 'tmp[%w]+%.dvi'),
     }
 
 
     for _, item in ipairs(folder_contents) do
       if item:match("^tmp[%w]+%.dvi$") then
-        table.insert(to_delete, M.joinpath(_file.folder, item))
+        table.insert(to_delete, vim.fs.joinpath(_file.folder, item))
       end
     end
 
@@ -136,7 +117,7 @@ function M.clear_tmp_files()
   end
   local tmp_contents = vim.fn.readdir(_file.tmp)
   for _, item in ipairs(tmp_contents) do
-    local item_path = M.joinpath(_file.tmp, item)
+    local item_path = vim.fs.joinpath(_file.tmp, item)
     table.insert(to_delete, item_path)
   end
   for _, file in ipairs(to_delete) do

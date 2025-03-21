@@ -30,10 +30,10 @@ function M.hyphenator(input)
   for i, j in pairs(hyphs) do
     input = input:gsub("%f[%w_]" .. i .. "s?%f[^%w_]", j)
   end
-  vim.fn.execute("set paste")
-  vim.fn.execute("normal gvc" .. input)
-  vim.fn.execute("normal g`<")
-  vim.fn.execute("set nopaste")
+  vim.api.nvim_set_option('paste', true)
+  vim.api.nvim_command('normal gvc' .. input)
+  vim.api.nvim_command('normal g`<')
+  vim.api.nvim_set_option('paste', false)
 end
 
 function M.pyphen(input)

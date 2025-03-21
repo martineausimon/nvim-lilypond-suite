@@ -23,8 +23,15 @@ local default = {
       main_file = "main.ly",
       main_folder = "%:p:h",
       include_dir = nil,
-      diagnostics = false,
       pdf_viewer = nil,
+      errors = {
+        diagnostics = true,
+        quickfix = "external",
+        filtered_lines = {
+          "compilation successfully completed",
+          "search path"
+        }
+      },
     },
   },
   latex = {
@@ -41,6 +48,18 @@ local default = {
       include_dir = nil,
       lilypond_syntax_au = "BufEnter",
       pdf_viewer = nil,
+      errors = {
+        diagnostics = true,
+        quickfix = "external",
+        filtered_lines = {
+          "Missing character",
+          "See the LaTeX manual or LaTeX Companion for explanation",
+          "for immediate help.",
+          "Overfull \\hbox",
+          "^%s%.%.%.",
+          "%s+%(.*%)"
+        }
+      },
     },
   },
   texinfo = {
@@ -57,6 +76,18 @@ local default = {
       --include_dir = nil,
       lilypond_syntax_au = "BufEnter",
       pdf_viewer = nil,
+      errors = {
+        diagnostics = true,
+        quickfix = "external",
+        filtered_lines = {
+          "Missing character",
+          "See the LaTeX manual or LaTeX Companion for explanation",
+          "for immediate help.",
+          "Overfull \\hbox",
+          "^%s%.%.%.",
+          "%s+%(.*%)"
+        }
+      },
     },
   },
   player = {
@@ -146,5 +177,27 @@ vim.api.nvim_create_user_command('Viewer', function()
   local file = require('nvls.config').fileInfos()
   require('nvls.viewer').open(file.pdf, file.name .. ".pdf")
 end, {})
+
+M.debug = {}
+
+vim.api.nvim_create_user_command("LilyDebug", function(opts)
+  local target = opts.args
+
+  if M.debug[target] == nil then
+    local available_targets = {}
+    for k, _ in pairs(M.debug) do
+      table.insert(available_targets, k)
+    end
+    require('nvls.utils').message("Unknown target, available targets: " .. table.concat(available_targets, ", "))
+    return
+  end
+
+  vim.cmd("tabnew")
+  local buf = vim.api.nvim_create_buf(true, true)
+  vim.api.nvim_win_set_buf(0, buf)
+  vim.api.nvim_buf_set_lines(buf, 0, -1, false, vim.split(M.debug[target], "\n"))
+  vim.api.nvim_buf_set_option(buf, "modifiable", false)
+end, { nargs = 1 })
+
 
 return M
