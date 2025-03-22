@@ -2,8 +2,6 @@ if exists('b:current_syntax')
   finish 
 endif
 
-syntax clear
-
 if !exists('g:nvls_language')
   let g:nvls_language = "default"
 endif
