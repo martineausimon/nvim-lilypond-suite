@@ -124,8 +124,6 @@ function M.process(cmd, stderr_output)
   local append_last = false
 
   for _, line in ipairs(vim.split(stderr_output, "[\r\n]+")) do
-    debug.lines = (debug.lines or "") .. "\n" .. line
-
     line = line:gsub(" ", "")
     if not filtered_lines(cmd, line) then
       if is_end_of_errors(cmd, line) then break end
