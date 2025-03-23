@@ -72,6 +72,7 @@ function M.diagnostics_priority(diagnostics)
     ["\\lyricmode"] = 1,
     ["Emergency stop"] = 1,
     ["Fatal error occurred"] = 1,
+    ["Spurious expression"] = 1
   }
   table.sort(diagnostics, function(a, b)
     local function get_priority(message)
