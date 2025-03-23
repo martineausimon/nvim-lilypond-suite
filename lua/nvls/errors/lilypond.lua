@@ -31,35 +31,37 @@ return {
       }
     end
   },
-  {
-    pattern = "([^:]+):(%d+):(%d+): (%w+): syntax error, unexpected (.*)",
-    rule = function(file, lnum, col, loglevel, pattern)
-      local unexpected, end_msg, end_col
-      local msg = string.format("syntax error, unexpected %s", pattern)
+  --{
+  --  pattern = "([^:]+):(%d+):(%d+): (%w+): syntax error, unexpected (.*)",
+  --  rule = function(file, lnum, col, loglevel, pattern)
+  --    local unexpected, end_msg
+  --    local last_line = pattern:match(".*|%s(%w+)$")
+  --    local msg = string.format("syntax error, unexpected %s", last_line or pattern)
 
-      if pattern:match("expecting") then
-        unexpected, end_msg = pattern:match("([^,]+), expecting (.*)$")
-        msg = string.format("syntax error, unexpected %s, expecting %s", unexpected, end_msg)
-        end_col = tonumber(col) + #unexpected - 1
-      end
+  --    if pattern:match("expecting") then
+  --      unexpected, end_msg = pattern:match("([^,]+), expecting (.*)$")
+  --      msg = string.format("syntax error, unexpected %s, expecting %s", unexpected, end_msg)
+  --    end
 
-      return {
-        filename = file,
-        lnum = tonumber(lnum),
-        col = tonumber(col),
-        type = Utils.qf_type(loglevel),
-        text = msg,
-        pattern = Utils.format_pattern(unexpected),
-        end_col = end_col
-      }
-    end
-  },
+  --    pattern = unexpected or last_line
+
+  --    return {
+  --      filename = file,
+  --      lnum = tonumber(lnum),
+  --      col = tonumber(col),
+  --      type = Utils.qf_type(loglevel),
+  --      text = msg,
+  --      pattern = Utils.format_pattern(unexpected or last_line),
+  --      end_col = pattern and (tonumber(col) + #pattern - 1) or Utils.get_end_col(file, lnum, col)
+  --    }
+  --  end
+  --},
   {
     pattern = "([^:]+):(%d+):(%d+): (%w+): (.+)|.+|%s+(.*%S)%s*$",
     rule = function(file, lnum, col, loglevel, msg, pattern)
       if msg:match("not a note name") then
         pattern = msg:match("name:%s*(%S+)")
-        msg = "not a note name:"
+        msg = "not a note name"
       end
       col = tonumber(col) or 0
       return {
