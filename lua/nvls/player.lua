@@ -45,29 +45,29 @@ end
 local M = {}
 
 function M.convert()
-  local File = require('nvls.file')()
-  if vim.fn.filereadable(File.midi) == 1 then
+  local file = require('nvls').get_file_infos()
+  if vim.fn.filereadable(file.midi) == 1 then
 
-    local midi_last = Utils.last_mod(File.midi)
-    local audio_last = Utils.last_mod(File.audio)
+    local midi_last = Utils.last_mod(file.midi)
+    local audio_last = Utils.last_mod(file.audio)
 
     if (audio_last > midi_last) then
-      M.open(File.audio, vim.fn.fnamemodify(File.audio, ":t"))
+      M.open(file.audio, vim.fn.fnamemodify(file.audio, ":t"))
 
     else
-      local old_audio = File.audio
+      local old_audio = file.audio
       if type(old_audio) == "string" then
         os.remove(old_audio)
       end
 
-      create_audio(File.midi, File.audio_format)
+      create_audio(file.midi, file.audio_format)
     end
 
-  elseif vim.fn.filereadable(File.audio) == 1 then
-    M.open(File.audio, vim.fn.fnamemodify(File.audio, ":t"))
+  elseif vim.fn.filereadable(file.audio) == 1 then
+    M.open(file.audio, vim.fn.fnamemodify(file.audio, ":t"))
 
   else
-    Utils.message(string.format("Can't find %s.%s or %s.midi in working directory", File.name, File.audio_format, File.name), "ERROR")
+    Utils.message(string.format("Can't find %s.%s or %s.midi in working directory", file.name, file.audio_format, file.name), "ERROR")
     do return end
   end
 end
@@ -254,7 +254,7 @@ local function quickplayerCheckErr(str)
 end
 
 function M.quickplayer()
-  local File = require('nvls.file')()
+  local file = require('nvls').get_file_infos()
   Utils.clear_tmp_files()
 
   local sel = Utils.extract_from_sel(vim.fn.getpos("'<"), vim.fn.getpos("'>"))
@@ -275,9 +275,7 @@ function M.quickplayer()
     "}"
   })
 
-  vim.fn.mkdir(File.tmp, 'p')
-
-  local ly_file = vim.fs.joinpath(File.tmp, 'tmp.ly')
+  local ly_file = vim.fs.joinpath(file.tmp, 'tmp.ly')
   local tmpfile = io.open(ly_file, 'w')
   if tmpfile then
     tmpfile:write(code)
@@ -286,11 +284,11 @@ function M.quickplayer()
 
   Job:add('lilypond', {
     "--loglevel=NONE",
-    "-o", File.tmp,
+    "-o", file.tmp,
     ly_file
   })
 
-  create_audio(vim.fs.joinpath(File.tmp, "tmp.midi"), File.audio_format)
+  create_audio(vim.fs.joinpath(file.tmp, "tmp.midi"), file.audio_format)
 end
 
 return M

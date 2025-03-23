@@ -1,5 +1,5 @@
 local Utils = require('nvls.errors.utils')
-local main = require('nvls.config').fileInfos().main
+local main = require('nvls').get_file_infos().main
 
 return {
   {

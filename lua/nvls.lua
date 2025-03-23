@@ -150,13 +150,16 @@ local default_hi = {
   },
 }
 
+local tmp_folder = vim.fs.joinpath(vim.fn.stdpath("cache"), "nvls")
+
 local M = {}
 
-M.setup = function(opts)
+function M.setup(opts)
   opts = opts or {}
   nvls_options = vim.tbl_deep_extend('keep', opts, default)
   vim.g.nvls_language = nvls_options.lilypond.options.pitches_language
   M.syntax()
+  vim.fn.mkdir(tmp_folder, 'p')
 end
 
 function M.syntax()
@@ -169,13 +172,58 @@ function M.syntax()
   end
 end
 
-M.get_nvls_options = function()
+function M.get_nvls_options()
   return nvls_options or default
 end
 
+function M.get_file_infos()
+  local opts = {
+    player = nvls_options.player.options,
+    tex = nvls_options.latex.options,
+    texinfo = nvls_options.texinfo.options,
+    lilypond = nvls_options.lilypond.options,
+  }
+
+  local audio_format = opts["player"].audio_format
+  local midi_synth = opts["player"].midi_synth
+  if midi_synth == "timidity" then
+    audio_format = "wav"
+  end
+
+  local main_folder, main_file
+  local current_filetype = vim.bo.filetype
+
+  if opts[current_filetype] then
+    main_folder = opts[current_filetype].main_folder
+    main_file = opts[current_filetype].main_file
+  end
+
+  local main = vim.fn.expand('%:p')
+  local main_path = vim.fs.joinpath(vim.fn.expand(main_folder), main_file)
+
+  if vim.fn.filereadable(main_path) == 1 then
+    main = main_path
+  end
+
+  local file = {
+    name = vim.fn.fnamemodify(main, ":t:r"),
+    pdf = require('nvls.utils').change_extension(main, "pdf"),
+    audio = require('nvls.utils').change_extension(main, audio_format),
+    audio_format = audio_format,
+    midi = require('nvls.utils').change_extension(main, "midi"),
+    midi_synth = midi_synth,
+    main = main,
+    folder = vim.fn.fnamemodify(main, ":h"),
+    tmp = tmp_folder,
+    output_fm = opts["lilypond"].output
+  }
+
+  return file
+end
+
 vim.api.nvim_create_user_command('Viewer', function()
-  local File = require('nvls.file')()
-  require('nvls.viewer').open(File.pdf, File.name .. ".pdf")
+  local file = M.get_file_infos()
+  require('nvls.viewer').open(file.pdf, file.name .. ".pdf")
 end, {})
 
 M.debug = {}
@@ -183,7 +231,7 @@ M.debug = {}
 vim.api.nvim_create_user_command("LilyDebug", function(opts)
   local target = opts.args
 
-  local file = require('nvls.file')()
+  local file = M.get_file_infos()
   local fileinfos = {
     ["main folder"] = file.folder,
     ["main file"] = file.main,

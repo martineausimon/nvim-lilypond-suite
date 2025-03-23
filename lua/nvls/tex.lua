@@ -1,9 +1,7 @@
-local File = require('nvls.file')()
 local Utils = require('nvls.utils')
 local Job = require('nvls.job')
 local opts = require('nvls').get_nvls_options().latex
-
-vim.fn.mkdir(File.tmp, 'p')
+local file = require('nvls').get_file_infos()
 
 local lilypond_opts = require('nvls').get_nvls_options().lilypond
 
@@ -19,7 +17,7 @@ function M.ToggleLilypondSyntax()
 end
 
 function M.DetectLilypondSyntax()
-  if Utils.has(File.main, "\\begin{lilypond}") or Utils.has(File.main, "\\lilypond") then
+  if Utils.has(file.main, "\\begin{lilypond}") or Utils.has(file.main, "\\lilypond") then
     vim.b.current_syntax = nil
     vim.cmd('syntax include @lilypond syntax/lilypond.vim')
     vim.cmd([[
@@ -63,17 +61,17 @@ end
 local function compile_lilypond_book()
 
   local lilypondbook_args = {
-    "--output=" .. File.tmp,
+    "--output=" .. file.tmp,
     '--pdf',
-    File.main
+    file.main
   }
 
   local lualatex_args = {
     "--file-line-error",
-    "--output-directory=" .. File.folder,
+    "--output-directory=" .. file.folder,
     "--shell-escape",
     "--interaction=nonstopmode",
-    vim.fs.joinpath(File.tmp, File.name .. ".tex")
+    vim.fs.joinpath(file.tmp, file.name .. ".tex")
   }
 
   local backend = lilypond_opts.options.backend
@@ -101,23 +99,23 @@ local function compile_lilypond_book()
 
   Job:check_and_clean_tmp()
   Job:add("lilypond-book", lilypondbook_args)
-  Job:add("lualatex", lualatex_args, File.tmp)
+  Job:add("lualatex", lualatex_args, file.tmp)
 end
 
 local function compile_lualatex()
   local lualatex_args = {
     "--file-line-error",
-    string.format("--output-directory=%s", File.folder),
+    string.format("--output-directory=%s", file.folder),
     "--shell-escape",
     "--interaction=nonstopmode",
-    File.main
+    file.main
   }
 
   Job:add("lualatex", lualatex_args)
 end
 
 function M.SelectMakePrgType()
-  if (Utils.has(File.main, "\\begin{lilypond}") or Utils.has(File.main, "\\lilypond")) and not Utils.has(File.main, "\\usepackage{lyluatex}") then
+  if (Utils.has(file.main, "\\begin{lilypond}") or Utils.has(file.main, "\\lilypond")) and not Utils.has(file.main, "\\usepackage{lyluatex}") then
     compile_lilypond_book()
   else
     compile_lualatex()

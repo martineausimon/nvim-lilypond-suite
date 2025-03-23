@@ -25,12 +25,12 @@ end, {})
 
 vim.api.nvim_create_user_command('LilyCmp', function()
   vim.fn.execute('write')
-  local File = require('nvls.file')()
+  local file = require('nvls').get_file_infos()
 
   local args = {
-    "-f", File.output_fm,
-    "-o", vim.fs.joinpath(File.folder, File.name),
-    File.main
+    "-f", file.output_fm,
+    "-o", vim.fs.joinpath(file.folder, file.name),
+    file.main
   }
 
   local include_args = Utils.format_include_dirs(opts.options.include_dir)
