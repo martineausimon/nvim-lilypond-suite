@@ -1,8 +1,10 @@
-local Config = require('nvls.config')
+local File = require('nvls.file')()
 local Utils = require('nvls.utils')
 local Job = require('nvls.job')
-local opts = require('nvls').get_nvls_options().texinfo
-local file = Config.fileInfos()
+local opts = require('nvls').get_nvls_options().latex
+
+vim.fn.mkdir(File.tmp, 'p')
+
 local lilypond_opts = require('nvls').get_nvls_options().lilypond
 
 local M = {}
@@ -18,7 +20,7 @@ end
 
 function M.DetectLilypondSyntax()
   --TODO
-  if Utils.has(file.main, "@lilypond") then
+  if Utils.has(File.main, "@lilypond") then
     vim.b.current_syntax = nil
     vim.cmd('syntax include @lilypond syntax/lilypond.vim')
     vim.cmd([[ 
@@ -43,14 +45,14 @@ end
 local function compile_lilypond_book()
 
   local lilypondbook_args = {
-    "--output=" .. file.tmp,
+    "--output=" .. File.tmp,
     '--pdf',
-    file.main
+    File.main
   }
 
   local texinfo_args = {
-    "--output=" .. Utils.change_extension(file.main, "pdf"),
-    vim.fs.joinpath(file.tmp, file.name .. ".texi")
+    "--output=" .. Utils.change_extension(File.main, "pdf"),
+    vim.fs.joinpath(File.tmp, File.name .. ".texi")
   }
 
   local backend = lilypond_opts.options.backend
@@ -78,20 +80,20 @@ local function compile_lilypond_book()
 
   Job:check_and_clean_tmp()
   Job:add("lilypond-book", lilypondbook_args)
-  Job:add("texi2pdf", texinfo_args, file.tmp)
+  Job:add("texi2pdf", texinfo_args, File.tmp)
 end
 
 local function compile_texinfo()
   local texinfo_args = {
-    "--output=" .. Utils.change_extension(file.main, "pdf"),
-    file.main
+    "--output=" .. Utils.change_extension(File.main, "pdf"),
+    File.main
   }
 
   Job:add("texi2pdf", texinfo_args)
 end
 
 function M.SelectMakePrgType()
-  if Utils.has(file.main, "@lilypond") then
+  if Utils.has(File.main, "@lilypond") then
     compile_lilypond_book()
   else
     compile_texinfo()

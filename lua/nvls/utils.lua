@@ -92,7 +92,7 @@ function M.last_mod(file)
 end
 
 function M.clear_tmp_files()
-  local _file = require('nvls.config').fileInfos()
+  local _file = require('nvls.file')()
   local folder_contents = vim.fn.readdir(_file.folder)
   local to_delete = {}
   if vim.bo.filetype == "tex" or vim.bo.filetype == "texinfo" then

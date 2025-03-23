@@ -174,14 +174,27 @@ M.get_nvls_options = function()
 end
 
 vim.api.nvim_create_user_command('Viewer', function()
-  local file = require('nvls.config').fileInfos()
-  require('nvls.viewer').open(file.pdf, file.name .. ".pdf")
+  local File = require('nvls.file')()
+  require('nvls.viewer').open(File.pdf, File.name .. ".pdf")
 end, {})
 
 M.debug = {}
 
 vim.api.nvim_create_user_command("LilyDebug", function(opts)
   local target = opts.args
+
+  local file = require('nvls.file')()
+  local fileinfos = {
+    ["main folder"] = file.folder,
+    ["main file"] = file.main,
+    ["output pdf file"] = file.pdf,
+    ["tmp folder"] = file.tmp
+  }
+  if vim.bo.filetype == "lilypond" then
+    fileinfos["audio file"] = file.audio
+  end
+
+  M.debug.fileinfos = vim.inspect(fileinfos)
 
   if M.debug[target] == nil then
     local available_targets = {}
@@ -198,6 +211,5 @@ vim.api.nvim_create_user_command("LilyDebug", function(opts)
   vim.api.nvim_buf_set_lines(buf, 0, -1, false, vim.split(M.debug[target], "\n"))
   vim.api.nvim_buf_set_option(buf, "modifiable", false)
 end, { nargs = 1 })
-
 
 return M

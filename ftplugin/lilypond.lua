@@ -1,5 +1,4 @@
 local lilyWords   = vim.fn.expand('<sfile>:p:h') .. '/../lilywords'
-local Config = require('nvls.config')
 local Utils = require('nvls.utils')
 local Job = require('nvls.job')
 local Player = require('nvls.player')
@@ -26,12 +25,12 @@ end, {})
 
 vim.api.nvim_create_user_command('LilyCmp', function()
   vim.fn.execute('write')
-  local file = Config.fileInfos()
+  local File = require('nvls.file')()
 
   local args = {
-    "-f", file.output_fm,
-    "-o", vim.fs.joinpath(file.folder, file.name),
-    file.main
+    "-f", File.output_fm,
+    "-o", vim.fs.joinpath(File.folder, File.name),
+    File.main
   }
 
   local include_args = Utils.format_include_dirs(opts.options.include_dir)
