@@ -9,7 +9,7 @@ This is a plugin ([Neovim](https://github.com/neovim/neovim) only) for writing [
 ---
 
 > [!Important]
->I just uploaded the most important update since the creation of this plugin. I hope it won't cause any issues for you!
+>I just uploaded the most important update since the creation of this plugin (commit [65dd9c0](https://github.com/martineausimon/nvim-lilypond-suite/commit/65dd9c0ce18bfc2990a309ddf253ac2f58e9ca62). I hope it won't cause any issues for you!
 
 <details>
 <summary><b>MAIN CHANGES MARCH 2025</b> (click to expand)</summary>
@@ -39,9 +39,9 @@ This is a plugin ([Neovim](https://github.com/neovim/neovim) only) for writing [
 
 * I write a new debug function `:LilyDebug` which displays information:
     * `:LilyDebug commands`: shows the latest commands executed by the plugin
-    * `:LilyDebug errors`: displays the errors sorted by the plugin
+    * `:LilyDebug errors`: displays the errors sorted by the plugin, as they are sent to be processed by the "rules". Useful for creating/improving the rules. In multi-line errors, line breaks are represented by "|"
     * `:LilyDebug stdout`: shows the raw output of the last used commands
-    * `:LilyDebug lines`: shows the lines as they are sent to be processed by the "rules". Useful for creating/improving the rules. In multi-line errors, line breaks are represented by "|"
+    * `:LilyDebug fileinfos`: shows the main file, main folder, output file, tmp folder used for compilation, and audio file if lilypond
 
 Please report any issues!
 </details>
