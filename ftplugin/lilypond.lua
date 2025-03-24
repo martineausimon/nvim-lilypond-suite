@@ -16,7 +16,7 @@ vim.opt_local.iskeyword:append([[\]])
 vim.opt_local.complete:append('k')
 if vim.api.nvim_buf_get_option(0, 'autoindent') then
   vim.opt_local.indentexpr = 'v:lua.require("nvls.indent").lilypond()'
-  vim.opt_local.indentkeys:append('o', 'O', '}', '>>')
+  vim.opt_local.indentkeys:append({ 'o', 'O', '}', '>>'})
 end
 
 vim.api.nvim_create_user_command('LilyPlayer', function()
