@@ -74,147 +74,226 @@ If you want to use all the functions (player, hyphenation for various languages.
 ```lua 
 { 
   'martineausimon/nvim-lilypond-suite',
-  config = function()
-    require('nvls').setup({
-      -- edit config here (see "Customize default settings" in wiki)
-    })
-  end
+  opts = {
+    -- edit config here (see "Customize default settings" in wiki)
+  }
 }
 ```
+
+> Non lazy.nvim users : this plugin needs require('nvls').setup()
 
 <details>
 <summary>With config (click to expand)</summary>
 
 ```lua
-{ 
+{
   'martineausimon/nvim-lilypond-suite',
-  config = function()
-    require('nvls').setup({
-      lilypond = {
+  opts = {
+    lilypond = {
+    mappings = {
+    player = "<F3>",
+    compile = "<F5>",
+    open_pdf = "<F6>",
+    switch_buffers = "<A-Space>",
+    insert_version = "<F4>",
+    hyphenation = "<F12>",
+    hyphenation_change_lang = "<F11>",
+    insert_hyphen = "<leader>ih",
+    add_hyphen = "<leader>ah",
+    del_next_hyphen = "<leader>dh",
+    del_prev_hyphen = "<leader>dH",
+    },
+    options = {
+      pitches_language = "default",
+      hyphenation_language = "en_DEFAULT",
+      output = "pdf",
+      backend = nil,
+      main_file = "main.ly",
+      main_folder = "%:p:h",
+      include_dir = nil,
+      pdf_viewer = nil,
+      errors = {
+        diagnostics = true,
+        quickfix = "external",
+        filtered_lines = {
+          "compilation successfully completed",
+          "search path"
+        }
+      },
+    },
+    },
+    latex = {
       mappings = {
-      player = "<F3>",
-      compile = "<F5>",
-      open_pdf = "<F6>",
-      switch_buffers = "<A-Space>",
-      insert_version = "<F4>",
-      hyphenation = "<F12>",
-      hyphenation_change_lang = "<F11>",
-      insert_hyphen = "<leader>ih",
-      add_hyphen = "<leader>ah",
-      del_next_hyphen = "<leader>dh",
-      del_prev_hyphen = "<leader>dH",
+        compile = "<F5>",
+        open_pdf = "<F6>",
+        lilypond_syntax = "<F3>"
       },
       options = {
-        pitches_language = "default",
-        hyphenation_language = "en_DEFAULT",
-        output = "pdf",
-        backend = nil,
-        main_file = "main.ly",
+        lilypond_book_flags = nil,
+        clean_logs = false,
+        main_file = "main.tex",
         main_folder = "%:p:h",
         include_dir = nil,
+        lilypond_syntax_au = "BufEnter",
         pdf_viewer = nil,
         errors = {
           diagnostics = true,
           quickfix = "external",
           filtered_lines = {
-            "compilation successfully completed",
-            "search path"
+            "Missing character",
+            "LaTeX manual or LaTeX Companion",
+            "for immediate help.",
+            "Overfull \\hbox",
+            "^%s%.%.%.",
+            "%s+%(.*%)"
           }
         },
       },
+    },
+    texinfo = {
+      mappings = {
+        compile = "<F5>",
+        open_pdf = "<F6>",
+        lilypond_syntax = "<F3>"
       },
-      latex = {
-        mappings = {
-          compile = "<F5>",
-          open_pdf = "<F6>",
-          lilypond_syntax = "<F3>"
-        },
-        options = {
-          lilypond_book_flags = nil,
-          clean_logs = false,
-          main_file = "main.tex",
-          main_folder = "%:p:h",
-          include_dir = nil,
-          lilypond_syntax_au = "BufEnter",
-          pdf_viewer = nil,
-          errors = {
-            diagnostics = true,
-            quickfix = "external",
-            filtered_lines = {
-              "Missing character",
-              "LaTeX manual or LaTeX Companion",
-              "for immediate help.",
-              "Overfull \\hbox",
-              "^%s%.%.%.",
-              "%s+%(.*%)"
-            }
-          },
-        },
-      },
-      texinfo = {
-        mappings = {
-          compile = "<F5>",
-          open_pdf = "<F6>",
-          lilypond_syntax = "<F3>"
-        },
-        options = {
-          lilypond_book_flags = "--pdf",
-          clean_logs = false,
-          main_file = "main.texi",
-          main_folder = "%:p:h",
-          lilypond_syntax_au = "BufEnter",
-          pdf_viewer = nil,
-          errors = {
-            diagnostics = true,
-            quickfix = "external",
-            filtered_lines = {
-              "Missing character",
-              "LaTeX manual or LaTeX Companion",
-              "for immediate help.",
-              "Overfull \\hbox",
-              "^%s%.%.%.",
-              "%s+%(.*%)"
-            }
-          },
-        },
-      },
-      player = {
-        mappings = {
-          quit = "q",
-          play_pause = "p",
-          loop = "<A-l>",
-          backward = "h",
-          small_backward = "<S-h>",
-          forward = "l",
-          small_forward = "<S-l>",
-          decrease_speed = "j",
-          increase_speed = "k",
-          halve_speed = "<S-j>",
-          double_speed = "<S-k>"
-        },
-        options = {
-          row = 1,
-          col = "99%",
-          width = "37",
-          height = "1",
-          border_style = "single",
-          winhighlight = "Normal:Normal,FloatBorder:Normal,FloatTitle:Normal",
-          midi_synth = "fluidsynth",
-          fluidsynth_flags = nil,
-          timidity_flags = nil,
-          audio_format = "mp3",
-          mpv_flags = {
-            "--msg-level=cplayer=no,ffmpeg=no,alsa=no",
-            "--loop",
-            "--config-dir=/dev/null",
-            "--no-video"
+      options = {
+        lilypond_book_flags = "--pdf",
+        clean_logs = false,
+        main_file = "main.texi",
+        main_folder = "%:p:h",
+        lilypond_syntax_au = "BufEnter",
+        pdf_viewer = nil,
+        errors = {
+          diagnostics = true,
+          quickfix = "external",
+          filtered_lines = {
+            "Missing character",
+            "LaTeX manual or LaTeX Companion",
+            "for immediate help.",
+            "Overfull \\hbox",
+            "^%s%.%.%.",
+            "%s+%(.*%)"
           }
         },
       },
-    })
-  end
+    },
+    player = {
+      mappings = {
+        quit = "q",
+        play_pause = "p",
+        loop = "<A-l>",
+        backward = "h",
+        small_backward = "<S-h>",
+        forward = "l",
+        small_forward = "<S-l>",
+        decrease_speed = "j",
+        increase_speed = "k",
+        halve_speed = "<S-j>",
+        double_speed = "<S-k>"
+      },
+      options = {
+        row = 1,
+        col = "99%",
+        width = "37",
+        height = "1",
+        border_style = "single",
+        winhighlight = "Normal:Normal,FloatBorder:Normal,FloatTitle:Normal",
+        midi_synth = "fluidsynth",
+        fluidsynth_flags = nil,
+        timidity_flags = nil,
+        audio_format = "mp3",
+        mpv_flags = {
+          "--msg-level=cplayer=no,ffmpeg=no,alsa=no",
+          "--loop",
+          "--config-dir=/dev/null",
+          "--no-video"
+        }
+      },
+    },
+  }
 }
 ```
+</details>
+
+<details>
+<summary>Minimal config with Lazy and Blink (click to expand)</summary>
+
+```lua
+-- Install lazy.nvim
+
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not (vim.uv or vim.loop).fs_stat(lazypath) then
+  local lazyrepo = "https://github.com/folke/lazy.nvim.git"
+  local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
+  if vim.v.shell_error ~= 0 then
+    vim.api.nvim_echo({
+      { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
+      { out, "WarningMsg" },
+      { "\nPress any key to exit..." },
+    }, true, {})
+    vim.fn.getchar()
+    os.exit(1)
+  end
+end
+
+vim.opt.rtp:prepend(lazypath)
+
+-- Plugins config
+
+require("lazy").setup({
+  {
+    "martineausimon/nvim-lilypond-suite",
+    opts = {}
+  },
+  { 'nvim-lua/plenary.nvim', lazy = true }, -- Required for blink.cmp
+  {
+    'saghen/blink.cmp',
+    dependencies = {
+      'Kaiser-Yang/blink-cmp-dictionary', -- Required for dictionary completion
+    },
+    version = '*',
+    opts = {
+      sources = {
+        default = { 'dictionary', 'lsp', 'path', 'snippets', 'buffer' }, -- Add 'dictionary'
+        providers = {
+          dictionary = {
+            module = 'blink-cmp-dictionary',
+            name = 'Dict',
+            min_keyword_length = 3,
+            max_items = 8,
+            opts = {
+              dictionary_files = function()
+                if vim.bo.filetype == 'lilypond' then -- Add lilypond words to sources
+                  return vim.fn.glob(vim.fn.expand('$LILYDICTPATH') .. '/*', true, true)
+                end
+              end,
+            }
+          },
+        },
+      },
+    },
+    opts_extend = { "sources.default" }
+  },
+},{})
+
+vim.diagnostic.config({ -- Show diagnostics if errors
+  virtual_text = true,
+  signs = true,
+  update_in_insert = false,
+  underline = true,
+})
+
+vim.api.nvim_create_autocmd('BufEnter', { -- Better highlights
+  command = "syntax sync fromstart",
+  pattern = { '*.ly', '*.ily', '*.tex', '*.texi', '*.texinfo' }
+})
+
+vim.api.nvim_create_autocmd( 'QuickFixCmdPost', { -- Show quickfix if errors, else close window
+  command = "cwindow",
+  pattern = "*"
+})
+```
+
 </details>
 
 ## WIKI INDEX
