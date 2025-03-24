@@ -190,6 +190,8 @@ function M.process(cmd, stderr_output)
         local entry_bufnr = entry.filename and vim.fn.bufnr(entry.filename, true) or nil
         return entry_bufnr and entry_bufnr ~= current_bufnr
       end, qf_list)
+    elseif ft and opts[ft] and opts[ft].options.errors.quickfix == "none" then
+      filtered_qf_list = {}
     end
 
     if #filtered_qf_list > 0 then
