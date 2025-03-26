@@ -22,19 +22,19 @@ This is a plugin ([Neovim](https://github.com/neovim/neovim) only) for writing [
 
 ```lua
 {
-    pattern = "([^:]+):(%d+):(%d+): (%w+): (.+): (.*)",
-    rule = function(file, lnum, col, loglevel, msg, pattern)
-      return {
-        filename = file,
-        lnum = tonumber(lnum),
-        col = tonumber(col),
-        type = Utils.qf_type(loglevel),
-        text = string.format("%s: %s", msg, pattern),
-        pattern = Utils.format_pattern(pattern),
-        end_col = tonumber(col) + #pattern - 1
-      }
-    end
-  },
+  pattern = "([^:]+):(%d+):(%d+): (%w+): (.+): (.*)",
+  rule = function(file, lnum, col, loglevel, msg, pattern)
+    return {
+      filename = file,
+      lnum = tonumber(lnum),
+      col = tonumber(col),
+      type = Utils.qf_type(loglevel),
+      text = string.format("%s: %s", msg, pattern),
+      pattern = Utils.format_pattern(pattern),
+      end_col = tonumber(col) + #pattern - 1
+    }
+  end
+},
 ```
 
 * I write a new debug function `:LilyDebug` which displays information:
