@@ -1,5 +1,3 @@
-local os_type = vim.loop.os_uname().sysname
-
 local M = {}
 
 function M.message(str, level)
@@ -78,18 +76,23 @@ end
 
 function M.last_mod(file)
   if vim.fn.filereadable(file) ~= 1 then return 0 end
-
-  local var = (
-    os_type == "Darwin" and io.popen(string.format("stat -f %m %q", file)) or
-    os_type == "Linux" and io.popen(string.format("stat -c %%Y %q", file)) or
-    os_type == "Windows" and io.popen(string.format('for %%F in (%q) do @echo %%~tF', file))
-  )
-
-  local result = var and var:read("*a"):match("%d+") or "0"
-  if var then var:close() end
-
-  return tonumber(result)
+  return vim.fn.getftime(file)
 end
+
+function M.set_texinputs(include_dir)
+  if not include_dir or include_dir == "" then return end
+
+  local sep = vim.loop.os_uname().sysname:match("Windows") and ";" or ":"
+
+  if type(include_dir) == "table" then
+    include_dir = table.concat(include_dir, sep)
+  end
+
+  local texinputs = tostring(vim.fn.getenv('TEXINPUTS'))
+  if texinputs == "vim.NIL" then texinputs = "" end
+  vim.fn.setenv('TEXINPUTS', texinputs .. sep .. include_dir)
+end
+
 
 function M.clear_tmp_files()
   local _file = require('nvls').get_file_infos()

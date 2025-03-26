@@ -34,3 +34,5 @@ if opts.options.clean_logs or vim.g.nvls_clean_tex_files == 1 then
     pattern = { "*.texi", "*.texinfo" }
   })
 end
+
+Utils.set_texinputs(opts.options.include_dir)
