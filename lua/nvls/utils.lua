@@ -80,6 +80,7 @@ function M.last_mod(file)
 end
 
 function M.set_texinputs(include_dir)
+  vim.fn.setenv('max_print_line', "10000")
   if not include_dir or include_dir == "" then return end
 
   local sep = vim.loop.os_uname().sysname:match("Windows") and ";" or ":"
