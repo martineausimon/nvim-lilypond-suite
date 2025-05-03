@@ -27,10 +27,12 @@ local function create_audio(midi_input, format)
     Utils.insert_flags(fluidsynth_args, nvls_options.player.options.fluidsynth_flags, true)
 
     local ffmpeg_args = {
-      "-f", "s32le",
+      "-ac", "2",
+      "-f", "s16le",
       "-i", raw_file,
-      audio_out
     }
+    Utils.insert_flags(ffmpeg_args, nvls_options.player.options.ffmpeg_flags)
+    Utils.insert_flags(ffmpeg_args, audio_out)
 
     Job:add("fluidsynth", fluidsynth_args)
     Job:add("ffmpeg", ffmpeg_args, nil, function()
