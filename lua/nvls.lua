@@ -114,6 +114,7 @@ local default = {
       midi_synth = "fluidsynth",
       fluidsynth_flags = nil,
       timidity_flags = nil,
+      ffmpeg_flags = nil,
       audio_format = "mp3",
       mpv_flags = {
         "--msg-level=cplayer=no,ffmpeg=no,alsa=no",
