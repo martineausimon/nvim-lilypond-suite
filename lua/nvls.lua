@@ -259,6 +259,19 @@ vim.api.nvim_create_user_command("LilyDebug", function(opts)
   vim.api.nvim_win_set_buf(0, buf)
   vim.api.nvim_buf_set_lines(buf, 0, -1, false, vim.split(M.debug[target], "\n"))
   vim.api.nvim_buf_set_option(buf, "modifiable", false)
-end, { nargs = 1 })
+end, {
+  nargs = 1,
+  complete = function(ArgLead)
+    local items = {
+      "fileinfos"
+    }
+    for k, _ in pairs(M.debug) do
+      if vim.startswith(k, ArgLead) then
+        table.insert(items, k)
+      end
+    end
+    return items
+  end
+})
 
 return M
