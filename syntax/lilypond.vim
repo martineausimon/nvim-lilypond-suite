@@ -110,7 +110,7 @@ if g:nvls_language != "nohl"
   syn match lilyChordStart "\:" contained 
         \ containedin=lilyChordNat
 
-  syn match lilyChordNat "\:\v(\d{1,2}(\+|-)?)?(maj|dim|sus|aug|min|m)?(\d{,2}(\+|-)?)?>"me=e+1,hs=s+1,he=e+1 contained
+  syn match lilyChordNat "\:\v((maj|min|m|dim|aug)?\d{0,2})*(sus\d{0,2})*(\d{0,2})?>"me=e+1,hs=s+1,he=e+1 contained
         \ containedin=@lilyPitchGroup
         \ nextgroup=lilyChordExt,lilyChordBass
         \ contains=lilyChordStart
