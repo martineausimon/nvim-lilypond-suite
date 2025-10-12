@@ -179,14 +179,17 @@ syn region lilyInScheme
   \ matchgroup=Delimiter 
   \ start="#{" 
   \ end="#}"
-  \ contained contains=@lilyMatchGroup,lilyInScheme
+  \ contained
+  \ contains=@lilyMatchGroup,lilyInScheme
+  \ containedin=lilyScheme,lilyInScheme
 
-syn region lilyInScheme
-  \ matchgroup=Delimiter 
-  \ start="(" 
+syn region lilyScheme
+  \ matchgroup=Delimiter
+  \ start="("
   \ end=")"
-  \ contained contains=@Scheme,lilyInScheme
-  \ containedin=LilyScheme
+  \ contained
+  \ contains=@Scheme,lilyInScheme
+  \ containedin=lilyScheme,lilyInScheme
 
 syn region lilyLyrics
   \ matchgroup=lilyLyrics
