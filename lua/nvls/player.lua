@@ -21,10 +21,14 @@ local function create_audio(midi_input, format)
     local raw_file = vim.fs.joinpath(vim.fn.stdpath("cache"), "nvls", "tmp.raw")
 
     local fluidsynth_args = {
-      midi_input,
-      "-T", "raw", "-F", raw_file, "-s"
+      "-n", "-a", "file",
+      "-T", "raw",
+      "-F", raw_file,
     }
-    Utils.insert_flags(fluidsynth_args, nvls_options.player.options.fluidsynth_flags, true)
+
+    Utils.insert_flags(fluidsynth_args, nvls_options.player.options.fluidsynth_flags, false)
+
+    table.insert(fluidsynth_args, midi_input)
 
     local ffmpeg_args = {
       "-ac", "2",
