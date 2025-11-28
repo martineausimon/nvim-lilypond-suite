@@ -1,5 +1,5 @@
 if exists('b:current_syntax')
-  finish 
+  finish
 endif
 
 if !exists('g:nvls_language')
@@ -47,30 +47,6 @@ syn region lilyChordReg
   \ contains=lilyPitch,lilyFing,lilyFunction
   \ nextgroup=lilyRythm
 
-syn region lilyMatcher  
-  \ matchgroup=Delimiter
-  \ start="{"
-  \ skip="\\\\\|\\[<>]"
-  \ end="}"
-  \ contains=@lilyMatchGroup 
-  \ nextgroup=lilyArticulation
-  \ fold
-
-syn region lilyMatcher  
-  \ matchgroup=Delimiter
-  \ start="\["
-  \ end="]"
-  \ contains=@lilyMatchGroup
-  \ fold
-
-syn region lilyMatcher  
-  \ matchgroup=Delimiter 
-  \ start="<\{2}" 
-  \ skip="\\\\\|\\[{<>}]" 
-  \ end=">\{2}" 
-  \ contains=@lilyMatchGroup 
-  \ fold
-
 if g:nvls_language != "nohl"
   syn match lilyFing "\s\{}[-_^\\]\d\+" contained nextgroup=lilyFing
 endif
@@ -107,7 +83,7 @@ syn match lilyRythm "\v(\/\l+)@<!(1024|512|256|128|64|32|16|8|4|2|1)=\.{}(\*\d{1
   \ contained contains=lilySpecial nextgroup=lilyArticulation,lilyFunction,lilyChordNat,lilyChordBass,lilyFing,lilySpecial,lilyDynamic,lilyMarkupReg
 
 if g:nvls_language != "nohl"
-  syn match lilyChordStart "\:" contained 
+  syn match lilyChordStart "\:" contained
         \ containedin=lilyChordNat
 
   syn match lilyChordNat "\:\v((maj|min|m|dim|aug)?\d{0,2})*(sus\d{0,2})*(\d{0,2})?>"me=e+1,hs=s+1,he=e+1 contained
@@ -115,7 +91,7 @@ if g:nvls_language != "nohl"
         \ nextgroup=lilyChordExt,lilyChordBass
         \ contains=lilyChordStart
 
-  syn match lilyChordExt "\v(\.|\^)([2-9]|1[0-3])(\+|-)=(\A|\n)"me=e-1 contained 
+  syn match lilyChordExt "\v(\.|\^)([2-9]|1[0-3])(\+|-)=(\A|\n)"me=e-1 contained
         \ containedin=lilyChordNat,lilyChordExt
         \ nextgroup=lilyChordExt,lilyChordBass
         \ contains=lilyChordLink
@@ -154,7 +130,7 @@ syn match lilyDynamic "\\[<!>\\]"
 
 if g:nvls_language == "nohl"
   syn match lilyNumber "[-_^.]\?\(\-\.\|\)\d\+[.]\{,3}" nextgroup=lilyChordNat,lilyArticulation,lilyFing
-else 
+else
   syn match lilyNumber "[-_^.]\?\(\-\.\|\)\d\+[.]\?" nextgroup=@lilyMatchGroup,lilyChordNat,lilyArticulation,lilyFing
 end
 
@@ -170,14 +146,14 @@ syn match Error "\<\\tuplet\(\s\|\)\+{"me=e-1
 syn include @Scheme syntax/scheme.vim
 unlet b:current_syntax
 syn region lilyScheme
-  \ matchgroup=Delimiter 
-  \ start="\(#\|\$\)['`]\?\s\{}\(\n\|\s\)\{}(" 
-  \ end=")" 
+  \ matchgroup=Delimiter
+  \ start="\(#\|\$\)['`]\?\s\{}\(\n\|\s\)\{}("
+  \ end=")"
   \ contains=@Scheme,lilyInScheme
 
 syn region lilyInScheme
-  \ matchgroup=Delimiter 
-  \ start="#{" 
+  \ matchgroup=Delimiter
+  \ start="#{"
   \ end="#}"
   \ contained
   \ contains=@lilyMatchGroup,lilyInScheme
@@ -197,9 +173,9 @@ syn region lilyLyrics
   \ end="}"
   \ contains=ALLBUT,lilyGrob,@lilyPitchGroup,Error,lilyVar,lilyDefineVar,lilyInnerMarkup
 
-syn region lilyInnerLyrics 
-  \ matchgroup=Delimiter 
-  \ start="\({\|(\|<\)" end="\(}\|)\|>\)" 
+syn region lilyInnerLyrics
+  \ matchgroup=Delimiter
+  \ start="\({\|(\|<\)" end="\(}\|)\|>\)"
   \ contained contains=ALLBUT,lilyGrob,@lilyPitchGroup,lilyVar,lilyDefineVar,lilyInnerMarkup
   \ containedin=lilyLyrics
 
@@ -213,10 +189,43 @@ syn region lilyMarkupReg
 
 syn region lilyInnerMarkup
   \ matchgroup=Delimiter
-  \ start="{" 
-  \ end="}" 
+  \ start="{"
+  \ end="}"
   \ contained contains=ALLBUT,lilyFunction,lilyInnerLyrics,@lilyPitchGroup,lilyVar,lilyDefineVar
   \ containedin=lilyMarkupReg
+
+syn region lilyMatcher
+  \ matchgroup=Delimiter
+  \ start="("
+  \ end=")"
+  \ contains=@lilyMatchGroup
+  \ fold
+
+syn region lilyMatcher
+  \ matchgroup=Delimiter
+  \ start="{"
+  \ skip="\\\\\|\\[<>]"
+  \ end="}"
+  \ contains=@lilyMatchGroup
+  \ nextgroup=lilyArticulation
+  \ fold
+
+syn region lilyMatcher
+  \ matchgroup=Delimiter
+  \ start="\["
+  \ end="]"
+  \ contains=@lilyMatchGroup
+  \ fold
+
+syn region lilyMatcher
+  \ matchgroup=Delimiter
+  \ start="<\{2}"
+  \ skip="\\\\\|\\[{<>}]"
+  \ end=">\{2}"
+  \ contains=@lilyMatchGroup
+  \ fold
+
+
 
 hi link lilyInnerLyrics       lilyLyrics
 hi link lilyGrobsExcpt        lilyGrob
