@@ -54,6 +54,7 @@ endif
 syn match lilyChordBass "\/" contained containedin=@lilyPitchGroup nextgroup=lilyPitch
 
 syn match lilyMarkup   "[-_^]\?\\\a\([-_]\{}\a\)\{}\s\{}"
+syn match lilyFunction "\\%"
 syn match lilyFunction "[-_^]\?\\\a\([-_]\{}\a\)\{}\s\{}" nextgroup=lilyPitch,lilyMatcher
 syn match lilyFunction "[-_^]\?\(\\tweak\|\\set\|\\unset\)\s\+" nextgroup=lilyVar,lilyContext,lilyGrob
 syn match lilyDynamic  "[-_^]\?\\\v((end)?(de)?cr(esc)?|(end)?dim|f{1,5}(p|z)?|m(f|p)?|n|p{1,5}|rfz|sf{1,2}|sf(p|z)?|sp{1,2}|[\)]|[\(])(\A|\n)"me=e-1
@@ -125,7 +126,7 @@ syn match lilyScheme "\(#['`]\?\|\$\)[^'\"(0-9 ]*[\n ]"ms=s+1
 syn match lilyBoolean "\v(##f|##t|#f|#t)(\A|\n)"
 syn region lilyString  start=/[_^-]\?"/  end=/"/   skip=/\\"/
 syn region lilyComment start="%{" skip="%$" end="%}"
-syn region lilyComment start="%\([^{]\|$\)" end="$"
+syn region lilyComment start="\(^\|[^\\]\)\zs%\([^{]\|$\)" end="$"
 syn match lilyDynamic "\\[<!>\\]"
 
 if g:nvls_language == "nohl"
