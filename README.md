@@ -8,43 +8,13 @@ This is a plugin ([Neovim](https://github.com/neovim/neovim) only) for writing [
 
 ---
 
-> [!Important]
->I just uploaded the most important update since the creation of this plugin (commit [65dd9c0](https://github.com/martineausimon/nvim-lilypond-suite/commit/65dd9c0ce18bfc2990a309ddf253ac2f58e9ca62). I hope it won't cause any issues for you!
+> [!NOTE]  
+> **NEW PLAYER** (sept. 2026)  
+> - **automatic audio update** if the player is open  
+> - use `gg`, `G`, and `[NUM]G` to **navigate to a specific bar**  
+> - add/jump to/del **marks** with `m`, `'` and `dm`  
+> - new ui
 
-<details>
-<summary><b>MAIN CHANGES MARCH 2025</b> (click to expand)</summary>
-
-* Compilation is now performed with `vim.uv`, which has many advantages, particularly regarding error management. For tasks that require multiple compilations, a job queue is created, and if a job fails, the queue is canceled, providing more information about what went wrong.
-
-* I've maximized the use of native nvim functions for file and path management to avoid issues with weird characters in file names.
-
-* I’ve significantly improved error handling with quickfix and diagnostics. Each error message is sorted according to a rule like this (some rules certainly needs improvements !):
-
-```lua
-{
-  pattern = "([^:]+):(%d+):(%d+): (%w+): (.+): (.*)",
-  rule = function(file, lnum, col, loglevel, msg, pattern)
-    return {
-      filename = file,
-      lnum = tonumber(lnum),
-      col = tonumber(col),
-      type = Utils.qf_type(loglevel),
-      text = string.format("%s: %s", msg, pattern),
-      pattern = Utils.format_pattern(pattern),
-      end_col = tonumber(col) + #pattern - 1
-    }
-  end
-},
-```
-
-* I write a new debug function `:LilyDebug` which displays information:
-    * `:LilyDebug commands`: shows the latest commands executed by the plugin
-    * `:LilyDebug errors`: displays the errors sorted by the plugin, as they are sent to be processed by the "rules". Useful for creating/improving the rules. In multi-line errors, line breaks are represented by "|"
-    * `:LilyDebug stdout`: shows the raw output of the last used commands
-    * `:LilyDebug fileinfos`: shows the main file, main folder, output file, tmp folder used for compilation, and audio file if lilypond
-
-Please report any issues!
-</details>
 
 ## FEATURES
 
@@ -89,19 +59,19 @@ If you want to use all the functions (player, hyphenation for various languages.
 {
   'martineausimon/nvim-lilypond-suite',
   opts = {
-    lilypond = {
+      lilypond = {
     mappings = {
-    player = "<F3>",
-    compile = "<F5>",
-    open_pdf = "<F6>",
-    switch_buffers = "<A-Space>",
-    insert_version = "<F4>",
-    hyphenation = "<F12>",
-    hyphenation_change_lang = "<F11>",
-    insert_hyphen = "<leader>ih",
-    add_hyphen = "<leader>ah",
-    del_next_hyphen = "<leader>dh",
-    del_prev_hyphen = "<leader>dH",
+      player = "<F3>",
+      compile = "<F5>",
+      open_pdf = "<F6>",
+      switch_buffers = "<A-Space>",
+      insert_version = "<F4>",
+      hyphenation = "<F12>",
+      hyphenation_change_lang = "<F11>",
+      insert_hyphen = "<leader>ih",
+      add_hyphen = "<leader>ah",
+      del_next_hyphen = "<leader>dh",
+      del_prev_hyphen = "<leader>dH",
     },
     options = {
       pitches_language = "default",
@@ -121,95 +91,104 @@ If you want to use all the functions (player, hyphenation for various languages.
         }
       },
     },
+  },
+  latex = {
+    mappings = {
+      compile = "<F5>",
+      open_pdf = "<F6>",
+      lilypond_syntax = "<F3>"
     },
-    latex = {
-      mappings = {
-        compile = "<F5>",
-        open_pdf = "<F6>",
-        lilypond_syntax = "<F3>"
-      },
-      options = {
-        lilypond_book_flags = nil,
-        clean_logs = false,
-        main_file = "main.tex",
-        main_folder = "%:p:h",
-        include_dir = nil,
-        lilypond_syntax_au = "BufEnter",
-        pdf_viewer = nil,
-        errors = {
-          diagnostics = true,
-          quickfix = "external",
-          filtered_lines = {
-            "Missing character",
-            "LaTeX manual or LaTeX Companion",
-            "for immediate help.",
-            "Overfull \\hbox",
-            "^%s%.%.%.",
-            "%s+%(.*%)"
-          }
-        },
-      },
-    },
-    texinfo = {
-      mappings = {
-        compile = "<F5>",
-        open_pdf = "<F6>",
-        lilypond_syntax = "<F3>"
-      },
-      options = {
-        lilypond_book_flags = "--pdf",
-        clean_logs = false,
-        main_file = "main.texi",
-        main_folder = "%:p:h",
-        lilypond_syntax_au = "BufEnter",
-        pdf_viewer = nil,
-        errors = {
-          diagnostics = true,
-          quickfix = "external",
-          filtered_lines = {
-            "Missing character",
-            "LaTeX manual or LaTeX Companion",
-            "for immediate help.",
-            "Overfull \\hbox",
-            "^%s%.%.%.",
-            "%s+%(.*%)"
-          }
-        },
-      },
-    },
-    player = {
-      mappings = {
-        quit = "q",
-        play_pause = "p",
-        loop = "<A-l>",
-        backward = "h",
-        small_backward = "<S-h>",
-        forward = "l",
-        small_forward = "<S-l>",
-        decrease_speed = "j",
-        increase_speed = "k",
-        halve_speed = "<S-j>",
-        double_speed = "<S-k>"
-      },
-      options = {
-        row = 1,
-        col = "99%",
-        width = "37",
-        height = "1",
-        border_style = "single",
-        winhighlight = "Normal:Normal,FloatBorder:Normal,FloatTitle:Normal",
-        midi_synth = "fluidsynth",
-        fluidsynth_flags = nil,
-        timidity_flags = nil,
-        ffmpeg_flags = nil,
-        audio_format = "mp3",
-        mpv_flags = {
-          "--msg-level=cplayer=no,ffmpeg=no,alsa=no",
-          "--loop",
-          "--config-dir=/dev/null",
-          "--no-video"
+    options = {
+      lilypond_book_flags = nil,
+      clean_logs = false,
+      main_file = "main.tex",
+      main_folder = "%:p:h",
+      include_dir = nil,
+      lilypond_syntax_au = "BufEnter",
+      pdf_viewer = nil,
+      errors = {
+        diagnostics = true,
+        quickfix = "external",
+        filtered_lines = {
+          "Missing character",
+          "See the LaTeX manual or LaTeX Companion for explanation",
+          "for immediate help.",
+          "Overfull \\hbox",
+          "^%s%.%.%.",
+          "%s+%(.*%)"
         }
       },
+    },
+  },
+  texinfo = {
+    mappings = {
+      compile = "<F5>",
+      open_pdf = "<F6>",
+      lilypond_syntax = "<F3>"
+    },
+    options = {
+      lilypond_book_flags = "--pdf",
+      clean_logs = false,
+      main_file = "main.texi",
+      main_folder = "%:p:h",
+      include_dir = nil,
+      lilypond_syntax_au = "BufEnter",
+      pdf_viewer = nil,
+      errors = {
+        diagnostics = true,
+        quickfix = "external",
+        filtered_lines = {
+          "Missing character",
+          "See the LaTeX manual or LaTeX Companion for explanation",
+          "for immediate help.",
+          "Overfull \\hbox",
+          "^%s%.%.%.",
+          "%s+%(.*%)"
+        }
+      },
+    },
+  },
+  player = {
+    mappings = {
+      quit = "q",
+      play_pause = "p",
+      loop = "<A-l>",
+      backward = "h",
+      small_backward = "<S-h>",
+      forward = "l",
+      small_forward = "<S-l>",
+      decrease_speed = "j",
+      increase_speed = "k",
+      halve_speed = "<S-j>",
+      double_speed = "<S-k>"
+    },
+    options = {
+      row = 1,
+      col = "99%",
+      width = "50",
+      height = "1",
+      border_style = "single",
+      winhighlight = "Normal:Normal,FloatBorder:Normal,FloatTitle:Normal",
+      winhighlight_inactive = "Normal:NvlsPlayerInactive,FloatBorder:NvlsPlayerInactive,FloatTitle:NvlsPlayerInactive,PmenuSel:NvlsPlayerInactive,NonText:NvlsPlayerInactive",
+      midi_synth = "fluidsynth",
+      fluidsynth_flags = nil,
+      timidity_flags = nil,
+      ffmpeg_flags = nil,
+      audio_format = "mp3",
+      mpv_flags = {
+        "--msg-level=cplayer=no,ffmpeg=no,alsa=no",
+        "--loop",
+        "--config-dir=/dev/null",
+        "--no-video"
+      },
+      icon_play = "󰐊",
+      icon_pause = "󰏤",
+      bar_char = "━",
+      seek_step = 5,
+      seek_step_small = 1,
+      speed_step = 0.1,
+      speed_multiply = 2.0,
+      refresh_interval_ms = 150,
     },
   }
 }

@@ -107,10 +107,11 @@ local default = {
     options = {
       row = 1,
       col = "99%",
-      width = "37",
+      width = "50",
       height = "1",
       border_style = "single",
       winhighlight = "Normal:Normal,FloatBorder:Normal,FloatTitle:Normal",
+      winhighlight_inactive = "Normal:NvlsPlayerInactive,FloatBorder:NvlsPlayerInactive,FloatTitle:NvlsPlayerInactive,PmenuSel:NvlsPlayerInactive,NonText:NvlsPlayerInactive",
       midi_synth = "fluidsynth",
       fluidsynth_flags = nil,
       timidity_flags = nil,
@@ -121,7 +122,15 @@ local default = {
         "--loop",
         "--config-dir=/dev/null",
         "--no-video"
-      }
+      },
+      icon_play = "󰐊",
+      icon_pause = "󰏤",
+      bar_char = "━",
+      seek_step = 5,
+      seek_step_small = 1,
+      speed_step = 0.1,
+      speed_multiply = 2.0,
+      refresh_interval_ms = 150,
     },
   },
 }
@@ -151,30 +160,55 @@ local default_hi = {
   },
 }
 
+-- Highlights internes au player (fenêtre flottante, curseur masqué).
+-- Même mécanisme que default_hi : overridable via nvls_options.player.highlights.
+local default_hi_player = {
+  NvlsHiddenCursor = { blend = 100, nocombine = true },
+  NvlsPlayerInactive = { link = "Comment", default = true },
+}
+
 local tmp_folder = vim.fs.joinpath(vim.fn.stdpath("cache"), "nvls")
 
 local M = {}
 
-function M.setup(opts)
-  opts = opts or {}
-  nvls_options = vim.tbl_deep_extend('keep', opts, default)
-  vim.g.nvls_language = nvls_options.lilypond.options.pitches_language
-  M.syntax()
-  vim.fn.mkdir(tmp_folder, 'p')
-end
-
-function M.syntax()
-  local hi = default_hi
-  if nvls_options and nvls_options.lilypond and nvls_options.lilypond.highlights then
-    hi = vim.tbl_extend('keep', nvls_options.lilypond.highlights, default_hi)
+local function apply_highlights(defaults, overrides)
+  local hi = defaults
+  if overrides then
+    hi = vim.tbl_extend('keep', overrides, defaults)
   end
   for i, j in pairs(hi) do
     vim.api.nvim_set_hl(0, i, j)
   end
 end
 
+function M.setup(opts)
+  opts = opts or {}
+  nvls_options = vim.tbl_deep_extend('keep', opts, default)
+  vim.g.nvls_language = nvls_options.lilypond.options.pitches_language
+  M.syntax()
+  M.syntax_player()
+  vim.fn.mkdir(tmp_folder, 'p')
+end
+
+function M.syntax()
+  local overrides = nvls_options and nvls_options.lilypond and nvls_options.lilypond.highlights
+  apply_highlights(default_hi, overrides)
+end
+
+function M.syntax_player()
+  local overrides = nvls_options and nvls_options.player and nvls_options.player.highlights
+  apply_highlights(default_hi_player, overrides)
+end
+
 function M.get_nvls_options()
   return nvls_options or default
+end
+
+--- Dossier de cache/tmp partagé par tout le plugin (marks, audio temporaire,
+--- helper LilyPond...). Ne dépend pas de M.setup() : calculable dès le
+--- chargement du module.
+function M.get_tmp_folder()
+  return tmp_folder
 end
 
 function M.get_file_infos()
