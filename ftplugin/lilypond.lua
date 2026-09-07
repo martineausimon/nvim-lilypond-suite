@@ -29,9 +29,11 @@ end, {})
 vim.api.nvim_create_user_command('LilyCmp', function()
   vim.fn.execute('write')
   local file = require('nvls').get_file_infos()
+  local helper_path = Utils.ensure_midi_helper()
 
   local args = {
     "-f", file.output_fm,
+    "-dinclude-settings=" .. helper_path,
     "-o", vim.fs.joinpath(file.folder, file.name),
     file.main
   }
@@ -46,7 +48,9 @@ vim.api.nvim_create_user_command('LilyCmp', function()
     table.insert(args, 1, "-dbackend=" .. opts.options.backend)
   end
 
-  Job:add('lilypond', args)
+  Job:add('lilypond', args, nil, function()
+    Player.refresh_if_open()
+  end)
 end, {})
 
 vim.api.nvim_create_user_command('HyphChLang', function()
@@ -78,6 +82,6 @@ map(key.insert_hyphen, "i<space>--<space><esc>")
 map(key.add_hyphen, "a<space>--<space><esc>")
 map(key.del_next_hyphen, "/<space>--<space><cr>:nohl<cr>4x")
 map(key.del_prev_hyphen, "?<space>--<space><cr>:nohl<cr>4x")
-vmap(key.player, ":lua<space>require('nvls.player').quickplayer()<cr>")
+vmap(key.player, ":lua<space>require('nvls.quickplayer').run()<cr>")
 vmap(key.hyphenation, ":lua<space>require('nvls.hyphenate').getHyphType()<cr>")
 map(key.insert_version, write_version)
