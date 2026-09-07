@@ -71,7 +71,8 @@ function JobQueue:run_job(job)
         if job.callback then job.callback(result) end
       end
 
-      print(' ')
+      --AMÉLIORER ICI
+      print('')
       Errors.process(job.cmd, result.output)
       vim.api.nvim_exec_autocmds("QuickFixCmdPost", {})
       if code == 0 then self:start_next() end
@@ -97,7 +98,7 @@ end
 
 function JobQueue:check_and_clean_tmp()
   if lb_failed then
-    vim.fn.delete(vim.fs.joinpath(vim.fn.stdpath("cache"), "nvls"), "rf")
+    vim.fn.delete(require('nvls').get_tmp_folder(), "rf")
     lb_failed = false
   end
 end
