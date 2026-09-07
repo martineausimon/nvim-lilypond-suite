@@ -1,0 +1,713 @@
+*nvim-lilypond-suite.txt*    Write, compile and play LilyPond scores in Neovim
+
+Author:  Simon Martineau (martineausimon)
+Repo:    https://github.com/martineausimon/nvim-lilypond-suite
+License: GPL-3.0
+
+==============================================================================
+CONTENTS                                    *nvim-lilypond-suite-contents*
+
+    1. Introduction ................. |nvim-lilypond-suite-introduction|
+    2. Requirements ................. |nvim-lilypond-suite-requirements|
+    3. Installation ................. |nvim-lilypond-suite-installation|
+      3.1 Midi/audio player ......... |nvim-lilypond-suite-install-player|
+      3.2 Hyphenation function ...... |nvim-lilypond-suite-install-hyphenation|
+    4. Configuration ................ |nvim-lilypond-suite-configuration|
+      4.1 Default settings .......... |nvim-lilypond-suite-config-defaults|
+      4.2 Per-folder configuration .. |nvim-lilypond-suite-config-per-folder|
+      4.3 Include directories ....... |nvim-lilypond-suite-config-include-dir|
+      4.4 Highlighting .............. |nvim-lilypond-suite-config-highlight|
+      4.5 Error messages ............ |nvim-lilypond-suite-config-errors|
+      4.6 Auto-completion ........... |nvim-lilypond-suite-config-completion|
+      4.7 Point and click ........... |nvim-lilypond-suite-config-p&c|
+      4.8 Pdf reader ................ |nvim-lilypond-suite-config-pdf-viewer|
+    5. Usage ........................ |nvim-lilypond-suite-usage|
+      5.1 Commands .................. |nvim-lilypond-suite-commands|
+      5.2 Mappings .................. |nvim-lilypond-suite-mappings|
+      5.3 Hyphenation function ...... |nvim-lilypond-suite-hyphenation|
+      5.4 Multiple files projects ... |nvim-lilypond-suite-multifile|
+      5.5 LaTeX ..................... |nvim-lilypond-suite-latex|
+    6. Debugging .................... |nvim-lilypond-suite-debug|
+    7. Tips and tricks .............. |nvim-lilypond-suite-tips|
+    8. License ...................... |nvim-lilypond-suite-license|
+
+==============================================================================
+1. INTRODUCTION                          *nvim-lilypond-suite-introduction*
+
+nvim-lilypond-suite (|nvls|) is a Neovim-only plugin for writing LilyPond
+scores. It bundles fast syntax highlighting, asynchronous compilation, a
+midi/mp3 player embedded in a floating window, an automatic "hyphenation"
+helper for lyrics, and point-and-click support.
+
+The repository also ships |ftplugin| files for LaTeX and Texinfo, so that
+files embedding LilyPond syntax (via the `lilypond-book` or `lyluatex`
+packages) get LilyPond syntax highlighting and an adapted `makeprg`.
+
+Main features:
+
+    - Fast syntax file for LilyPond
+    - Asynchronous |:LilyCmp| - compile in the background without
+      freezing Neovim
+    - Audio player in a floating window (LilyPond only), using `mpv` with
+      `timidity` or `fluidsynth` + `ffmpeg` for the midi-to-audio step
+    - QuickPlayer (LilyPond only) - convert and play only a visual
+      selection
+    - Hyphenation - automatically insert hyphens ('--') inside lyrics
+    - Simple ftplugin for LilyPond with a working `makeprg`
+    - Multiple-files support - only the main file is compiled when working
+      on a multi-file project
+    - ftplugin for LaTeX and Texinfo files, with embedded LilyPond syntax
+      detection and adaptive compilation for `lyluatex` or `lilypond-book`
+    - Completion-plugin agnostic dictionary files, and "point & click"
+      configuration
+    - Error handling with correct quickfix and diagnostics
+
+==============================================================================
+2. REQUIREMENTS                          *nvim-lilypond-suite-requirements*
+
+    - Neovim >= 0.7
+    - `lilypond` (obviously), and `lualatex`/`texi2pdf` if you also want to
+      use the LaTeX/Texinfo ftplugins
+    - Optional, for the audio player: `mpv`, and either `timidity` or
+      `fluidsynth` (+ `ffmpeg`) - see |nvim-lilypond-suite-install-player|
+    - Optional, for hyphenation in languages other than the default one:
+      the Python `pyphen` module - see
+      |nvim-lilypond-suite-install-hyphenation|
+
+==============================================================================
+3. INSTALLATION                          *nvim-lilypond-suite-installation*
+
+Using lazy.nvim: >lua
+    {
+      'martineausimon/nvim-lilypond-suite',
+      opts = {
+        -- your config here, see |nvim-lilypond-suite-config-defaults|
+      }
+    }
+<
+Non lazy.nvim users must call `require('nvls').setup()` themselves.
+
+Using packer.nvim: >lua
+    use { 'martineausimon/nvim-lilypond-suite' }
+<
+Using vim-plug: >vim
+    Plug 'martineausimon/nvim-lilypond-suite'
+<
+------------------------------------------------------------------------------
+3.1 Midi/audio player                    *nvim-lilypond-suite-install-player*
+
+The player converts midi to audio and plays it with `mpv`. Two synthesizers
+are supported to render the midi file: `timidity` (default and only option
+on Windows) and `fluidsynth` (default on Unix).
+
+Always required if you want the player: >
+    mpv
+<
+Then choose one of the two backends:
+
+Timidity: >
+    # Arch
+    sudo pacman -S timidity soundfont-fluid
+    echo "soundfont /usr/share/soundfonts/FluidR3_GM.sf2" >> /etc/timidity/timidity.cfg
+
+    # macOS
+    brew install timidity
+    brew install fluid-synth
+<
+Fluidsynth: >
+    # Arch
+    sudo pacman -S fluidsynth soundfont-fluid
+    sudo ln -s /usr/share/soundfonts/FluidR3_GM.sf2 /usr/share/soundfonts/default.sf2
+<
+A soundfont can also be set directly from `setup()`; it must be the first
+element of `fluidsynth_flags`: >lua
+    require('nvls').setup({
+      player = {
+        options = {
+          fluidsynth_flags = {
+            "/path/to/soundfont.sf2",
+            -- other flags
+          }
+        }
+      }
+    })
+<
+Finally, `ffmpeg` is required to produce the audio file: >
+    sudo pacman -S ffmpeg
+<
+------------------------------------------------------------------------------
+3.2 Hyphenation function            *nvim-lilypond-suite-install-hyphenation*
+
+The hyphenation function works out of the box with the `en_DEFAULT`
+language, using a bundled dictionary (the same one used by Philip Aker's
+Text Editor plugin for Finale) - no dependency needed.
+
+To use another language, install the Python `pyphen` module: >
+    pip install pyphen
+<
+`pyphen` is also packaged for Arch, CentOS, Gentoo, Fedora and Mageia. You
+will also need a working Python 3 provider for Neovim (check with
+`:checkhealth`).
+
+See |nvim-lilypond-suite-hyphenation| for how to use it.
+
+==============================================================================
+4. CONFIGURATION                        *nvim-lilypond-suite-configuration*
+
+All settings are configured in Lua, through `require('nvls').setup({...})`,
+called once (typically in your `init.lua`). If you use a vimscript config,
+wrap the Lua snippet between `lua << EOF` and `EOF`.
+
+It is fine to only override part of the defaults, e.g.: >lua
+    require('nvls').setup({
+      latex = {
+        mappings = { compile = "<leader>c" },
+        options = { clean_logs = true },
+      },
+    })
+<
+------------------------------------------------------------------------------
+4.1 Default settings                  *nvim-lilypond-suite-config-defaults*
+
+Full default configuration, for reference/copy-paste: >lua
+    require('nvls').setup({
+      lilypond = {
+        mappings = {
+          player = "<F3>",
+          compile = "<F5>",
+          open_pdf = "<F6>",
+          switch_buffers = "<A-Space>",
+          insert_version = "<F4>",
+          hyphenation = "<F12>",
+          hyphenation_change_lang = "<F11>",
+          insert_hyphen = "<leader>ih",
+          add_hyphen = "<leader>ah",
+          del_next_hyphen = "<leader>dh",
+          del_prev_hyphen = "<leader>dH",
+        },
+        options = {
+          pitches_language = "default",
+          hyphenation_language = "en_DEFAULT",
+          output = "pdf",
+          backend = nil,
+          main_file = "main.ly",
+          main_folder = "%:p:h",
+          include_dir = nil,
+          pdf_viewer = nil,
+          errors = {
+            diagnostics = true,
+            quickfix = "external",
+            filtered_lines = {
+              "compilation successfully completed",
+              "search path",
+            },
+          },
+        },
+      },
+      latex = {
+        mappings = {
+          compile = "<F5>",
+          open_pdf = "<F6>",
+          lilypond_syntax = "<F3>",
+        },
+        options = {
+          lilypond_book_flags = nil,
+          clean_logs = false,
+          main_file = "main.tex",
+          main_folder = "%:p:h",
+          include_dir = nil,
+          lilypond_syntax_au = "BufEnter",
+          pdf_viewer = nil,
+          errors = {
+            diagnostics = true,
+            quickfix = "external",
+            filtered_lines = {
+              "Missing character",
+              "See the LaTeX manual or LaTeX Companion for explanation",
+              "for immediate help.",
+              "Overfull \\hbox",
+              "^%s%.%.%.",
+              "%s+%(.*%)",
+            },
+          },
+        },
+      },
+      texinfo = {
+        mappings = {
+          compile = "<F5>",
+          open_pdf = "<F6>",
+          lilypond_syntax = "<F3>",
+        },
+        options = {
+          lilypond_book_flags = "--pdf",
+          clean_logs = false,
+          main_file = "main.texi",
+          main_folder = "%:p:h",
+          include_dir = nil,
+          lilypond_syntax_au = "BufEnter",
+          pdf_viewer = nil,
+          errors = {
+            diagnostics = true,
+            quickfix = "external",
+            filtered_lines = {
+              "Missing character",
+              "See the LaTeX manual or LaTeX Companion for explanation",
+              "for immediate help.",
+              "Overfull \\hbox",
+              "^%s%.%.%.",
+              "%s+%(.*%)",
+            },
+          },
+        },
+      },
+      player = {
+        mappings = {
+          quit = "q",
+          play_pause = "p",
+          loop = "<A-l>",
+          backward = "h",
+          small_backward = "<S-h>",
+          forward = "l",
+          small_forward = "<S-l>",
+          decrease_speed = "j",
+          increase_speed = "k",
+          halve_speed = "<S-j>",
+          double_speed = "<S-k>",
+        },
+        options = {
+          row = 1,
+          col = "99%",
+          width = "50",
+          height = "1",
+          border_style = "single",
+          winhighlight = "Normal:Normal,FloatBorder:Normal,FloatTitle:Normal",
+          winhighlight_inactive = "Normal:NvlsPlayerInactive,FloatBorder:NvlsPlayerInactive,FloatTitle:NvlsPlayerInactive,PmenuSel:NvlsPlayerInactive,NonText:NvlsPlayerInactive",
+          midi_synth = "fluidsynth",
+          fluidsynth_flags = nil,
+          timidity_flags = nil,
+          ffmpeg_flags = nil,
+          audio_format = "mp3",
+          mpv_flags = {
+            "--msg-level=cplayer=no,ffmpeg=no,alsa=no",
+            "--loop",
+            "--config-dir=/dev/null",
+            "--no-video",
+          },
+          icon_play = "",
+          icon_pause = "",
+          bar_char = "-",
+          seek_step = 5,
+          seek_step_small = 1,
+          speed_step = 0.1,
+          speed_multiply = 2.0,
+          refresh_interval_ms = 150,
+        },
+      },
+    })
+<
+------------------------------------------------------------------------------
+4.2 Per-folder configuration        *nvim-lilypond-suite-config-per-folder*
+
+nvls can be configured differently per project folder. This relies on
+Neovim's `exrc` mechanism, see |nvim-lilypond-suite-multifile| for the
+exact steps.
+
+------------------------------------------------------------------------------
+4.3 Include directories             *nvim-lilypond-suite-config-include-dir*
+
+`include_dir` appends one or more directories to the search path used for
+input files with relative paths. It accepts a string or a list: >lua
+    require('nvls').setup({
+      lilypond = {
+        options = {
+          include_dir = {
+            "$HOME/Documents/",
+            "$HOME/Lilypond/",
+          },
+        },
+      },
+    })
+<
+------------------------------------------------------------------------------
+4.4 Highlighting                      *nvim-lilypond-suite-config-highlight*
+
+Recommended `syntax sync` settings, to add to your `init.lua`: >lua
+    vim.api.nvim_create_autocmd('BufEnter', {
+      command = "syntax sync fromstart",
+      pattern = { '*.ly', '*.ily', '*.tex' },
+    })
+<
+Default highlight groups (overridable through `setup()`'s `highlights`
+table, per filetype): >
+    lilyString       -> String
+    lilyDynamic      -> bold
+    lilyComment      -> Comment
+    lilyNumber       -> Number
+    lilyVar          -> Tag
+    lilyBoolean      -> Boolean
+    lilySpecial      -> bold
+    lilyArgument     -> Type
+    lilyScheme       -> Special
+    lilyLyrics       -> Special
+    lilyMarkup       -> bold
+    lilyFunction     -> Statement
+    lilyArticulation -> PreProc
+    lilyContext      -> Type
+    lilyGrob         -> Include
+    lilyTranslator   -> Type
+    lilyPitch        -> Function
+    lilyChord        -> bold, lightMagenta
+<
+Example override: >lua
+    require('nvls').setup({
+      lilypond = {
+        highlights = {
+          lilyVar = { ctermfg = "blue" },
+        },
+      },
+    })
+<
+Pitch names in languages other than the default can be highlighted with the
+`pitches_language` option (currently: "english", "français", "deutsch",
+"nohl" to disable, or "default"). Set `pitches_language = "nohl"` to skip
+pitch highlighting entirely for a lighter syntax file.
+
+------------------------------------------------------------------------------
+4.5 Error messages                      *nvim-lilypond-suite-config-errors*
+
+Error handling works in three steps:
+
+    1. Each compiler command (lilypond, lualatex, texi2pdf) produces an
+       output, viewable with `:LilyDebug stdout`.
+    2. That output is parsed; lines matching an error pattern are kept.
+       Multi-line messages are joined with `|` as the line separator, and
+       can be inspected with `:LilyDebug errors`.
+    3. By default, these lines are dispatched to:
+       - buffer diagnostics (`errors.diagnostics = true`) - requires
+         `vim.diagnostic.config()` to be set for virtual text/signs to
+         actually show, e.g.: >lua
+    vim.diagnostic.config({
+      virtual_text = true,
+      signs = true,
+      update_in_insert = false,
+      underline = true,
+    })
+<
+       - the quickfix list, for errors coming from buffers other than the
+         current one (`errors.quickfix = "external"`; can also be `"full"`
+         or `"none"`). Open it with `:copen`, or automatically with: >lua
+    vim.api.nvim_create_autocmd('QuickFixCmdPost', {
+      command = "cwindow",
+      pattern = "*",
+    })
+<
+Lines listed in `errors.filtered_lines` are excluded from error reporting.
+
+------------------------------------------------------------------------------
+4.6 Auto-completion                  *nvim-lilypond-suite-config-completion*
+
+Recommended: coc.nvim with `coc-dictionary` and `coc-tabnine` - works out
+of the box.
+
+For other completion plugins, nvls exposes dictionary files under
+`$LILYDICTPATH`: >
+    grobs, keywords, musicFunctions, articulations, grobProperties,
+    paperVariables, headerVariables, contextProperties, clefs,
+    repeatTypes, languageNames, accidentalsStyles, scales, musicCommands,
+    markupCommands, contextsCmd, dynamics, contexts, translators
+<
+Example setup with lazy.nvim and blink.cmp (via
+`blink-cmp-dictionary`): >lua
+    require("lazy").setup({
+      {
+        "martineausimon/nvim-lilypond-suite",
+        opts = {},
+      },
+      { 'nvim-lua/plenary.nvim', lazy = true },
+      {
+        'saghen/blink.cmp',
+        dependencies = { 'Kaiser-Yang/blink-cmp-dictionary' },
+        version = '*',
+        opts = {
+          sources = {
+            default = { 'dictionary', 'lsp', 'path', 'snippets', 'buffer' },
+            providers = {
+              dictionary = {
+                module = 'blink-cmp-dictionary',
+                name = 'Dict',
+                min_keyword_length = 3,
+                max_items = 8,
+                opts = {
+                  dictionary_files = function()
+                    if vim.bo.filetype == 'lilypond' then
+                      return vim.fn.glob(
+                        vim.fn.expand('$LILYDICTPATH') .. '/*', true, true)
+                    end
+                  end,
+                },
+              },
+            },
+          },
+        },
+        opts_extend = { "sources.default" },
+      },
+    }, {})
+<
+------------------------------------------------------------------------------
+4.7 Point and click                          *nvim-lilypond-suite-config-p&c*
+
+"Point and click" jumps from a PDF viewer straight to the matching line in
+the source file, and needs Neovim reachable through a remote/server
+mechanism.
+
+Recommended: the external `neovim-remote` (`nvr`) tool, which handles
+several `.ly` files open in the same session gracefully (the Neovim
+built-in `--listen`/`--remote-send` mechanism only supports one file per
+instance).
+
+Easiest setup - patch `xdg-open` (or add a `xdg-open` shim earlier in
+`$PATH`, e.g. in `$HOME/.local/bin/`) to intercept `textedit://...ly:...`
+URLs and forward them to `nvr`: >sh
+    if [[ "$@" == textedit://*ly:* ]]; then
+      tmp=${@#*://} tmp="${tmp%%:*}" attr=${@#*ly:}
+      file="${tmp//%20/\\ }"
+      line=${attr%:*:*}
+      col=${attr##*:}
+      nvr -s +:"dr $file | call cursor($line, $col)"
+      exit
+    fi
+<
+Classic way (does not support paths with spaces) - add to `~/.profile` or
+`~/.bashrc`: >sh
+    export LYEDITOR="nvr -s +:'dr %(file)s | call cursor(%(line)s,%(char)s+1)'"
+<
+then follow LilyPond's own instructions to configure
+`lilypond-invoke-editor.desktop`, and reboot/reload the session.
+
+------------------------------------------------------------------------------
+4.8 Pdf reader                         *nvim-lilypond-suite-config-pdf-viewer*
+
+By default `:Viewer` uses `xdg-open` (or `open` on macOS). Override with
+`pdf_viewer`: >lua
+    require('nvls').setup({
+      lilypond = { options = { pdf_viewer = "zathura" } },
+      latex    = { options = { pdf_viewer = "zathura" } },
+    })
+<
+Recommended viewer: zathura, with the zathura-pdf-mupdf plugin for
+point-and-click support.
+
+For Okular, use this as the "custom text editor" command instead: >
+    nvr +:'dr %f | call cursor(%l,%c+1)'
+<
+==============================================================================
+5. USAGE                                        *nvim-lilypond-suite-usage*
+
+------------------------------------------------------------------------------
+5.1 Commands                                  *nvim-lilypond-suite-commands*
+
+                                                              *:LilyCmp*
+:LilyCmp        Save and compile the current file (LilyPond, LaTeX or
+                Texinfo, depending on filetype) asynchronously.
+
+                                                              *:LilyPlayer*
+:LilyPlayer     Convert the midi output to audio and open the player in a
+                floating window (LilyPond only).
+
+                                                              *:Viewer*
+:Viewer         Open the compiled output (pdf by default) with the
+                configured |nvim-lilypond-suite-config-pdf-viewer|.
+
+                                                              *:HyphChLang*
+:HyphChLang     Change the hyphenation language on the fly, see
+                |nvim-lilypond-suite-hyphenation|.
+
+                                                              *:ToggleSyn*
+:ToggleSyn      Enable/disable embedded LilyPond syntax highlighting
+                inside LaTeX/Texinfo buffers.
+
+                                                              *:TexCmp*
+:TexCmp         Save and compile a LaTeX file to pdf.
+
+                                                              *:LilyDebug*
+:LilyDebug {arg}
+                Display internal plugin state. {arg} is one of:
+                    commands    latest commands run by the plugin
+                    errors      errors sorted by the plugin, as sent to
+                                the error "rules" ('|' marks line breaks
+                                inside a multi-line error)
+                    stdout      raw output of the last command(s)
+                    fileinfos   main file, main folder, output file, tmp
+                                folder, and audio file (if LilyPond)
+
+------------------------------------------------------------------------------
+5.2 Mappings                                  *nvim-lilypond-suite-mappings*
+
+LilyPond buffers (all overridable, see
+|nvim-lilypond-suite-config-defaults|):
+>
+    Mode  Default        Action ~
+    n     <F3>           |:LilyPlayer|
+    v     <F3>           QuickPlayer: play only the visual selection
+                          (experimental)
+    n     <F4>           Insert current LilyPond version
+    n     <F5>           |:LilyCmp|
+    n     <F6>           |:Viewer|
+    n     <F11>          |:HyphChLang|
+    v     <F12>          Automatically add hyphens to the selection
+    n     <leader>ih     Insert a hyphen before the cursor
+    n     <leader>ah     Add a hyphen after the cursor
+    n     <leader>dh     Delete next hyphen
+    n     <leader>dH     Delete previous hyphen
+<
+LaTeX buffers: >
+    Mode  Default        Action ~
+    n     <F3>           |:ToggleSyn|
+    n     <F5>           |:TexCmp|
+    n     <F6>           |:Viewer|
+<
+Player mappings (LilyPond only, active inside the floating player
+window): >
+    Key                  Action ~
+    <A-Space>            Switch focus between player and LilyPond buffer
+    q / <Esc>            Close the player
+    p                    Play / Pause
+    <A-l>                Loop: start / stop / clear
+    h / l                Seek backward / forward (5s)
+    <S-h> / <S-l>        Seek backward / forward (1s)
+    j / k                Decrease / increase speed by 10%
+    <S-j> / <S-k>        Halve / double current speed
+<
+------------------------------------------------------------------------------
+5.3 Hyphenation function                  *nvim-lilypond-suite-hyphenation*
+
+This function inserts hyphens ("--") inside a piece of text so it can be
+used as lyrics. See |nvim-lilypond-suite-mappings| for its keybindings.
+
+Default language: `en_DEFAULT`, based on a dictionary originally built for
+Philip Aker's Text Editor plugin for Finale (macOS), well suited for
+lyrics, and bundled with nvls (no dependency required).
+
+Other languages require the `pyphen` module (see
+|nvim-lilypond-suite-install-hyphenation|) and are selected on the fly with
+|:HyphChLang| (default mapping `<F11>`). Note: `pyphen` does not currently
+handle line breaks, and word-processor dictionaries are usually reluctant
+to break right after the first letter of a word, so you may need to add
+hyphens there by hand.
+
+Available languages: >
+    af_ZA be_BY bg_BG ca cs_CZ da_DK de_AT de_CH de_DE el_GR en_GB en_US
+    eo es et_EE fr gl hr_HR hu_HU id_ID is it_IT lt lv_LV mn_MN nb_NO
+    nl_NL nn_NO pl_PL pt_BR pt_PT ro_RO ru_RU sk_SK sl_SI sq_AL sr
+    sr_Latn sv te_IN uk_UA zu_ZA
+<
+Example, hyphenating "available associated creation organisation":
+>
+    en_DEFAULT:   a-vail-a-ble as-so-ci-a-ted cre-a-tion or-ga-ni-sa-tion
+    en_GB:        avail-able as-so-ci-ated cre-ation or-gan-isa-tion
+    Frescobaldi:  avail-able as-so-ci-at-ed cre-ation or-gan-i-sa-tion
+<
+------------------------------------------------------------------------------
+5.4 Multiple files projects                    *nvim-lilypond-suite-multifile*
+
+When a project splits its score across several files with `\include`,
+only `main.ly` in the current folder is used for compilation, opening the
+pdf and playing the midi. Change this with the `main_file`/`main_folder`
+options (see |nvim-lilypond-suite-config-defaults|).
+
+To use a different configuration per folder, rely on Neovim's `exrc`:
+
+    1. Enable it in your `init.lua`: >lua
+    vim.opt.exrc = true
+<
+    2. Create a `.nvim.lua` file at the root of the project, e.g.: >lua
+    require('nvls').setup({
+      lilypond = {
+        options = {
+          main_file = "my_main_file.ly",
+        },
+      },
+    })
+<
+------------------------------------------------------------------------------
+5.5 LaTeX                                          *nvim-lilypond-suite-latex*
+
+`lilypond-book` is used by default whenever the `.tex` file contains
+`\begin{lilypond}`. To use `lyluatex` instead, add
+`\usepackage{lyluatex}` to the preamble.
+Note: `lyluatex` does not support file names containing spaces, nor
+compiling outside the working directory.
+
+Embedded LilyPond syntax highlighting can be slow; toggle it with `<F3>`
+(|:ToggleSyn|), or control when it reloads: >lua
+    require('nvls').setup({
+      latex = {
+        options = {
+          lilypond_syntax_au = { "BufWrite", "VimEnter" },
+        },
+      },
+    })
+<
+Set `clean_logs = true` (see |nvim-lilypond-suite-config-defaults|) to
+remove log files on exit.
+
+==============================================================================
+6. DEBUGGING                                      *nvim-lilypond-suite-debug*
+
+Use |:LilyDebug| (see |nvim-lilypond-suite-commands|) to inspect what the
+plugin is doing: the last commands run, the raw compiler output, the
+errors as parsed by nvls, and the file paths currently in use. This is the
+first thing to check when compilation, the player, or error reporting
+don't behave as expected, and it's the most useful information to include
+when reporting an issue.
+
+==============================================================================
+7. TIPS AND TRICKS                                  *nvim-lilypond-suite-tips*
+
+Justify a score with lilypond-book (avoids left padding), in the LaTeX
+preamble: >tex
+    \def\preLilyPondExample{\hspace*{-3mm}}
+    \newcommand{\betweenLilyPondSystem}[1]{\linebreak\hspace*{-3mm}}
+<
+Adjust the space between systems: >tex
+    {\betweenLilyPondSystem}[1]{\vspace{5mm}\linebreak\hspace*{-3mm}}
+<
+Compile automatically on save with overseer.nvim: register an nvls-aware
+"lilypond" template (reading options from `require('nvls.config').fileInfos()`
+and `require('nvls').get_nvls_options()`), then run `:OverseerRun` followed
+by `:OverseerQuickaction watch`. Combined with an autosave plugin and a
+pdf viewer that reloads automatically, this gives near-live feedback.
+Full template contributed by kflak, see GitHub issue #6 on the repo.
+
+Play any file on the system with the nvls player (handy for transcribing):
+>lua
+    vim.api.nvim_create_user_command('Play', function(args)
+      local file = args.fargs[1]
+      if file then
+        require('nvls.player').open(file)
+      end
+    end, { nargs = '*', complete = 'file' })
+<
+then `:Play /path/to/audio.wav`.
+
+Use the QuickPlayer for any filetype: >lua
+    vim.keymap.set("v", "<leader>qp",
+      ":lua require('nvls.quickplayer').run()", { silent = true })
+<
+make a visual selection and press `<leader>qp`.
+
+Midi keyboard input: see niveK77pur's midi-input.nvim plugin, a wrapper
+around lilypond-midi-input inspired by Frescobaldi/Denemo MIDI entry.
+
+Termux on-screen keyboard: a suggested `extra-keys` layout for
+`~/.termux/termux.properties` (LilyPond-friendly symbols) is documented on
+the "Tips and tricks" wiki page.
+
+==============================================================================
+8. LICENSE                                       *nvim-lilypond-suite-license*
+
+nvim-lilypond-suite is released under the GPL-3.0 license. See the
+`LICENSE` file at the root of the repository.
+
+==============================================================================
+vim:tw=78:ts=8:ft=help:norl:
