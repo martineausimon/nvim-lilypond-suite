@@ -8,9 +8,10 @@ function M.message(str, level)
 end
 
 function M.has(file, string)
-  local content = io.open(file, "r")
-  if not content then return end
-  content = content:read("*all")
+  local f = io.open(file, "r")
+  if not f then return false end
+  local content = f:read("*a")
+  f:close()
   return content:find(string, 1, true) ~= nil
 end
 
@@ -138,6 +139,39 @@ end
 
 function M.vmap(key, cmd)
   vim.keymap.set('v', key, cmd, { noremap = true, silent = true, buffer = true })
+end
+
+function M.ensure_midi_helper()
+  local cache_dir = require('nvls').get_tmp_folder()
+  local helper_path = vim.fs.joinpath(cache_dir, "midi_helper.ly")
+
+  vim.fn.mkdir(cache_dir, "p")
+  local f = io.open(helper_path, "w")
+  if f then
+    f:write([[
+\midi {
+  \context {
+    \Score
+    \consists
+    #(lambda (context)
+       (let ((last-bar -1))
+         `((start-translation-timestep
+            . ,(lambda (performer)
+                 (let ((bar (ly:context-property context 'currentBarNumber)))
+                   (if (and (number? bar) (not (= bar last-bar)))
+                       (begin
+                         (set! last-bar bar)
+                         (ly:broadcast
+                          (ly:context-event-source context)
+                          (ly:make-stream-event
+                           'mark-event
+                           `((label . ,(string-append "BAR:" (number->string bar))))))))))))))
+  }
+}
+]])
+    f:close()
+  end
+  return helper_path
 end
 
 return M
